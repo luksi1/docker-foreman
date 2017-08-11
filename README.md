@@ -22,6 +22,11 @@ A post-configuration docker image is also used to import Puppet classes from you
   - https://docs.puppet.com/pe/latest/r10k.html
   - https://docs.puppet.com/pe/latest/cmgmt_control_repo.html
   - https://github.com/puppetlabs/control-repo
+  
+- add a webhook for each repository you want to trigger a pull when pushing to. Go to the settings for your repository you want to use as a trigger and add a webhook. Something like:
+```
+https://puppet:puppet@puppet-test.domain.com:8088/payload
+```
 
 ## Setup
 
