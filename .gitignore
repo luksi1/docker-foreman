@@ -1,0 +1,21 @@
+# Web certificates for Foreman
+foreman/certs/*
+
+# Foreman passwords
+tests/foreman/foreman_properties.py
+
+.env
+
+# Postgres data files
+volumes/postgres/data/*
+
+# Puppet SSL and code
+volumes/puppet/*
+
+# Foreman admin password
+volumes/foreman/accounts/admin
+
+# Python files for tests
+__pycache__/
+*.py[cod]
+*$py.class

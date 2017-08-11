@@ -1,0 +1,11 @@
+---
+# Update for your Foreman and Puppet master hostname(s)
+:url: "https://foreman.domain.com"
+:ssl_cert: /etc/puppetlabs/puppet/ssl/certs/puppet.domain.com.pem
+:ssl_key: /etc/puppetlabs/puppet/ssl/private_keys/puppet.domain.com.pem
+:ssl_ca: /etc/puppetlabs/puppet/ssl/certs/ca.pem
+
+:puppetdir: "/opt/puppetlabs/server/data/puppetserver"
+:facts: true
+:timeout: 10
+:threads: null

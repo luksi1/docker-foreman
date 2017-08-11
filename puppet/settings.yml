@@ -1,0 +1,11 @@
+:bind_host: '0.0.0.0'
+:daemon: true
+:trusted_hosts:
+  - FOREMAN_HOSTNAME
+  - FOREMAN_HOSTNAME_AND_DOMAIN
+:foreman_url: https://foreman
+:forward_verify: false
+:https_port: 8443
+:ssl_certificate: /etc/puppetlabs/puppet/ssl/certs/puppet.domain.com.pem
+:ssl_private_key: /etc/puppetlabs/puppet/ssl/private_keys/puppet.domain.com.pem
+:ssl_ca_file: /etc/puppetlabs/puppet/ssl/certs/ca.pem
