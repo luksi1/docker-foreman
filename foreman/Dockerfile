@@ -2,6 +2,8 @@ FROM ubuntu:16.04
 
 MAINTAINER luksi1
 
+ARG FOREMAN_VERSION
+
 ENV DEBIAN_FRONTEND=noninteractive \
     TZ=Europe/Stockholm \
     # Gosu version. Gosu is used to run applications using a specific user.
@@ -39,9 +41,12 @@ RUN dpkg -i puppetlabs-release-pc1-xenial.deb
 RUN groupadd -g 999 puppet
 RUN useradd -ms /bin/bash -g puppet -u 999 puppet
 
+# Foreman Puppet run is built for RedHat. Add /var/www directory for use with Ubuntu
+RUN mkdir /var/www
+
 # Enable Foreman repo
-RUN echo "deb http://deb.theforeman.org/ xenial 1.14" > /etc/apt/sources.list.d/foreman.list && \
-    echo "deb http://deb.theforeman.org/ plugins 1.14" >> /etc/apt/sources.list.d/foreman.list && \
+RUN echo deb http://deb.theforeman.org/ xenial $FOREMAN_VERSION > /etc/apt/sources.list.d/foreman.list && \
+    echo deb http://deb.theforeman.org/ plugins $FOREMAN_VERSION >> /etc/apt/sources.list.d/foreman.list && \
     wget -q https://deb.theforeman.org/pubkey.gpg -O- | apt-key add - 
 
 # Download the installer

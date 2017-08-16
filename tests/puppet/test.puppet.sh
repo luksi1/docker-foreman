@@ -20,7 +20,7 @@ function ok {
 if [[ -z $QUIET ]]; then
   docker run -w $SCRIPTPATH -h $PUPPET_AGENT_HOSTNAME puppet/puppet-agent-ubuntu agent -t --server=${PUPPET_HOSTNAME}.${DOMAIN} --waitforcert 10 > /dev/null 2>&1
 else 
-  docker run -w $SCRIPTPATH -h $PUPPET_AGENT_HOSTNAME puppet/puppet-agent-ubuntu agent -t --server=${PUPPET_HOSTNAME}${DOMAIN} --waitforcert 10
+  docker run -w $SCRIPTPATH -h $PUPPET_AGENT_HOSTNAME puppet/puppet-agent-ubuntu agent -t --server=${PUPPET_HOSTNAME}.${DOMAIN} --waitforcert 10
 fi
 
 if [[ $? -gt 0 ]]; then

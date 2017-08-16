@@ -26,11 +26,11 @@ function run_composer {
 }
 
 function import_puppet_classes {
-  ${SCRIPTPATH}/test.puppet.class.import.py
+  ${SCRIPTPATH}/foreman/test.puppet.class.import.py
 }
 
 function puppet_agent_run {
-  ${SCRIPTPATH}/puppet/test.puppet.sh
+  ${SCRIPTPATH}/puppet/test.puppet.sh 
 }
 
 function foreman_api {
@@ -44,7 +44,7 @@ function delete_node {
 run_composer
 
 while ! nc -z $PUPPET_HOSTNAME 8443; do
-  sleep 30
+  sleep 1
 done
 
 puppet_agent_run

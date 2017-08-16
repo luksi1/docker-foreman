@@ -2,11 +2,13 @@ FROM puppet/puppetserver
 
 MAINTAINER luksi1
 
+ARG FOREMAN_VERSION
+
 COPY foreman.rb /opt/puppetlabs/puppet/lib/ruby/vendor_ruby/puppet/reports/
 
 # Enable Foreman repo
-RUN echo "deb http://deb.theforeman.org/ xenial 1.14" > /etc/apt/sources.list.d/foreman.list \
-  && echo "deb http://deb.theforeman.org/ plugins 1.14" >> /etc/apt/sources.list.d/foreman.list \
+RUN echo deb http://deb.theforeman.org/ xenial $FOREMAN_VERSION > /etc/apt/sources.list.d/foreman.list \
+  && echo deb http://deb.theforeman.org/ plugins $FOREMAN_VERSION >> /etc/apt/sources.list.d/foreman.list \
   && wget -q https://deb.theforeman.org/pubkey.gpg -O- | apt-key add - \ 
   && apt-get update \
   && apt-get install -y foreman-proxy netcat nscd

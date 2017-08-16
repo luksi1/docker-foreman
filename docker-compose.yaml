@@ -1,4 +1,5 @@
 version: '3'
+
 services:
   foreman:
     image: ${IMAGE_PREFIX}/foreman:${IMAGE_TAG}
@@ -37,6 +38,8 @@ services:
       IMPORT_ONLY_ROLES_AND_PROFILES: $IMPORT_ONLY_ROLES_AND_PROFILES
     build:
       context: ./foreman
+      args:
+        FOREMAN_VERSION: $FOREMAN_VERSION
     depends_on:
       - postgres
     volumes:
@@ -49,6 +52,8 @@ services:
     hostname: ${PUPPET_HOSTNAME}
     build: 
       context: ./puppet
+      args:
+        FOREMAN_VERSION: $FOREMAN_VERSION
     image: ${IMAGE_PREFIX}/puppet:${IMAGE_TAG}
     ports:
       - 8140:8140
