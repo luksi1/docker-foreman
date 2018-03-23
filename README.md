@@ -32,10 +32,9 @@ https://puppet:puppet@puppet-test.domain.com:8088/payload
 
 Go through the following to setup your environment:
 
-1. All source files need to be in /opt/foreman. <b>This is hardcoded in the volumes so you need to do this!</b>
-2. Setup your .env file
-3. Copy in SSL certificates and import your database if you are migrating from an existing instance
-4. Run
+1. Setup your .env file
+2. Copy in SSL certificates and import your database if you are migrating from an existing instance
+3. Run
 
 #### .env
 
