@@ -43,8 +43,8 @@ services:
     depends_on:
       - postgres
     volumes:
-      - /opt/foreman/volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/
-      - /opt/foreman/volumes/foreman/accounts:/tmp/accounts
+      - ./volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/
+      - ./volumes/foreman/accounts:/tmp/accounts
     ports:
       - 443:443
   puppet:
@@ -59,8 +59,8 @@ services:
       - 8140:8140
       - 8443:8443
     volumes:
-      - /opt/foreman/volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/
-      - /opt/foreman/volumes/puppet/code:/etc/puppetlabs/code
+      - ./volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/
+      - ./volumes/puppet/code:/etc/puppetlabs/code
     depends_on:
       - foreman
     links:
@@ -85,8 +85,8 @@ services:
     ports:
       - 5432
     volumes:
-      - /opt/foreman/volumes/postgres/data:/var/lib/postgresql/data
-      - /opt/foreman/volumes/postgres/scripts:/docker-entrypoint-initdb.d
+      - ./volumes/postgres/data:/var/lib/postgresql/data
+      - ./volumes/postgres/scripts:/docker-entrypoint-initdb.d
   r10k:
     container_name: r10k
     environment:
@@ -97,7 +97,7 @@ services:
     ports:
       - 8088:8088
     volumes:
-      - /puppet/code:/etc/puppetlabs/code
+      - ./volumes/puppet/code:/etc/puppetlabs/code
   puppetdb:
     container_name: puppetdb
     hostname: ${PUPPETDB_HOSTNAME}.${DOMAIN}
@@ -112,7 +112,7 @@ services:
       - 8080:8080
       - 8081:8081
     volumes:
-      - /opt/foreman/volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/
+      - ./volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/
   post_config:
     image: python:3
     container_name: post_config
@@ -123,5 +123,5 @@ services:
       FOREMAN_HOSTNAME: ${FOREMAN_HOSTNAME}
       DOMAIN: ${DOMAIN}
     volumes:
-      - /opt/foreman/volumes/post_scripts:/usr/local/app
-      - /opt/foreman/volumes/foreman/accounts:/tmp/accounts
+      - ./volumes/post_scripts:/usr/local/app
+      - ./volumes/foreman/accounts:/tmp/accounts
