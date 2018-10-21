@@ -15,7 +15,7 @@
     <foreman.version>6.0.1</foreman.version>
     <r10k.version>0.1.1</r10k.version>
     <puppetdb.version>5.2.4</puppetdb.version>
-    <docker.registry>dockerhub.io</docker.registry>
+    <docker.registry>docker.io</docker.registry>
     <database.username>postgres</database.username>
     <database.password>Abcd1234</database.password>
     <r10k.control.repo>https://github.com/luksi1/control-repo</r10k.control.repo>
@@ -44,11 +44,11 @@
           <registry>${docker.registry}</registry>
           <images>
             <image>
-              <name>dockerhub.io/puppet/puppetdb-postgres:latest</name>
+              <name>docker.io/puppet/puppetdb-postgres:latest</name>
               <alias>postgres</alias>
               <run>
                 <ports>
-                  <port>8081:8081</port>
+                  <port>5432:5432</port>
                 </ports>
                 <env>
                    <POSTGRES_PASSWORD>postgres</POSTGRES_PASSWORD>
@@ -56,16 +56,17 @@
                 </env>
                 <volumes>
                   <bind>
-                    <volume>./volumes/puppetdb-postgres/data:/var/lib/postgresql/data/</volume>
+                    <volume>${project.basedir}/src/main/volumes/puppetdb-postgres/data:/var/lib/postgresql/data/</volume>
                   </bind>
                 </volumes>
                 <wait>
                   <time>30000</time>
+                  <log>database system is ready to accept connections</log>
                 </wait>
               </run>
             </image>
             <image>
-              <name>dockerhub.io/puppet/puppetserver:${puppet.version}</name>
+              <name>docker.io/puppet/puppetserver:${puppet.version}</name>
               <alias>puppet</alias>
               <run>
                 <hostname>puppet</hostname>
@@ -74,24 +75,25 @@
                 </ports>
                 <volumes>
                   <bind>
-                    <volume>./volumes/code::/etc/puppetlabs/code/</volume>
-                    <volume>./volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/</volume>
-                    <volume>./volumes/puppet/serverdata:/opt/puppetlabs/server/data/puppetserver/</volume>
+                    <volume>${project.basedir}/volumes/code:/etc/puppetlabs/code/</volume>
+                    <volume>${project.basedir}/volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/</volume>
+                    <volume>${project.basedir}/volumes/puppet/serverdata:/opt/puppetlabs/server/data/puppetserver/</volume>
                   </bind>
                 </volumes>
               </run>
             </image>
             <image>
-              <name>dockerhub.io/puppet/puppetdb:${puppetdb.version}</name>
+              <name>docker.io/puppet/puppetdb:${puppetdb.version}</name>
               <alias>puppetdb</alias>
               <run>
                 <hostname>puppetdb</hostname>
                 <ports>
                   <port>8081:8081</port>
+                  <port>8080:8080</port>
                 </ports>
                 <volumes>
                   <bind>
-                    <volume>./volumes/puppetdb/ssl:/etc/puppetlabs/puppet/ssl/</volume>
+                    <volume>${project.basedir}/volumes/puppetdb/ssl:/etc/puppetlabs/puppet/ssl/</volume>
                   </bind>
                 </volumes>
               </run>
