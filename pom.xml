@@ -11,6 +11,7 @@
     <docker-maven-plugin.version>0.21.0</docker-maven-plugin.version>
     <!--Log output during creation of Docker image to standard out. -->
     <docker.verbose>true</docker.verbose>
+    <docker.autoCreateCustomNetworks>true</docker.autoCreateCustomNetworks>
     <puppet.version>5.3.5</puppet.version>
     <foreman.version>6.0.1</foreman.version>
     <r10k.version>0.1.1</r10k.version>
@@ -48,7 +49,7 @@
               <alias>postgres</alias>
               <run>
                 <ports>
-                  <port>5432:5432</port>
+                  <port>5432</port>
                 </ports>
                 <env>
                    <POSTGRES_PASSWORD>postgres</POSTGRES_PASSWORD>
@@ -59,10 +60,34 @@
                     <volume>${project.basedir}/src/main/volumes/puppetdb-postgres/data:/var/lib/postgresql/data/</volume>
                   </bind>
                 </volumes>
+                <network>
+                  <mode>custom</mode>
+                  <name>puppet-foreman-network</name>
+                </network>
                 <wait>
                   <time>30000</time>
                   <log>database system is ready to accept connections</log>
                 </wait>
+              </run>
+            </image>
+            <image>
+              <name>docker.io/puppet/puppetdb:${puppetdb.version}</name>
+              <alias>puppetdb</alias>
+              <run>
+                <hostname>puppetdb</hostname>
+                <ports>
+                  <port>8081:8081</port>
+                  <port>8080:8080</port>
+                </ports>
+                <volumes>
+                  <bind>
+                    <volume>${project.basedir}/volumes/puppetdb/ssl:/etc/puppetlabs/puppet/ssl/</volume>
+                  </bind>
+                </volumes>
+                <network>
+                  <mode>custom</mode>
+                  <name>puppet-foreman-network</name>
+                </network>
               </run>
             </image>
             <image>
@@ -80,22 +105,14 @@
                     <volume>${project.basedir}/volumes/puppet/serverdata:/opt/puppetlabs/server/data/puppetserver/</volume>
                   </bind>
                 </volumes>
-              </run>
-            </image>
-            <image>
-              <name>docker.io/puppet/puppetdb:${puppetdb.version}</name>
-              <alias>puppetdb</alias>
-              <run>
-                <hostname>puppetdb</hostname>
-                <ports>
-                  <port>8081:8081</port>
-                  <port>8080:8080</port>
-                </ports>
-                <volumes>
-                  <bind>
-                    <volume>${project.basedir}/volumes/puppetdb/ssl:/etc/puppetlabs/puppet/ssl/</volume>
-                  </bind>
-                </volumes>
+                <wait>
+                  <time>120000</time>
+                  <log>Puppet Server has successfully started and is now ready to handle requests</log>
+                </wait>
+                <network>
+                  <mode>custom</mode>
+                  <name>puppet-foreman-network</name>
+                </network>
               </run>
             </image>
           </images>
