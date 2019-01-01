@@ -42,6 +42,7 @@
         <artifactId>docker-maven-plugin</artifactId>
         <version>${docker-maven-plugin.version}</version>
         <configuration>
+          <autoCreateCustomNetworks>true</autoCreateCustomNetworks>
           <registry>${docker.registry}</registry>
           <images>
             <image>
@@ -52,8 +53,8 @@
                   <port>5432</port>
                 </ports>
                 <env>
-                   <POSTGRES_PASSWORD>postgres</POSTGRES_PASSWORD>
-                   <POSTGRES_USER>postgres</POSTGRES_USER>
+                   <POSTGRES_PASSWORD>puppetdb</POSTGRES_PASSWORD>
+                   <POSTGRES_USER>puppetdb</POSTGRES_USER>
                 </env>
                 <volumes>
                   <bind>
@@ -61,8 +62,8 @@
                   </bind>
                 </volumes>
                 <network>
-                  <mode>custom</mode>
                   <name>puppet-foreman-network</name>
+                  <alias>postgres</alias>
                 </network>
                 <wait>
                   <time>30000</time>
@@ -85,8 +86,8 @@
                   </bind>
                 </volumes>
                 <network>
-                  <mode>custom</mode>
                   <name>puppet-foreman-network</name>
+                  <alias>puppetdb</alias>
                 </network>
               </run>
             </image>
@@ -110,8 +111,28 @@
                   <log>Puppet Server has successfully started and is now ready to handle requests</log>
                 </wait>
                 <network>
-                  <mode>custom</mode>
                   <name>puppet-foreman-network</name>
+                  <alias>puppet</alias>
+                </network>
+              </run>
+            </image>
+            <image>
+              <name>docker.io/puppet/puppet-agent-ubuntu:latest</name>
+              <alias>puppet-agent</alias>
+              <run>
+                <hostname>puppet-agent</hostname>
+                <volumes>
+                  <bind>
+                    <volume>${project.basedir}/volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/</volume>
+                  </bind>
+                </volumes>
+                <wait>
+                  <time>120000</time>
+                </wait>
+                <cmd>agent -t --server=puppet --waitforcert 10</cmd>
+                <network>
+                  <name>puppet-foreman-network</name>
+                  <alias>puppet-agent</alias>
                 </network>
               </run>
             </image>
