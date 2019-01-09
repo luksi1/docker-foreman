@@ -4,6 +4,8 @@ foreman/certs/*
 # Foreman passwords
 tests/foreman/foreman_properties.py
 
+target/*
+
 .env
 
 # Postgres data files
