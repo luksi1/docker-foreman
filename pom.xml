@@ -180,7 +180,6 @@
                 <dockerFileDir>${project.basedir}/src/main/foreman</dockerFileDir>
                 <args>
                   <FOREMAN_RELEASE>1.20</FOREMAN_RELEASE>
-                  <FOREMAN_PACKAGE_VERSION>1.20.0-1</FOREMAN_PACKAGE_VERSION>
                 </args>
               </build>
               <run>
@@ -201,11 +200,16 @@
                   <alias>foreman</alias>
                 </network>
                 <env>
-                   <PGPASSWORD>foreman</PGPASSWORD>
-                   <PGUSER>foreman</PGUSER>
-                   <FOREMAN_TASK_PARAMS></FOREMAN_TASK_PARAMS>
+                   <DATABASE_TYPE>postgresql</DATABASE_TYPE>
+                   <DATABASE_HOST>foreman-postgres</DATABASE_HOST>
+                   <DATABASE_PORT>5433</DATABASE_PORT>
+                   <DATABASE_USER>foreman</DATABASE_USER>
+                   <DATABASE_PASSWORD>foreman</DATABASE_PASSWORD>
+                   <HOSTNAME>foreman</HOSTNAME>
+                   <DOMAIN>${domain}</DOMAIN>
+                   <!--<FOREMAN_TASK_PARAMS></FOREMAN_TASK_PARAMS>-->
                 </env>
-                <envPropertyFile>${project.basedir}/src/main/foreman/environment.properties</envPropertyFile>
+                <!--<envPropertyFile>${project.basedir}/src/main/foreman/environment.properties</envPropertyFile>-->
               </run>
             </image>
             <!--
