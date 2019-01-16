@@ -45,6 +45,45 @@
           <registry>${docker.registry}</registry>
           <images>
             <image>
+              <name>frapsoft/openssl:latest</name>
+              <run>
+                <cmd>req -x509 -newkey rsa:4096 -keyout /export/private.key -out /export/public.crt -days 1 -nodes -subj /C=SE/L=Gothenburg/CN=foreman.foobar.test</cmd>
+                <volumes>
+                  <bind>
+                    <volume>${project.basedir}/volumes/certificates:/export/</volume>
+                  </bind>
+                </volumes>
+                <wait>
+                  <time>10000</time>
+                </wait>
+              </run>
+            </image>
+            <image>
+              <name>busybox</name>
+              <run>
+                <cmd>cp /export/public.crt /export/ca.pem</cmd>
+                <volumes>
+                  <bind>
+                    <volume>${project.basedir}/volumes/certificates:/export/</volume>
+                  </bind>
+                </volumes>
+                <wait>
+                  <time>2000</time>
+                </wait>
+              </run>
+            </image>
+            <image>
+              <name>busybox</name>
+              <run>
+                <cmd>touch /export/crl.pem</cmd>
+                <volumes>
+                  <bind>
+                    <volume>${project.basedir}/volumes/certificates:/export/</volume>
+                  </bind>
+                </volumes>
+              </run>
+            </image>
+            <image>
               <name>puppetdb-postgres</name>
               <alias>puppetdb-postgres</alias>
               <build>
@@ -189,7 +228,9 @@
                 </ports>
                 <volumes>
                   <bind>
-                    <volume>${project.basedir}/volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/</volume>
+                    <volume>${project.basedir}/volumes/certificates/public.crt:/certs/public.crt</volume>
+                    <volume>${project.basedir}/volumes/certificates/private.key:/certs/private.key</volume>
+                    <volume>${project.basedir}/volumes/certificates/ca.pem:/certs/ca.pem</volume>
                   </bind>
                 </volumes>
                 <wait>
