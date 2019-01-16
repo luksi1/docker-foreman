@@ -11,7 +11,7 @@ RUN echo deb http://deb.theforeman.org/ xenial $FOREMAN_VERSION > /etc/apt/sourc
   && echo deb http://deb.theforeman.org/ plugins $FOREMAN_VERSION >> /etc/apt/sources.list.d/foreman.list \
   && wget -q https://deb.theforeman.org/pubkey.gpg -O- | apt-key add - \ 
   && apt-get update \
-  && apt-get install -y foreman-proxy netcat nscd
+  && apt-get install -y foreman-proxy netcat nscd iproute2
 
 # enable foreman-proxy 
 RUN sed -i '/:enabled/c\:enabled: https' /etc/foreman-proxy/settings.d/puppet.yml 
