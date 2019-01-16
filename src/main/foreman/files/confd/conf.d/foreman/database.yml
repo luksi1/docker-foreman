@@ -1,0 +1,12 @@
+### File managed with puppet ###
+## Module:           'foreman'
+
+# Database is managed by foreman::database::postgresql
+production:
+  adapter: postgresql
+  host: foreman-postgres
+  port: 5432
+  database: foreman
+  username: foreman
+  password: "foreman"
+  pool: 5

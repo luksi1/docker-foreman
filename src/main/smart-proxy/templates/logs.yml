@@ -1,0 +1,2 @@
+---
+:enabled: {{ .Env.LOGS_ENABLED }}
