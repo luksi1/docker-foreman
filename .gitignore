@@ -3,6 +3,7 @@ foreman/certs/*
 
 # Foreman passwords
 tests/foreman/foreman_properties.py
+volumes/*
 
 target/*
 
