@@ -3,8 +3,8 @@
 # Managed by Puppet
 # ************************************
 
-<VirtualHost *:80>
-  ServerName foreman.foobar.test
+<VirtualHost *:443>
+  ServerName {{getenv "HOSTNAME"}}.{{getenv "DOMAIN"}}
 
   ## Vhost docroot
   DocumentRoot "/usr/share/foreman/public"
@@ -18,15 +18,27 @@
   </Directory>
 
   ## Load additional static includes
-  IncludeOptional "/etc/httpd/conf.d/05-foreman.d/*.conf"
+  IncludeOptional "/etc/apache2/conf.d/05-foreman-ssl.d/*.conf"
 
   ## Logging
-  ErrorLog "/var/log/httpd/foreman_error.log"
+  ErrorLog "/var/log/apache2/foreman-ssl_error_ssl.log"
   ServerSignature Off
-  CustomLog "/var/log/httpd/foreman_access.log" combined 
+  CustomLog "/var/log/apache2/foreman-ssl_access_ssl.log" combined
 
   ## Server aliases
-  ServerAlias {{getenv "HOSTNAME"}}
+  ServerAlias foreman
+
+  ## SSL directives
+  SSLEngine on
+  SSLCertificateFile      "/certs/public.crt"
+  SSLCertificateKeyFile   "/certs/private.key"
+  SSLCertificateChainFile "/certs/cachain.pem"
+  SSLVerifyClient         optional
+  SSLCACertificateFile    "/certs/ca.pem"
+  SSLCARevocationFile     "/certs/crl.pem"
+  SSLVerifyDepth          3
+  SSLCARevocationCheck    "chain"
+  SSLOptions +StdEnvVars +ExportCertData
 
   ## Custom fragment
   # Static public dir serving
@@ -70,16 +82,20 @@
 
 </Directory>
 
+<Location /users/extlogin>
+  SSLUsername SSL_CLIENT_S_DN_CN
+</Location>
 
 
-  PassengerRuby /usr/bin/tfm-ruby
   PassengerAppRoot /usr/share/foreman
+  PassengerRuby /usr/bin/foreman-ruby
   PassengerMinInstances 1
-  PassengerStartTimeout 90
+  PassengerStartTimeout 600
+  PassengerPreStart https://{{ getenv "HOSTNAME" }}.{{ getenv "DOMAIN" }}:443
 
   AddDefaultCharset UTF-8
   KeepAlive on
   KeepAliveTimeout 5
   MaxKeepAliveRequests 100
 </VirtualHost>
-PassengerPreStart http://{{getenv "HOSTNAME"}}.{{getenv "DOMAIN"}}:80
+

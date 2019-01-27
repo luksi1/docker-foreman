@@ -1,3 +1,0 @@
-[template]
-src = "passenger_conf.tmpl"
-dest = "/etc/httpd/conf.d/passenger.conf"

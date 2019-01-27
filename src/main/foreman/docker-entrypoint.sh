@@ -45,15 +45,13 @@ set -e
 # conf configuration
 /usr/local/bin/confd -onetime -backend env
 
-rm /etc/httpd/conf.d/autoindex.conf
-
-chmod 777 /etc/foreman/encryption_key.rb
-foreman-rake security:generate_encryption_key
-foreman-rake db:migrate
-foreman-rake db:seed
-foreman-rake apipie:cache:index
-foreman-rake permissions:reset PASSWORD=${ADMIN_PASSWORD}
-chmod 640 /etc/foreman/encryption_key.rb
+# chmod 777 /etc/foreman/encryption_key.rb
+# foreman-rake security:generate_encryption_key
+# foreman-rake db:migrate
+# foreman-rake db:seed
+# foreman-rake apipie:cache:index
+# foreman-rake permissions:reset PASSWORD=${ADMIN_PASSWORD}
+# chmod 640 /etc/foreman/encryption_key.rb
 
 # apachectl -d /etc/httpd -f /etc/httpd/conf/httpd.conf -e debug -DFOREGROUND
 # /usr/sbin/httpd -d /etc/httpd -f /etc/httpd/conf/httpd.conf -e info -DFOREGROUND

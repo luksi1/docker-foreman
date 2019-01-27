@@ -1,3 +1,0 @@
-[template]
-src = "default_conf.tmpl"
-dest = "/etc/httpd/conf.d/15-default.conf"

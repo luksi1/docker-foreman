@@ -1,3 +1,0 @@
-[template]
-src = "ssl_conf.tmpl"
-dest = "/etc/httpd/conf.d/ssl.conf"
