@@ -1,4 +1,3 @@
-# FROM ubuntu:18.04
 FROM centos:7
 
 MAINTAINER luksi1
@@ -9,6 +8,9 @@ ARG FOREMAN_RELEASE
 #     TZ=Europe/Stockholm \
 #     # Gosu version. Gosu is used to run applications using a specific user.
 #     GOSU_VERSION=1.9
+
+# ENV HOSTNAME="dummy.hostname"
+ENV FOREMAN_OPTS="--puppet-server=false --puppet-agent=false --foreman-proxy-puppet=false --foreman-proxy-puppetca=false --foreman-proxy-tftp=false --foreman-proxy-realm=false --foreman-proxy-dns=false --foreman-proxy-dhcp=false --foreman-proxy-bmc=false --puppet-puppetmaster=puppet --foreman-db-type=postgresql --foreman-db-manage=false --foreman-db-manage-rake=false --foreman-db-username=foreman --foreman-db-password=foreman --foreman-db-host=foreman-postgres --foreman-db-database=foreman --foreman-db-port=5433 --foreman-proxy-trusted-hosts=https://puppet.foobar.test --foreman-proxy-trusted-hosts=https://puppet --foreman-admin-username=admin --foreman-admin-password=admin --no-enable-foreman-proxy --no-enable-foreman-cli"
 
 # Install gosuENV GOSU_VERSION 1.9
 # RUN set -x \
@@ -58,7 +60,8 @@ RUN yum install -y foreman-release-scl
 #     wget -q https://deb.theforeman.org/pubkey.gpg -O- | apt-key add - 
 
 # RUN yum install -y puppet-agent foreman-installer foreman-postgresql puppet-agent-oauth foreman-proxy foreman-cli apache2
-RUN yum install -y foreman foreman-selinux foreman-rake foreman-postgresql mailcap httpd puppet-agent mod_ssl mod_passenger tfm-rubygem-passenger-native
+RUN yum install -y foreman foreman-selinux foreman-rake foreman-postgresql mailcap httpd puppet-agent mod_ssl mod_passenger tfm-rubygem-passenger-native foreman-installer
+# RUN echo $(/opt/puppetlabs/bin/facter fqdn) > /etc/hostname && hostname -f && /opt/puppetlabs/bin/facter fqdn && foreman-installer $FOREMAN_OPTS || true
 
 # confd
 ADD https://github.com/kelseyhightower/confd/releases/download/v0.10.0/confd-0.10.0-linux-amd64 /usr/local/bin/confd
@@ -82,5 +85,6 @@ EXPOSE 443
 
 VOLUME /certs/public.crt
 VOLUME /certs/private.key
+VOLUME /certs/cachain.pem
 VOLUME /certs/ca.pem
 VOLUME /certs/crl.pem

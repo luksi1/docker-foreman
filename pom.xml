@@ -12,6 +12,7 @@
     <foreman.version>6.0.1</foreman.version>
     <puppetdb.version>5.2.4</puppetdb.version>
     <r10k.version>0.1.1</r10k.version>
+    <foreman.servername>foreman</foreman.servername>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Version of theFabric8 Docker Maven plugin. -->
     <docker-maven-plugin.version>0.21.0</docker-maven-plugin.version>
@@ -45,42 +46,17 @@
           <registry>${docker.registry}</registry>
           <images>
             <image>
-              <name>frapsoft/openssl:latest</name>
+              <name>luksi1/certificate-builder:latest</name>
               <run>
-                <cmd>req -x509 -newkey rsa:4096 -keyout /export/private.key -out /export/public.crt -days 1 -nodes -subj /C=SE/L=Gothenburg/CN=foreman.foobar.test</cmd>
                 <volumes>
                   <bind>
-                    <volume>${project.basedir}/volumes/certificates:/export/</volume>
+                    <volume>${project.basedir}/volumes/certificates:/export</volume>
                   </bind>
                 </volumes>
-                <wait>
-                  <time>10000</time>
-                </wait>
-              </run>
-            </image>
-            <image>
-              <name>busybox</name>
-              <run>
-                <cmd>cp /export/public.crt /export/ca.pem</cmd>
-                <volumes>
-                  <bind>
-                    <volume>${project.basedir}/volumes/certificates:/export/</volume>
-                  </bind>
-                </volumes>
-                <wait>
-                  <time>2000</time>
-                </wait>
-              </run>
-            </image>
-            <image>
-              <name>busybox</name>
-              <run>
-                <cmd>touch /export/crl.pem</cmd>
-                <volumes>
-                  <bind>
-                    <volume>${project.basedir}/volumes/certificates:/export/</volume>
-                  </bind>
-                </volumes>
+                <env>
+                  <SERVER_NAME>${foreman.servername}.${domain}</SERVER_NAME>
+                  <INTERMEDIATE_CERT_EXPIRATION_DAYS>1</INTERMEDIATE_CERT_EXPIRATION_DAYS>
+                </env>
               </run>
             </image>
             <image>
@@ -222,15 +198,17 @@
                 </args>
               </build>
               <run>
-                <hostname>foreman.${domain}</hostname>
+                <hostname>${foreman.servername}.${domain}</hostname>
                 <ports>
                   <port>443:443</port>
                 </ports>
                 <volumes>
                   <bind>
-                    <volume>${project.basedir}/volumes/certificates/public.crt:/certs/public.crt</volume>
-                    <volume>${project.basedir}/volumes/certificates/private.key:/certs/private.key</volume>
-                    <volume>${project.basedir}/volumes/certificates/ca.pem:/certs/ca.pem</volume>
+                    <volume>${project.basedir}/volumes/certificates/intermediate/certs/${foreman.servername}.${domain}.crt:/certs/public.crt</volume>
+                    <volume>${project.basedir}/volumes/certificates/intermediate/certs/ca-chain.crt:/certs/cachain.pem</volume>
+                    <volume>${project.basedir}/volumes/certificates/intermediate/private/${foreman.servername}.${domain}.key:/certs/private.key</volume>
+                    <volume>${project.basedir}/volumes/puppet/ssl/certs/ca.pem:/certs/ca.pem</volume>
+                    <volume>${project.basedir}/volumes/puppet/ssl/ca/ca_crl.pem:/certs/crl.pem</volume>
                   </bind>
                 </volumes>
                 <wait>
@@ -238,15 +216,16 @@
                 </wait>
                 <network>
                   <name>puppet-foreman-network</name>
-                  <alias>foreman</alias>
+                  <alias>${forman.servername}</alias>
                 </network>
                 <env>
+                   <ADMIN_PASSWORD>Abcd1234</ADMIN_PASSWORD>
                    <DATABASE_TYPE>postgresql</DATABASE_TYPE>
                    <DATABASE_HOST>foreman-postgres</DATABASE_HOST>
                    <DATABASE_PORT>5433</DATABASE_PORT>
                    <DATABASE_USER>foreman</DATABASE_USER>
                    <DATABASE_PASSWORD>foreman</DATABASE_PASSWORD>
-                   <HOSTNAME>foreman</HOSTNAME>
+                   <HOSTNAME>${foreman.servername}</HOSTNAME>
                    <DOMAIN>${domain}</DOMAIN>
                    <!--<FOREMAN_TASK_PARAMS></FOREMAN_TASK_PARAMS>-->
                 </env>

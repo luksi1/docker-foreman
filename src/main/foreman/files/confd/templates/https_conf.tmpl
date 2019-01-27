@@ -32,14 +32,10 @@
   SSLEngine on
   SSLCertificateFile      "/certs/public.crt"
   SSLCertificateKeyFile   "/certs/private.key"
-  # SSLCertificateChainFile "/certs/ca.pem"
+  SSLCertificateChainFile "/certs/cachain.pem"
   SSLVerifyClient         optional
   SSLCACertificateFile    "/certs/ca.pem"
-  {{ if getenv "MANAGE_CERTIFICATE_REVOCATION_LIST" }}
   SSLCARevocationFile     "/certs/crl.pem"
-  {{ else }}
-  # SSLCARevocationFile     "/certs/crl.pem"
-  {{ end }}
   SSLVerifyDepth          3
   SSLCARevocationCheck    "chain"
   SSLOptions +StdEnvVars +ExportCertData
