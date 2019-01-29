@@ -33,27 +33,12 @@ set -e
 #   echo "  - !ruby/regexp '/^(?!role|profile).*$/'" >> $IGNORED_ENVIRONMENTS_FILE
 # fi
 
-# Add our own frontend cert
-# if [[ ! -z $FOREMAN_WEB_PUBLIC_CERT ]]; then
-#   sed -i "s|.*SSLCertificateFile.*|  SSLCertificateFile      \"/etc/puppetlabs/puppet/ssl/web_certs/${FOREMAN_WEB_PUBLIC_CERT}\"|" /etc/apache2/sites-enabled/05-foreman-ssl.conf
-#   sed -i "s|.*SSLCertificateKeyFile.*|  SSLCertificateKeyFile   \"/etc/puppetlabs/puppet/ssl/web_certs/${FOREMAN_WEB_PRIVATE_CERT}\"|" /etc/apache2/sites-enabled/05-foreman-ssl.conf
-#   sed -i "s|.*SSLCertificateChainFile.*|  SSLCertificateChainFile \"/etc/puppetlabs/puppet/ssl/web_certs/${FOREMAN_WEB_CA}\"|" /etc/apache2/sites-enabled/05-foreman-ssl.conf
-# fi
-
-# /etc/init.d/foreman start 
-
 # conf configuration
 /usr/local/bin/confd -onetime -backend env
 
-# chmod 777 /etc/foreman/encryption_key.rb
-# foreman-rake security:generate_encryption_key
-# foreman-rake db:migrate
-# foreman-rake db:seed
-# foreman-rake apipie:cache:index
-# foreman-rake permissions:reset PASSWORD=${ADMIN_PASSWORD}
-# chmod 640 /etc/foreman/encryption_key.rb
+foreman-rake permissions:reset PASSWORD=${ADMIN_PASSWORD}
+foreman-rake db:migrate
+foreman-rake db:seed
+foreman-rake apipie:cache:index
 
-# apachectl -d /etc/httpd -f /etc/httpd/conf/httpd.conf -e debug -DFOREGROUND
-# /usr/sbin/httpd -d /etc/httpd -f /etc/httpd/conf/httpd.conf -e info -DFOREGROUND
-
-sleep 900
+apachectl -d /etc/apache2 -f /etc/apache2/apache2.conf -e debug -DFOREGROUND

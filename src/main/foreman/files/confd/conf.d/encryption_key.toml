@@ -1,3 +1,4 @@
 [template]
 src = "encryption_key.tmpl"
 dest = "/etc/foreman/encryption_key.rb"
+mode = "0666"

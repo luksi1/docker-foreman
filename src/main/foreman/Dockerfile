@@ -35,15 +35,44 @@ RUN echo deb http://deb.theforeman.org/ bionic $FOREMAN_RELEASE > /etc/apt/sourc
 # This will speed up the foreman-installer, removing the need to install
 # necessary packages.
 RUN apt-get update \
-  && apt-get install -y puppet-agent foreman-installer foreman-postgresql puppet-agent-oauth wget grub-common grub-efi-amd64-bin foreman-proxy tftpd-hpa syslinux-common pxelinux libapache2-mod-passenger mime-support foreman-cli cron ruby-foreman-setup apache2 netcat
+    && apt-get install -y puppet-agent foreman-installer foreman-postgresql puppet-agent-oauth wget grub-common grub-efi-amd64-bin foreman-proxy tftpd-hpa syslinux-common pxelinux libapache2-mod-passenger mime-support foreman-cli cron ruby-foreman-setup apache2 netcat
 
 # confd
 ADD https://github.com/kelseyhightower/confd/releases/download/v0.10.0/confd-0.10.0-linux-amd64 /usr/local/bin/confd
 RUN chmod +x /usr/local/bin/confd
 ADD files/confd /etc/confd
 
-# copy in httpd modules
-# COPY files/modules/* /etc/httpd/conf.modules.d/
+# copy in apache2 modules
+COPY files/modules/mods-available/* /etc/apache2/mods-available/
+RUN a2enmod access_compat \
+    && a2enmod alias \
+    && a2enmod auth_basic \
+    && a2enmod authn_core \
+    && a2enmod authn_file \
+    && a2enmod authz_core \
+    && a2enmod authz_groupfile \
+    && a2enmod authz_host \
+    && a2enmod authz_user \
+    && a2enmod autoindex \
+    && a2enmod cgid \
+    && a2enmod dav_fs \
+    && a2enmod dav \
+    && a2enmod deflate \
+    && a2enmod dir \
+    && a2enmod env \
+    && a2enmod filter \
+    && a2enmod headers \
+    && a2enmod mime \
+    && a2enmod negotiation \
+    && a2enmod passenger \
+    && a2enmod reqtimeout \
+    && a2enmod setenvif \
+    && a2enmod socache_shmcb \
+    && a2enmod ssl \
+    && a2enmod worker \
+    && a2enmod zpassenger \
+    && a2dismod mpm_event \
+    && a2dismod status
 
 COPY docker-entrypoint.sh /
 RUN chmod +x /docker-entrypoint.sh

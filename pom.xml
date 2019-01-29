@@ -204,6 +204,7 @@
                 </ports>
                 <volumes>
                   <bind>
+                    <volume>${project.basedir}/volumes/foo:/foo</volume>
                     <volume>${project.basedir}/volumes/certificates/intermediate/certs/${foreman.servername}.${domain}.crt:/certs/public.crt</volume>
                     <volume>${project.basedir}/volumes/certificates/intermediate/certs/ca-chain.crt:/certs/cachain.pem</volume>
                     <volume>${project.basedir}/volumes/certificates/intermediate/private/${foreman.servername}.${domain}.key:/certs/private.key</volume>
