@@ -1,1 +1,0 @@
-V	190130201732Z		1000	unknown	/CN=intermediate.test/ST=Vastra Gotaland/O=MyTest/C=SE/L=Gothenburg

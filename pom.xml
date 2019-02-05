@@ -6,20 +6,20 @@
   <version>0.0.1</version>
   <packaging>pom</packaging>
   <properties>
-    <domain>foobar.test</domain>
+    <domain>dummy.test</domain>
     <r10k.control.repo>https://github.com/luksi1/control-repo</r10k.control.repo>
     <puppet.version>5.3.5</puppet.version>
     <foreman.version>6.0.1</foreman.version>
     <puppetdb.version>5.2.4</puppetdb.version>
     <r10k.version>0.1.1</r10k.version>
     <foreman.servername>foreman</foreman.servername>
+    <puppetagent.servername>puppet-agent</puppetagent.servername>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Version of theFabric8 Docker Maven plugin. -->
     <docker-maven-plugin.version>0.21.0</docker-maven-plugin.version>
     <!--Log output during creation of Docker image to standard out. -->
     <docker.verbose>true</docker.verbose>
     <docker.autoCreateCustomNetworks>true</docker.autoCreateCustomNetworks>
-    <docker.registry>docker.io</docker.registry>
   </properties>
   <dependencies>
     <dependency>
@@ -34,6 +34,12 @@
       <version>1.3</version>
       <scope>test</scope>
     </dependency>
+    <dependency>
+      <groupId>org.codehaus.groovy.modules.http-builder</groupId>
+      <artifactId>http-builder</artifactId>
+      <version>0.6</version>
+      <scope>test</scope>
+    </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -43,7 +49,6 @@
         <version>${docker-maven-plugin.version}</version>
         <configuration>
           <autoCreateCustomNetworks>true</autoCreateCustomNetworks>
-          <registry>${docker.registry}</registry>
           <images>
             <image>
               <name>luksi1/certificate-builder:latest</name>
@@ -118,29 +123,6 @@
               </run>
             </image>
             <image>
-              <name>docker.io/puppet/puppetdb:${puppetdb.version}</name>
-              <alias>puppetdb</alias>
-              <run>
-                <hostname>puppetdb.${domain}</hostname>
-                <ports>
-                  <port>8081:8081</port>
-                  <port>8080:8080</port>
-                </ports>
-                <env>
-                   <PUPPETDB_DATABASE_CONNECTION>//puppetdb-postgres:5432/puppetdb</PUPPETDB_DATABASE_CONNECTION>
-                </env>
-                <volumes>
-                  <bind>
-                    <volume>${project.basedir}/volumes/puppetdb/ssl:/etc/puppetlabs/puppet/ssl/</volume>
-                  </bind>
-                </volumes>
-                <network>
-                  <name>puppet-foreman-network</name>
-                  <alias>puppetdb</alias>
-                </network>
-              </run>
-            </image>
-            <image>
               <name>puppetserver:${puppet.version}</name>
               <alias>puppet</alias>
               <build>
@@ -169,10 +151,38 @@
               </run>
             </image>
             <image>
+              <name>docker.io/puppet/puppetdb:${puppetdb.version}</name>
+              <alias>puppetdb</alias>
+              <run>
+                <hostname>puppetdb</hostname>
+                <ports>
+                  <port>8081:8081</port>
+                  <port>8080:8080</port>
+                </ports>
+                <env>
+                   <PUPPETDB_DATABASE_CONNECTION>//puppetdb-postgres:5432/puppetdb</PUPPETDB_DATABASE_CONNECTION>
+                </env>
+                <volumes>
+                  <bind>
+                    <volume>${project.basedir}/volumes/puppetdb/ssl:/etc/puppetlabs/puppet/ssl/</volume>
+                  </bind>
+                </volumes>
+                <wait>
+                  <!--<log>PuppetDB finished starting</log>-->
+                  <log>Starting database garbage collection</log>
+                  <time>150000</time>
+                </wait>
+                <network>
+                  <name>puppet-foreman-network</name>
+                  <alias>puppetdb</alias>
+                </network>
+              </run>
+            </image>
+            <image>
               <name>docker.io/puppet/puppet-agent-ubuntu:latest</name>
               <alias>puppet-agent</alias>
               <run>
-                <hostname>agent.${domain}</hostname>
+                <hostname>${puppetagent.servername}.${domain}</hostname>
                 <volumes>
                   <bind>
                     <volume>${project.basedir}/volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/</volume>
@@ -213,7 +223,8 @@
                   </bind>
                 </volumes>
                 <wait>
-                  <time>120000</time>
+                  <log>loaded module mpm_worker_module</log>
+                  <time>180000</time>
                 </wait>
                 <network>
                   <name>puppet-foreman-network</name>
@@ -228,9 +239,7 @@
                    <DATABASE_PASSWORD>foreman</DATABASE_PASSWORD>
                    <HOSTNAME>${foreman.servername}</HOSTNAME>
                    <DOMAIN>${domain}</DOMAIN>
-                   <!--<FOREMAN_TASK_PARAMS></FOREMAN_TASK_PARAMS>-->
                 </env>
-                <!--<envPropertyFile>${project.basedir}/src/main/foreman/environment.properties</envPropertyFile>-->
               </run>
             </image>
             <!--
@@ -322,6 +331,12 @@
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
         <version>2.12</version>
+        <configuration>
+          <systemPropertyVariables>
+            <puppetAgentHostname>${puppetagent.servername}.${domain}</puppetAgentHostname>
+            <volumesDir>${project.basedir}/volumes</volumesDir>
+          </systemPropertyVariables>
+        </configuration>
         <executions>
           <execution>
             <id>integration-test</id>
