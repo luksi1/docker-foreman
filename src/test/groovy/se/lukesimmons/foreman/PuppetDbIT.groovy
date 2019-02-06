@@ -30,10 +30,9 @@ class PuppetDbIT extends GroovyTestCase {
 
   void testPuppetDbCallReturnsCorrectFacterInformation() {
     def http = new HTTPBuilder(url)
-    def request = http.get(path : nodeFacts)
-    println(request)
-    // assertThat(request, containsString("certname:" + node))
-    // assertThat(request, containsString("name:osfamily"))
-    assertThat(request, containsString("value:Debian"))
+    def request = (String)http.get(path : nodeFacts)
+    assertThat(request, containsString("certname=" + node))
+    assertThat(request, containsString("name=osfamily"))
+    assertThat(request, containsString("value=Debian"))
   }
 }
