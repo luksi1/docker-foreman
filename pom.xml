@@ -20,6 +20,10 @@
     <!--Log output during creation of Docker image to standard out. -->
     <docker.verbose>true</docker.verbose>
     <docker.autoCreateCustomNetworks>true</docker.autoCreateCustomNetworks>
+    <root.subject>/C=SE/ST=Vastra Gotaland/L=Gothenburg/O=Acme/CN=root.${domain}</root.subject>
+    <intermediate.subject>/C=SE/ST=Vastra Gotaland/L=Gothenburg/O=Acme/CN=intermediate.${domain}</intermediate.subject>
+    <foreman.subject>/C=SE/ST=Vastra Gotaland/L=Gothenburg/O=Acme/CN=${foreman.servername}.${domain}</foreman.subject>
+    <crl.distribution.points>URI:http://${foreman.servername}.${domain}/crl.pem</crl.distribution.points>
   </properties>
   <dependencies>
     <dependency>
@@ -51,7 +55,7 @@
           <autoCreateCustomNetworks>true</autoCreateCustomNetworks>
           <images>
             <image>
-              <name>luksi1/certificate-builder:latest</name>
+              <name>luksi1/root-certificate-builder:latest</name>
               <run>
                 <volumes>
                   <bind>
@@ -59,9 +63,47 @@
                   </bind>
                 </volumes>
                 <env>
-                  <SERVER_NAME>${foreman.servername}.${domain}</SERVER_NAME>
-                  <INTERMEDIATE_CERT_EXPIRATION_DAYS>1</INTERMEDIATE_CERT_EXPIRATION_DAYS>
+                  <ROOT_SUBJECT>${root.subject}</ROOT_SUBJECT>
                 </env>
+                <wait>
+                  <log>certificate created</log>
+                  <time>10000</time>
+                </wait>
+              </run>
+            </image>
+            <image>
+              <name>luksi1/intermediate-certificate-builder:latest</name>
+              <run>
+                <volumes>
+                  <bind>
+                    <volume>${project.basedir}/volumes/certificates:/export</volume>
+                  </bind>
+                </volumes>
+                <env>
+                  <INTERMEDIATE_SUBJECT>${intermediate.subject}</INTERMEDIATE_SUBJECT>
+                  <CRL_DISTRIBUTION_POINTS>${crl.distribution.points}</CRL_DISTRIBUTION_POINTS>
+                </env>
+                <wait>
+                  <log>certificate created</log>
+                  <time>10000</time>
+                </wait>
+              </run>
+            </image>
+            <image>
+              <name>luksi1/server-certificate-builder:latest</name>
+              <run>
+                <volumes>
+                  <bind>
+                    <volume>${project.basedir}/volumes/certificates:/export</volume>
+                  </bind>
+                </volumes>
+                <env>
+                  <SERVER_SUBJECT>${foreman.subject}</SERVER_SUBJECT>
+                </env>
+                <wait>
+                  <log>certificate created</log>
+                  <time>10000</time>
+                </wait>
               </run>
             </image>
             <image>
@@ -215,11 +257,11 @@
                 <volumes>
                   <bind>
                     <volume>${project.basedir}/volumes/foo:/foo</volume>
-                    <volume>${project.basedir}/volumes/certificates/intermediate/certs/${foreman.servername}.${domain}.crt:/certs/public.crt</volume>
-                    <volume>${project.basedir}/volumes/certificates/intermediate/certs/ca-chain.crt:/certs/cachain.pem</volume>
-                    <volume>${project.basedir}/volumes/certificates/intermediate/private/${foreman.servername}.${domain}.key:/certs/private.key</volume>
-                    <volume>${project.basedir}/volumes/puppet/ssl/certs/ca.pem:/certs/ca.pem</volume>
-                    <volume>${project.basedir}/volumes/puppet/ssl/ca/ca_crl.pem:/certs/crl.pem</volume>
+                    <volume>${project.basedir}/volumes/certificates/certs/${foreman.servername}.${domain}.crt:/certs/public.crt</volume>
+                    <volume>${project.basedir}/volumes/certificates/certs/ca-chain.crt:/certs/cachain.pem</volume>
+                    <volume>${project.basedir}/volumes/certificates/private/${foreman.servername}.${domain}.key:/certs/private.key</volume>
+                    <volume>${project.basedir}/volumes/certificates/certs/root.crt:/certs/ca.pem</volume>
+                    <volume>${project.basedir}/volumes/certificates/crl/intermediate.crl:/certs/crl.pem</volume>
                   </bind>
                 </volumes>
                 <wait>
