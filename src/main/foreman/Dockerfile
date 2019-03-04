@@ -1,16 +1,14 @@
 FROM ubuntu:18.04
 
-MAINTAINER luksi1
-
 ARG FOREMAN_RELEASE
 
-ENV DEBIAN_FRONTEND=noninteractive \
-    GOSU_VERSION=1.9
+LABEL org.label-schema.maintainer="Luke Simmons <luksi1>" \
+      org.label-schema.name="Foreman" \
+      org.label-schema.license="Apache-2.0" \
+      org.label-schema.version=$FOREMAN_RELEASE \
+      org.label-schema.vcs-url="https://github.com/luksi1/docker-foreman" \
+      org.label-schema.dockerfile="/Dockerfile"
 
-# ENV HOSTNAME="dummy.hostname"
-ENV FOREMAN_OPTS="--puppet-server=false --puppet-agent=false --foreman-proxy-puppet=false --foreman-proxy-puppetca=false --foreman-proxy-tftp=false --foreman-proxy-realm=false --foreman-proxy-dns=false --foreman-proxy-dhcp=false --foreman-proxy-bmc=false --puppet-puppetmaster=puppet --foreman-db-type=postgresql --foreman-db-manage=false --foreman-db-manage-rake=false --foreman-db-username=foreman --foreman-db-password=foreman --foreman-db-host=foreman-postgres --foreman-db-database=foreman --foreman-db-port=5433 --foreman-proxy-trusted-hosts=https://puppet.foobar.test --foreman-proxy-trusted-hosts=https://puppet --foreman-admin-username=admin --foreman-admin-password=admin --no-enable-foreman-proxy --no-enable-foreman-cli"
-
-# Install gosuENV GOSU_VERSION 1.9
 RUN apt-get update && apt-get install -y --no-install-recommends ca-certificates wget tzdata locales nscd gnupg
 
 # Enable en_US.utf8 for Foreman
