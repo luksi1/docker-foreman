@@ -39,6 +39,6 @@ set -e
 # foreman-rake db:migrate
 # foreman-rake db:seed
 # foreman-rake apipie:cache:index
-foreman-rake permissions:reset PASSWORD=${ADMIN_PASSWORD}
+foreman-rake permission:reset PASSWORD=${ADMIN_PASSWORD}
 
 apachectl -d /etc/apache2 -f /etc/apache2/apache2.conf -e debug -DFOREGROUND
