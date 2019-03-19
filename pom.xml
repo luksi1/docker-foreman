@@ -179,7 +179,7 @@
               <run>
                 <hostname>puppet.${domain}</hostname>
                 <ports>
-                  <port>8140:8140</port>
+                  <port>puppet.port:8140</port>
                 </ports>
                 <volumes>
                   <bind>
@@ -204,8 +204,8 @@
               <run>
                 <hostname>puppetdb</hostname>
                 <ports>
-                  <port>8081:8081</port>
-                  <port>8080:8080</port>
+                  <port>puppetdb.ssl.port:8081</port>
+                  <port>puppetdb.port:8080</port>
                 </ports>
                 <env>
                    <PUPPETDB_DATABASE_CONNECTION>//puppetdb-postgres:5432/puppetdb</PUPPETDB_DATABASE_CONNECTION>
@@ -258,7 +258,7 @@
               <run>
                 <hostname>${foreman.servername}.${domain}</hostname>
                 <ports>
-                  <port>443:443</port>
+                  <port>foreman.port:443</port>
                 </ports>
                 <volumes>
                   <bind>

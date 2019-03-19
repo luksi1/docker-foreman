@@ -15,7 +15,8 @@ import static groovyx.net.http.Method.GET
 // Test that our puppet agent is sending facter information to the master
 class PuppetDbIT extends GroovyTestCase {
 
-  String url = 'http://localhost:8080'
+  String port = System.getProperty("puppetdb.port");
+  String url = 'http://localhost:' + port
   String node = System.getProperty("puppetAgentHostname")
   String allNodes = '/pdb/query/v4/nodes'
   String nodeFacts = allNodes + "/" + node + "/facts/osfamily"

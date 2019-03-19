@@ -19,7 +19,7 @@ public class Foreman {
   public String adminPassword;
     
   private Foreman(){
-    def command = '/usr/bin/docker exec -t $(/usr/bin/docker ps | /bin/grep "443->443" | /usr/bin/awk \'{print $1)\') foreman-rake permissions:reset | /usr/bin/tail -1 | /usr/bin/awk \'{print $NF}\''
+    def command = '/usr/bin/docker exec -t $(/usr/bin/docker ps | /bin/grep "->443" | /usr/bin/awk \'{print $1)\') foreman-rake permissions:reset | /usr/bin/tail -1 | /usr/bin/awk \'{print $NF}\''
     def proc = commmand.execute()
     proc.waitFor()
     adminPassword = proc.in.text
@@ -36,6 +36,8 @@ public class Foreman {
 class ForemanIT extends GroovyTestCase {
 
   void testConnectity() {
+
+    System.getProperty("foreman.port");
 
     HTTPBuilder remote = new HTTPBuilder("https://foreman.foobar.test")
     Foreman f = Foreman.getInstance()
