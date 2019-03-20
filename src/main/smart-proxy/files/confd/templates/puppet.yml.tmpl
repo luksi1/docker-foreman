@@ -1,0 +1,7 @@
+---
+{{ if .Env.HTTP_ENABLED }}
+:enabled: http
+{{ else }}
+:enabled: https
+{{ end }}
+:puppet_version: {{ .Env.PUPPET_VERSION }}

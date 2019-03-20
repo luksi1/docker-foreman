@@ -1,0 +1,4 @@
+[template]
+src = "settings.yml.tmpl"
+dest = "/etc/foreman-proxy/settings.yml"
+mode = "0666"

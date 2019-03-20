@@ -46,8 +46,13 @@
     <dependency>
       <groupId>org.codehaus.groovy.modules.http-builder</groupId>
       <artifactId>http-builder</artifactId>
-      <version>0.6</version>
+      <version>0.7.1</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>org.codehaus.groovy</groupId>
+      <artifactId>groovy-json</artifactId>
+      <version>2.5.6</version>
     </dependency>
   </dependencies>
   <build>
@@ -383,6 +388,10 @@
           <systemPropertyVariables>
             <puppetAgentHostname>${puppetagent.servername}.${domain}</puppetAgentHostname>
             <volumesDir>${project.basedir}/volumes</volumesDir>
+            <puppetdbPort>${puppetdb.port}</puppetdbPort>
+            <puppetdbSslPort>${puppetdb.ssl.port}</puppetdbSslPort>
+            <puppetPort>${puppet.port}</puppetPort>
+            <foremanPort>${foreman.port}</foremanPort>
           </systemPropertyVariables>
         </configuration>
         <executions>

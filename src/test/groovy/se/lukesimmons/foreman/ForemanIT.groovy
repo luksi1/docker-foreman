@@ -1,6 +1,5 @@
 #!/usr/bin/env groovy
 
-//@Grab(group='org.codehaus.groovy.modules.http-builder', module='http-builder', version='0.7.1')
 import groovyx.net.http.*
 import org.apache.http.auth.*
 import org.apache.http.impl.client.*
@@ -10,6 +9,7 @@ import groovy.xml.*
 import junit.framework.Test
 import junit.textui.TestRunner
 import org.apache.commons.text.StringEscapeUtils
+import groovy.json.JsonSlurper
 import static org.junit.matchers.JUnitMatchers.*
 
 public class Foreman {
@@ -19,10 +19,8 @@ public class Foreman {
   public String adminPassword;
     
   private Foreman(){
-    def command = '/usr/bin/docker exec -t $(/usr/bin/docker ps | /bin/grep "->443" | /usr/bin/awk \'{print $1)\') foreman-rake permissions:reset | /usr/bin/tail -1 | /usr/bin/awk \'{print $NF}\''
-    def proc = commmand.execute()
-    proc.waitFor()
-    adminPassword = proc.in.text
+    (["/usr/bin/docker","ps"].execute().text =~ /(\S+).*foreman:latest.*/).each { fullContainerId, containerId -> (["/usr/bin/docker","exec","-t",containerId,"foreman-rake","permissions:reset"].execute().text =~ /Reset to user: admin, password: (\S+)\s+/).each { full, match -> adminPassword = match }
+    }
   }
     
   public static Foreman getInstance(){
@@ -37,15 +35,17 @@ class ForemanIT extends GroovyTestCase {
 
   void testConnectity() {
 
-    System.getProperty("foreman.port");
+    def foremanPort = System.getProperty("foremanPort");
 
-    HTTPBuilder remote = new HTTPBuilder("https://foreman.foobar.test")
+    String url = "https://localhost:" + foremanPort
     Foreman f = Foreman.getInstance()
     String user = 'admin'
     String password = f.adminPassword
+    String base64UsernamePassword = user + ":" + password.bytes.encodeBase64().toString()
 
+    HTTPBuilder remote = new HTTPBuilder(url)
     remote.ignoreSSLIssues()
-    remote.setHeaders([Authorization: "Basic ${"${user}:${password}".bytes.encodeBase64().toString()}"])
+    remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"])
 
     remote.request(Method.GET) { req ->
       uri.path = "/api/v2/dashboard"
