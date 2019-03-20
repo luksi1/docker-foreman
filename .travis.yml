@@ -1,0 +1,44 @@
+---
+language: java
+jdk:
+- oraclejdk8
+
+sudo: required
+
+stages:
+  - syntax
+  - integration
+  - name: deploy
+    if: branch = master
+
+services:
+  - docker
+
+env:
+  global:
+    - secure: FtPJAZ2tbTHVN12/bBLCXpNxY+tDXk6Nv4Dw5UYegVIqdfBx7KAiXZLljoqKvDOPVNxlEw3o9Um9TL/sthsW1KheBI3cKN9TST/aPL2X30Aoao/k/gK5L8dgz6P0/jQNLFPQGoB3yXh6GvVJp7KLxhGmqaDmyonmmznG5x5u2C5ZTizW5ePyzqZv1+cWTXQt/sle3lbgJc43lC/tmPTh5T7Zax5P/PAhkN7190PgCY74U+odSGNBxQcyOgvBn97fU42Z7NE27fM7YtFIUqTPq120fjSuRmSQ7Xv800+7UoOuw3tcpnbE5QEkkWWiYGtc6Wst4K3gRCIrVAMeVwZbONQnbyAi2pVHr/n4TBuOKbsmaQCdqh5Gm24oo6/6pbxnu+0xMIbRQP+gSL1WzMIQYz+rwEd76Z01InjOP+A0c6ucm3WTUV+U7e0AOC8gxmJKSBjLqEXGm98WI2McP8omvtrd0jckHyc5Qlopmojw8892s4pHn7w1+RB9GHBrzKeXNnWqU3FdDRNrBiiDOc5pfmmlQHxSYhOBff1xU9fbW0S2aG1FlPkOw04hcHW7s9PVhju8gwPIsJ8RGJlonPj6BfsDGjlvk9ACwlq3CAaNPxdEyEwFoQGWuJyomKDbENnhRFTho+qo85R8JnSF1a3Rk5uBSyPd/T+oD2GKD47v8To=
+    - secure: aw8Sc2rOjTY7fRyA2F7IHV+yTTLQ97thFqcY7aMSOw5/m7D6vezvrFVYtOZlSo8ZQ/oXRziDqLMkek+eKuxbk7DbX+pse9rPVUdIazauWKEKz8mXZ+1ZXs1ft+DIfREAUT4oKP90jVdhvaSAPwmDehf5Ad7THfB+2vR2HHjU15Gvv2jl2AdnRiwezlfm8KdGlCR7CPdXA83xpESBmyQWe4X6p3FaRZ5f4+314MNMvvv2alrq0K96r8J6/7/TM6hMmW6rVU295ftgoCXcqVRB7vJXjcQ9xWaQTXbC61hVoKIbrOl5B4I+bXs+3xPBl58diMUUWqAQKAN/nOxd99G8dD8P/SUvor9ndeLL524ZyT5OzawV15upw+t02p6LZHvtzFS8ImMIzIb10Y3Ll1j2yuKqCMyOk+Xdbc0QoW7Y4xIeruf1sbFyjNXZwohMgRew3+egyV9ChyGw0CSro8RFU425cIffkpJkPAhORK3ivEK59zLbEpCWXiODxpVZ7VB3+CzMFoyBEtoIVR9Ey/lpxawDfTbuduEDUCm3Nlgk72PNiYWkZdmLZXA17xK8eqzrMvohemZ94Bikm1XMju5HXoFSc9GVMUnWZuc6t61BwG/olZ+laQ+HkgVmgyJws7SRa0n8CHvgy04U/yqU/81G1pSpspBlfj8dD6TacnERmcQ=
+
+before_install:
+  - sudo apt-get update && sudo apt-get install -y openssl
+  - docker pull lukasmartinelli/hadolint
+  - docker pull koalaman/shellcheck:stable
+
+jobs:
+  include:
+    - stage: syntax
+      name: "Dockerfile checks with Hadolint"
+      script: docker run --rm -i hadolint/hadolint < src/main/foreman/Dockerfile
+      script: docker run --rm -i hadolint/hadolint < src/main/puppet/Dockerfile
+    -
+      name: "Shell checks with shellchecker"
+      script: docker run --rm -v "$(pwd)":/mnt koalaman/shellcheck:stable src/main/foreman/*.sh
+    - stage: integration
+      name: "docker-maven-plugin integration tests"
+      script: mvn verify
+    - stage: deploy
+      name: "Deploy to DockerHub"
+      script: 
+        - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        - mvn docker:build
+        - mvn docker:push

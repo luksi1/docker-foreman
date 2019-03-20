@@ -8,15 +8,15 @@
   <properties>
     <domain>dummy.test</domain>
     <r10k.control.repo>https://github.com/luksi1/control-repo</r10k.control.repo>
-    <puppet.version>5.3.5</puppet.version>
-    <foreman.version>6.0.1</foreman.version>
+    <puppet.version>6.2.1</puppet.version>
+    <foreman.release>1.20</foreman.release>
     <puppetdb.version>5.2.4</puppetdb.version>
     <r10k.version>0.1.1</r10k.version>
     <foreman.servername>foreman</foreman.servername>
     <puppetagent.servername>puppet-agent</puppetagent.servername>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Version of theFabric8 Docker Maven plugin. -->
-    <docker-maven-plugin.version>0.21.0</docker-maven-plugin.version>
+    <docker-maven-plugin.version>0.28.0</docker-maven-plugin.version>
     <!--Log output during creation of Docker image to standard out. -->
     <docker.verbose>true</docker.verbose>
     <docker.autoCreateCustomNetworks>true</docker.autoCreateCustomNetworks>
@@ -63,7 +63,7 @@
         <version>${docker-maven-plugin.version}</version>
         <configuration>
           <autoCreateCustomNetworks>true</autoCreateCustomNetworks>
-          <autoPull>always</autoPull>
+          <!--<autoPull>always</autoPull>-->
           <images>
             <image>
               <name>luksi1/root-certificate-builder:latest</name>
@@ -118,11 +118,13 @@
               </run>
             </image>
             <image>
-              <name>puppetdb-postgres</name>
+              <name>docker.io/postgres:9.6</name>
               <alias>puppetdb-postgres</alias>
+              <!--
               <build>
                 <dockerFileDir>${project.basedir}/src/main/puppetdb-postgres</dockerFileDir>
               </build>
+              -->
               <run>
                 <ports>
                   <port>5432</port>
@@ -176,9 +178,14 @@
               </run>
             </image>
             <image>
-              <name>puppetserver:${puppet.version}</name>
+              <name>docker.io/luksi1/puppetserver:${puppet.version}-foreman</name>
               <alias>puppet</alias>
               <build>
+                <!-- This needs to be reported as a bug
+                <args>
+                  <PUPPETSERVER_VERSION>${puppet.version}</PUPPETSERVER_VERSION>
+                </args>
+                -->
                 <dockerFileDir>${project.basedir}/src/main/puppet</dockerFileDir>
               </build>
               <run>
@@ -257,7 +264,7 @@
               <build>
                 <dockerFileDir>${project.basedir}/src/main/foreman</dockerFileDir>
                 <args>
-                  <FOREMAN_RELEASE>1.20</FOREMAN_RELEASE>
+                  <FOREMAN_RELEASE>${foreman.release}</FOREMAN_RELEASE>
                 </args>
               </build>
               <run>

@@ -1,4 +1,4 @@
-FROM puppet/puppetserver:latest
+FROM puppet/puppetserver:6.2.1
 
 COPY files/* /etc/puppetlabs/puppet/
 ADD https://raw.githubusercontent.com/theforeman/puppet-foreman/master/lib/puppet/parser/functions/foreman.rb /opt/puppetlabs/puppet/lib/ruby/vendor_ruby/puppet/reports/foreman.rb
