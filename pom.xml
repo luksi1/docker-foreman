@@ -230,7 +230,7 @@
                 <wait>
                   <!--<log>PuppetDB finished starting</log>-->
                   <log>Starting database garbage collection</log>
-                  <time>300000</time>
+                  <time>600000</time>
                 </wait>
                 <network>
                   <name>puppet-foreman-network</name>
