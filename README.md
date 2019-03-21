@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/luksi1/docker-foreman.svg?branch=master)](https://travis-ci.org/luksi1/docker-foreman)
+
 # docker-foreman
 
 A docker-compose stack for Foreman and Puppet using R10K for versioning.
