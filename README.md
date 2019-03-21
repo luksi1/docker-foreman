@@ -32,7 +32,7 @@ https://puppet:puppet@puppet-test.domain.com:8088/payload
 
 Go through the following to setup your environment:
 
-1. Setup your .env file
+1. Setup your .env file 
 2. Copy in SSL certificates and import your database if you are migrating from an existing instance
 3. Run
 
