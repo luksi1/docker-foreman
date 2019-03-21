@@ -12,7 +12,6 @@ class AgentCertificatesIT extends GroovyTestCase {
   
   void testIfCertificatesAreCreated() {
     def filePath = System.getProperty("volumesDir") + "/puppet/ssl/certs/" + System.getProperty("puppetAgentHostname") + ".pem"
-    println(filePath)
     def file = new File(filePath)
     assert file.exists() : "file not found"
   }

@@ -36,9 +36,9 @@ set -e
 # conf configuration
 /usr/local/bin/confd -onetime -backend env
 
-# foreman-rake db:migrate
-# foreman-rake db:seed
-# foreman-rake apipie:cache:index
+foreman-rake db:migrate
+foreman-rake db:seed
+foreman-rake apipie:cache:index
 # foreman-rake permission:reset PASSWORD=${ADMIN_PASSWORD}
 
 apachectl -d /etc/apache2 -f /etc/apache2/apache2.conf -e debug -DFOREGROUND

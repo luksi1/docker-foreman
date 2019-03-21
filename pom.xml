@@ -136,7 +136,7 @@
                 </env>
                 <volumes>
                   <bind>
-                    <volume>${project.basedir}/src/main/volumes/puppetdb-postgres/data:/var/lib/postgresql/data/</volume>
+                    <volume>${project.basedir}/volumes/puppetdb-postgres/data:/var/lib/postgresql/data/</volume>
                   </bind>
                 </volumes>
                 <network>
@@ -164,7 +164,7 @@
                 </env>
                 <volumes>
                   <bind>
-                    <volume>${project.basedir}/src/main/volumes/foreman-postgres/data:/var/lib/postgresql/data/</volume>
+                    <volume>${project.basedir}/volumes/foreman-postgres/data:/var/lib/postgresql/data/</volume>
                   </bind>
                 </volumes>
                 <network>
@@ -302,7 +302,7 @@
                 </env>
               </run>
             </image>
-            <!--
+<!--
             <image>
               <name>docker.io/luksi1/puppet-smart-proxy:latest</name>
               <alias>puppet-smart-proxy</alias>
@@ -337,8 +337,7 @@
                   <alias>puppet-smart-proxy</alias>
                 </network>
               </run>
-            </image>
-            -->
+            </image>-->
           </images>
         </configuration>
         <executions>
