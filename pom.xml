@@ -201,7 +201,7 @@
                   </bind>
                 </volumes>
                 <wait>
-                  <time>120000</time>
+                  <time>150000</time>
                   <log>Puppet Server has successfully started and is now ready to handle requests</log>
                 </wait>
                 <network>
