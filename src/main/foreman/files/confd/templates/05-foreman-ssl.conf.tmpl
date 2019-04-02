@@ -30,12 +30,12 @@
 
   ## SSL directives
   SSLEngine on
-  SSLCertificateFile      "/certs/public.crt"
-  SSLCertificateKeyFile   "/certs/private.key"
-  SSLCertificateChainFile "/certs/cachain.pem"
+  SSLCertificateFile      "/certs/server.crt"
+  SSLCertificateKeyFile   "/certs/server.key"
+  SSLCertificateChainFile "/certs/server_cachain.pem"
   SSLVerifyClient         optional
-  SSLCACertificateFile    "/certs/ca.pem"
-  SSLCARevocationFile     "/certs/crl.pem"
+  SSLCACertificateFile    "/certs/client_ca.pem"
+  SSLCARevocationFile     "/certs/client_crl.pem"
   SSLVerifyDepth          3
   SSLCARevocationCheck    "chain"
   SSLOptions +StdEnvVars +ExportCertData

@@ -106,8 +106,19 @@ ENTRYPOINT ["/docker-entrypoint.sh"]
 
 EXPOSE 443
 
-VOLUME /certs/public.crt
-VOLUME /certs/private.key
-VOLUME /certs/cachain.pem
-VOLUME /certs/ca.pem
-VOLUME /certs/crl.pem
+# server certificates used for external access
+VOLUME /certs/server.crt
+VOLUME /certs/server.key
+# the certificate authority chain for your server certificate
+VOLUME /certs/server_cachain.pem
+# the client certificate authority. this will be used to
+# trust client certificates. When using a Puppet smart proxy
+# this will be the ca.pem of your puppet installation
+VOLUME /certs/client_ca.pem
+# the certificate revocation list for the client certificate
+# when using puppet, this will be your Puppet CRL.
+VOLUME /certs/client_crl.pem
+# the client certificates. The will be used for example to
+# perform mutual authentication with a smart proxy
+VOLUME /certs/client.crt
+VOLUME /certs/client.key

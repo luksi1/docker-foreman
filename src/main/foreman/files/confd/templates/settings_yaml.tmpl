@@ -18,13 +18,13 @@
 
 # Websockets
 :websockets_encrypt: on
-:websockets_ssl_key: /certs/private.key
-:websockets_ssl_cert: /certs/public.crt
+:websockets_ssl_key: /certs/server.key
+:websockets_ssl_cert: /certs/server.crt
 
 # SSL-settings
-:ssl_certificate: /certs/public.crt
-:ssl_ca_file: /certs/ca.pem
-:ssl_priv_key: /certs/private.key
+:ssl_certificate: /certs/client.crt
+:ssl_ca_file: /certs/client_ca.pem
+:ssl_priv_key: /certs/client.key
 
 # HSTS setting
 :hsts_enabled: true
