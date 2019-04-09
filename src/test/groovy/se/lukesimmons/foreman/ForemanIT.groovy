@@ -78,6 +78,7 @@ class ForemanIT extends GroovyTestCase {
     String user = 'admin'
     String password = f.adminPassword
     String usernamePassword = user + ":" + password
+    println usernamePassword
     String base64UsernamePassword = usernamePassword.bytes.encodeBase64().toString()
 
     HTTPBuilder remote = new HTTPBuilder(url)
