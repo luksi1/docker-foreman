@@ -6,6 +6,8 @@ tests/foreman/foreman_properties.py
 volumes/certificates/*
 volumes/puppetdb/ssl/*
 
+volumes/*
+
 target/*
 
 .env

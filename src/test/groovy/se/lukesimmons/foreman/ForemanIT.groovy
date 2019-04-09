@@ -11,6 +11,8 @@ import junit.textui.TestRunner
 import org.apache.commons.text.StringEscapeUtils
 import groovy.json.JsonSlurper
 import static org.junit.matchers.JUnitMatchers.*
+import static groovyx.net.http.ContentType.*
+import static groovyx.net.http.Method.*
 
 /**
 Run foreman-rake against the image to reset and grab Foreman's admin password.
@@ -63,6 +65,32 @@ class ForemanIT extends GroovyTestCase {
       response.success = { resp, json ->
         assertEquals((int)resp.status, 200)
         assertEquals((int)json.total_hosts, 0)
+      }
+    }
+  }
+
+  void testAddingPuppetSmartProxy() {
+
+    def foremanPort = System.getProperty("foremanPort");
+
+    String url = "https://localhost:" + foremanPort
+    Foreman f = Foreman.getInstance()
+    String user = 'admin'
+    String password = f.adminPassword
+    String usernamePassword = user + ":" + password
+    String base64UsernamePassword = usernamePassword.bytes.encodeBase64().toString()
+
+    HTTPBuilder remote = new HTTPBuilder(url)
+    remote.ignoreSSLIssues()
+    remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"])
+
+    remote.request(POST) {
+      uri.path = "/api/v2/smart_proxies"
+      headers.'Accept' = 'application/json'
+      requestContentType = ContentType.JSON
+      body = ["smart_proxy": ["name": "puppet", "url": "https://puppet-smart-proxy.dummy.test:8443"]]
+      response.success = { resp ->
+        assertEquals((int)resp.status, 201)
       }
     }
   }

@@ -67,7 +67,6 @@
         <configuration>
           <autoCreateCustomNetworks>true</autoCreateCustomNetworks>
           <images>
-<!--
             <image>
               <name>luksi1/root-certificate-builder:latest</name>
               <run>
@@ -139,7 +138,6 @@
                 </wait>
               </run>
             </image>
--->
             <image>
               <name>docker.io/postgres:9.6</name>
               <alias>puppetdb-postgres</alias>
@@ -255,9 +253,8 @@
             </image>
             <image>
               <name>docker.io/puppet/puppet-agent-ubuntu:latest</name>
-              <alias>puppet-agent</alias>
               <run>
-                <hostname>${puppetagent.servername}.${domain}</hostname>
+                <hostname>${foreman.servername}.${domain}</hostname>
                 <volumes>
                   <bind>
                     <volume>${project.basedir}/volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/</volume>
@@ -268,7 +265,23 @@
                 </wait>
                 <network>
                   <name>puppet-foreman-network</name>
-                  <alias>puppet-agent</alias>
+                </network>
+              </run>
+            </image>
+            <image>
+              <name>docker.io/puppet/puppet-agent-ubuntu:latest</name>
+              <run>
+                <hostname>${puppet.smartproxy.servername}.${domain}</hostname>
+                <volumes>
+                  <bind>
+                    <volume>${project.basedir}/volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/</volume>
+                  </bind>
+                </volumes>
+                <wait>
+                  <time>10000</time>
+                </wait>
+                <network>
+                  <name>puppet-foreman-network</name>
                 </network>
               </run>
             </image>
@@ -299,7 +312,7 @@
                 </volumes>
                 <wait>
                   <log>loaded module mpm_worker_module</log>
-                  <time>180000</time>
+                  <time>250000</time>
                 </wait>
                 <network>
                   <name>puppet-foreman-network</name>
@@ -340,6 +353,7 @@
                   </bind>
                 </volumes>
                 <wait>
+                  <log>Smart proxy has launched</log>
                   <time>120000</time>
                 </wait>
                 <env>
@@ -410,7 +424,7 @@
         <version>2.12</version>
         <configuration>
           <systemPropertyVariables>
-            <puppetAgentHostname>${puppetagent.servername}.${domain}</puppetAgentHostname>
+            <puppetAgentHostname>${puppet.smartproxy.servername}.${domain}</puppetAgentHostname>
             <volumesDir>${project.basedir}/volumes</volumesDir>
             <puppetdbPort>${puppetdb.port}</puppetdbPort>
             <puppetdbSslPort>${puppetdb.ssl.port}</puppetdbSslPort>
