@@ -26,9 +26,9 @@ public class Foreman {
   public String adminPassword;
 
   private Foreman(){
-    (["/usr/bin/docker","ps"].execute().text =~ /(\S+).*foreman:latest.*/).each { 
+    (["/usr/bin/sudo","/usr/bin/docker","ps"].execute().text =~ /(\S+).*foreman:latest.*/).each { 
       fullContainerId, containerId -> 
-        (["/usr/bin/docker","exec","-t",containerId,"foreman-rake","permissions:reset"].execute().text =~ /Reset to user: admin, password: (\S+)\s+/).each { 
+        (["/usr/bin/sudo","/usr/bin/docker","exec","-t",containerId,"foreman-rake","permissions:reset"].execute().text =~ /Reset to user: admin, password: (\S+)\s+/).each { 
           full, match -> 
             adminPassword = match
         }
@@ -74,6 +74,7 @@ class ForemanIT extends GroovyTestCase {
     def foremanPort = System.getProperty("foremanPort");
 
     String url = "https://localhost:" + foremanPort
+    println(url)
     Foreman f = Foreman.getInstance()
     String user = 'admin'
     String password = f.adminPassword
@@ -93,6 +94,44 @@ class ForemanIT extends GroovyTestCase {
       response.success = { resp ->
         assertEquals((int)resp.status, 201)
       }
+      response.failure = { resp, json ->
+        throw new Exception("Stopping at item POST: uri: " + uri + "\n" +
+            "   Unknown error trying to create item: ${resp.status}, not creating Item.")
+      }
+
+    }
+  }
+
+  void testDeletePuppetSmartProxy() {
+
+    def foremanPort = System.getProperty("foremanPort");
+
+    String url = "https://localhost:" + foremanPort
+    println(url)
+    Foreman f = Foreman.getInstance()
+    String user = 'admin'
+    String password = f.adminPassword
+    String usernamePassword = user + ":" + password
+    String base64UsernamePassword = usernamePassword.bytes.encodeBase64().toString()
+
+    HTTPBuilder remote = new HTTPBuilder(url)
+    remote.ignoreSSLIssues()
+    remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"])
+
+    remote.request(POST) {
+      uri.path = "/api/v2/smart_proxies"
+      headers.'Accept' = 'application/json'
+      requestContentType = ContentType.JSON
+      body = ["smart_proxy": ["name": "puppet", "url": "https://puppet-smart-proxy.dummy.test:8443"]]
+      response.success = { resp ->
+        println "POST response status: ${resp.statusLine}"
+        assertEquals((int)resp.status, 201)
+      }
+      response.failure = { resp, json ->
+        throw new Exception("Stopping at item POST: uri: " + uri + "\n" +
+            "   Unknown error trying to create item: ${resp.status}, not creating Item.")
+      }
+
     }
   }
 }

@@ -17,7 +17,7 @@
     <puppetagent.servername>puppet-agent</puppetagent.servername>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Version of theFabric8 Docker Maven plugin. -->
-    <docker-maven-plugin.version>0.28.0</docker-maven-plugin.version>
+    <docker-maven-plugin.version>0.29.0</docker-maven-plugin.version>
     <!--Log output during creation of Docker image to standard out. -->
     <docker.verbose>true</docker.verbose>
     <docker.autoCreateCustomNetworks>true</docker.autoCreateCustomNetworks>
@@ -242,7 +242,12 @@
                   </bind>
                 </volumes>
                 <wait>
-                  <log>Starting database garbage collection</log>
+                  <http>
+                    <url>http://localhost:${puppetdb.port}/pdb/query/v4/nodes</url>
+                    <method>GET</method>
+                    <status>200</status>
+                  </http>
+                  <!--<log>Starting database garbage collection</log>-->
                   <time>600000</time>
                 </wait>
                 <network>
