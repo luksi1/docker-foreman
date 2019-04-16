@@ -102,6 +102,7 @@ class ForemanIT extends GroovyTestCase {
     }
   }
 
+  /**
   void testDeletePuppetSmartProxy() {
 
     def foremanPort = System.getProperty("foremanPort");
@@ -133,5 +134,5 @@ class ForemanIT extends GroovyTestCase {
       }
 
     }
-  }
+  }*/
 }
