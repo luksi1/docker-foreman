@@ -91,7 +91,9 @@ class ForemanIT extends GroovyTestCase {
       headers.'Accept' = 'application/json'
       requestContentType = ContentType.JSON
       body = ["smart_proxy": ["name": "puppet", "url": "https://puppet-smart-proxy.dummy.test:8443"]]
-      response.success = { resp ->
+      response.success = { resp, json ->
+        def puppetSmartProxyId  = json.id
+        println "id: ${puppetSmartProxyId}"
         assertEquals((int)resp.status, 201)
       }
       response.failure = { resp, json ->

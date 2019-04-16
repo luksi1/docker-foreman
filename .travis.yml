@@ -31,7 +31,7 @@ jobs:
       script: docker run --rm -i hadolint/hadolint < src/main/foreman/Dockerfile
       script: docker run --rm -i hadolint/hadolint < src/main/puppet/Dockerfile
     -
-      name: "Shell checks with shellchecker"
+      name: "Shellscript checks with shellchecker"
       script: docker run --rm -v "$(pwd)":/mnt koalaman/shellcheck:stable src/main/foreman/*.sh
     - stage: integration
       name: "docker-maven-plugin integration tests"
