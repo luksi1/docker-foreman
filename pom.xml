@@ -7,7 +7,7 @@
   <packaging>pom</packaging>
   <properties>
     <domain>dummy.test</domain>
-    <r10k.control.repo>https://github.com/luksi1/control-repo</r10k.control.repo>
+    <control.repo>https://github.com/luksi1/control-repo</control.repo>
     <puppet.version>6.2.1</puppet.version>
     <foreman.release>1.20</foreman.release>
     <puppetdb.version>5.2.4</puppetdb.version>
@@ -15,6 +15,7 @@
     <foreman.servername>foreman</foreman.servername>
     <puppet.smartproxy.servername>puppet-smart-proxy</puppet.smartproxy.servername>
     <puppetagent.servername>puppet-agent</puppetagent.servername>
+    <r10k.servername>r10k</r10k.servername>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Version of theFabric8 Docker Maven plugin. -->
     <docker-maven-plugin.version>0.29.0</docker-maven-plugin.version>
@@ -375,6 +376,35 @@
                 </network>
               </run>
             </image>
+            <image>
+              <name>docker.io/luksi1/r1Ok:latest</name>
+              <alias>${r10k.servername}</alias>
+              <build>
+                <dockerFileDir>${project.basedir}/src/main/r10k</dockerFileDir>
+              </build>
+              <run>
+                <hostname>${r10k.servername}.${domain}</hostname>
+                <ports>
+                  <port>r10k.port:8088</port>
+                </ports>
+                <volumes>
+                  <bind>
+                    <volume>${project.basedir}/volumes/code:/etc/puppetlabs/code/</volume>
+                  </bind>
+                </volumes>
+                <wait>
+                  <time>120000</time>
+                </wait>
+                <env>
+                  <CONTROL_REPO>${control.repo}</CONTROL_REPO>
+                </env>
+                <network>
+                  <name>puppet-foreman-network</name>
+                  <alias>${r10k.servername}</alias>
+                  <alias>${r10k.servername}.${domain}</alias>
+                </network>
+              </run>
+            </image>
           </images>
         </configuration>
         <executions>
@@ -435,6 +465,7 @@
             <puppetdbSslPort>${puppetdb.ssl.port}</puppetdbSslPort>
             <puppetPort>${puppet.port}</puppetPort>
             <foremanPort>${foreman.port}</foremanPort>
+            <r10kPort>${r10k.port}</r10kPort>
             <puppetSmartproxyPort>${puppet.smartproxy.port}</puppetSmartproxyPort>
           </systemPropertyVariables>
         </configuration>
