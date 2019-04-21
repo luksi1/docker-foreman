@@ -1,11 +1,17 @@
-FROM ruby:2.3.0
+FROM ruby:2.3-jessie
 
-MAINTAINER Gareth Rushgrove "gareth@puppet.com"
+ENV PUPPET_AGENT_VERSION="1.8.3" UBUNTU_CODENAME="xenial" PREFIX="false" CACHEDIR="/var/cache/r10k" BASEDIR="/etc/puppetlabs/code/environments"
 
-ENV PUPPET_AGENT_VERSION="1.8.3" UBUNTU_CODENAME="xenial"
+# install confd
+ADD https://github.com/kelseyhightower/confd/releases/download/v0.10.0/confd-0.10.0-linux-amd64 /usr/local/bin/confd
+RUN chmod +x /usr/local/bin/confd
+
+# copy in docker-entrypoint.sh
+COPY docker-entrypoint.sh /
 
 RUN apt-get update && \
     apt-get install --no-install-recommends -y wget ca-certificates lsb-release && \
+    # install puppet agent from the puppetlabs repository
     wget https://apt.puppetlabs.com/puppetlabs-release-pc1-"$UBUNTU_CODENAME".deb && \
     dpkg -i puppetlabs-release-pc1-"$UBUNTU_CODENAME".deb && \
     rm puppetlabs-release-pc1-"$UBUNTU_CODENAME".deb && \
@@ -14,30 +20,23 @@ RUN apt-get update && \
     apt-get remove --purge -y wget && \
     apt-get autoremove -y && \
     apt-get clean && \
-    rm -rf /var/lib/apt/lists/*
+    rm -rf /var/lib/apt/lists/* && \
+    # install r10k and the puppet webhook
+    gem install r10k puppet_webhook json && \
+    # docker-entrypoint.sh needs to be executable
+    chmod +x /docker-entrypoint.sh && \
+    # create r10k directory
+    # the default directory for r10k configuration files is
+    # under /etc/puppetlabs/r10k
+    mkdir -p /etc/puppetlabs/r10k
 
-ENV PATH=/opt/puppetlabs/server/bin:/opt/puppetlabs/puppet/bin:/opt/puppetlabs/bin:$PATH
-# Install r10k web hook
-RUN mkdir /modules
-RUN git clone https://github.com/puppetlabs/puppetlabs-stdlib.git /modules/stdlib
-RUN git clone https://github.com/puppetlabs/puppetlabs-ruby.git /modules/ruby
-RUN git clone https://github.com/puppetlabs/puppetlabs-gcc.git /modules/gcc
-RUN git clone https://github.com/puppetlabs/puppetlabs-inifile.git /modules/inifile
-RUN git clone https://github.com/puppetlabs/puppetlabs-vcsrepo.git /modules/vscrepo
-RUN git clone https://github.com/puppetlabs/puppetlabs-git.git /modules/git
-RUN git clone https://github.com/voxpupuli/puppet-r10k.git /modules/r10k
-COPY webhook.pp /
-RUN mkdir /etc/mcollective
-COPY server_private.pem /etc/mcollective/server_private.pem
-COPY server_public.pem  /etc/mcollective/server_public.pem
-COPY docker-entrypoint.sh /
-RUN chmod +x /docker-entrypoint.sh
-RUN ln -s /usr/local/bundle/bin/r10k /usr/local/bin/r10k
-
-VOLUME /etc/puppetlabs/code/
-
+# copy in template files for confd
+COPY files/confd /etc/confd
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
+# This gives us access to the Puppet code directory. This will need
+# to be read-write on the r10k side, while read-only on the Puppet server.
+VOLUME /etc/puppetlabs/code/
 
-# r10k web hook
+# r10k web hook port
 EXPOSE 8088

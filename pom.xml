@@ -7,7 +7,7 @@
   <packaging>pom</packaging>
   <properties>
     <domain>dummy.test</domain>
-    <control.repo>https://github.com/luksi1/control-repo</control.repo>
+    <control.repo>https://github.com/luksi1/puppet-control-repo-example</control.repo>
     <puppet.version>6.2.1</puppet.version>
     <foreman.release>1.20</foreman.release>
     <puppetdb.version>5.2.4</puppetdb.version>
@@ -377,7 +377,7 @@
               </run>
             </image>
             <image>
-              <name>docker.io/luksi1/r1Ok:latest</name>
+              <name>docker.io/luksi1/r10k:latest</name>
               <alias>${r10k.servername}</alias>
               <build>
                 <dockerFileDir>${project.basedir}/src/main/r10k</dockerFileDir>
@@ -393,6 +393,7 @@
                   </bind>
                 </volumes>
                 <wait>
+                  <log>WEBrick::HTTPServer#start:</log>
                   <time>120000</time>
                 </wait>
                 <env>

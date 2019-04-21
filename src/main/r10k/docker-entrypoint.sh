@@ -1,5 +1,10 @@
 #!/bin/bash
 
-sed -i "s|.*remote.*|      'remote'  => '$R10K_REPO',|" /webhook.pp
-puppet apply /webhook.pp --modulepath=/modules
-tail -f /var/log/webhook/access.log
+# confd configuration
+/usr/local/bin/confd -onetime -backend env
+
+# pull all of our images
+r10k deploy environment -pv 
+
+# start webhook
+puppet_webhook
