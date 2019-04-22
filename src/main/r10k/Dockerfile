@@ -1,5 +1,7 @@
 FROM ruby:2.3-jessie
 
+ARG R10K_VERSION
+
 ENV PUPPET_AGENT_VERSION="1.8.3" UBUNTU_CODENAME="xenial" PREFIX="false" CACHEDIR="/var/cache/r10k" BASEDIR="/etc/puppetlabs/code/environments"
 
 # install confd
@@ -22,7 +24,7 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     # install r10k and the puppet webhook
-    gem install r10k puppet_webhook json && \
+    gem install r10k:${R10K_VERSION} puppet_webhook json && \
     # docker-entrypoint.sh needs to be executable
     chmod +x /docker-entrypoint.sh && \
     # create r10k directory

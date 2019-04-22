@@ -3,15 +3,15 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>luksi1</groupId>
   <artifactId>puppet-foreman-stack</artifactId>
-  <version>0.0.1</version>
+  <version>0.1.0</version>
   <packaging>pom</packaging>
   <properties>
     <domain>dummy.test</domain>
     <control.repo>https://github.com/luksi1/puppet-control-repo-example</control.repo>
     <puppet.version>6.2.1</puppet.version>
     <foreman.release>1.20</foreman.release>
-    <puppetdb.version>5.2.4</puppetdb.version>
-    <r10k.version>0.1.1</r10k.version>
+    <r10k.version>3.2.0</r10k.version>
+    <puppetdb.version>6.2.0</puppetdb.version>
     <foreman.servername>foreman</foreman.servername>
     <puppet.smartproxy.servername>puppet-smart-proxy</puppet.smartproxy.servername>
     <puppetagent.servername>puppet-agent</puppetagent.servername>
@@ -195,12 +195,12 @@
               </run>
             </image>
             <image>
-              <name>docker.io/luksi1/puppetserver:${puppet.version}-foreman</name>
+              <name>luksi1/puppetserver-foreman:%v</name>
               <alias>puppet</alias>
               <build>
-                <args>
-                  <PUPPETSERVER_VERSION>${puppet.version}</PUPPETSERVER_VERSION>
-                </args>
+                <tags>
+                  <tag>latest</tag>
+                </tags>
                 <dockerFileDir>${project.basedir}/src/main/puppet</dockerFileDir>
               </build>
               <run>
@@ -292,10 +292,13 @@
               </run>
             </image>
             <image>
-              <name>docker.io/luksi1/foreman:latest</name>
+              <name>luksi1/foreman:%v</name>
               <alias>foreman</alias>
               <build>
                 <dockerFileDir>${project.basedir}/src/main/foreman</dockerFileDir>
+                <tags>
+                  <tag>latest</tag>
+                </tags>
                 <args>
                   <FOREMAN_RELEASE>${foreman.release}</FOREMAN_RELEASE>
                 </args>
@@ -307,8 +310,6 @@
                 </ports>
                 <volumes>
                   <bind>
-                    <volume>${project.basedir}/volumes/certificates/certs/${foreman.servername}.${domain}.crt:/certs/server.crt</volume>
-                    <volume>${project.basedir}/volumes/certificates/private/${foreman.servername}.${domain}.key:/certs/server.key</volume>
                     <volume>${project.basedir}/volumes/certificates/certs/ca-chain.crt:/certs/server_cachain.pem</volume>
                     <volume>${project.basedir}/volumes/puppet/ssl/certs/ca.pem:/certs/client_ca.pem</volume>
                     <volume>${project.basedir}/volumes/puppet/ssl/ca/ca_crl.pem:/certs/client_crl.pem</volume>
@@ -337,10 +338,13 @@
               </run>
             </image>
             <image>
-              <name>docker.io/luksi1/puppet-smart-proxy:latest</name>
+              <name>luksi1/puppet-smart-proxy:%v</name>
               <alias>puppet-smart-proxy</alias>
               <build>
                 <dockerFileDir>${project.basedir}/src/main/puppet-smart-proxy</dockerFileDir>
+                <tags>
+                  <tag>latest</tag>
+                </tags>
                 <args>
                   <FOREMAN_RELEASE>${foreman.release}</FOREMAN_RELEASE>
                 </args>
@@ -377,10 +381,16 @@
               </run>
             </image>
             <image>
-              <name>docker.io/luksi1/r10k:latest</name>
+              <name>luksi1/r10k:%v</name>
               <alias>${r10k.servername}</alias>
               <build>
                 <dockerFileDir>${project.basedir}/src/main/r10k</dockerFileDir>
+                <tags>
+                  <tag>latest</tag>
+                </tags>
+                <args>
+                  <R10K_VERSION>${r10k.version}</R10K_VERSION>
+                </args>
               </build>
               <run>
                 <hostname>${r10k.servername}.${domain}</hostname>
