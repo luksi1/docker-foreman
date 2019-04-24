@@ -7,5 +7,9 @@ if [ -d /certs/trusts ]; then
 fi
 update-ca-certificates
 /usr/local/bin/confd -onetime -backend env
-cat /etc/foreman-proxy/settings.yml
+
+while ! wget -q --spider -T 1 ${FOREMAN_URL}; do
+  sleep 1
+done
+
 ruby /usr/share/foreman-proxy/bin/smart-proxy

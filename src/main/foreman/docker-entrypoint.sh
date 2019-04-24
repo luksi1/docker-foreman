@@ -26,6 +26,10 @@ update-ca-certificates
 # confd configuration
 /usr/local/bin/confd -onetime -backend env
 
+while ! nc -z ${DATABASE_HOST} ${DATABASE_PORT}; do
+  sleep 1
+done
+
 foreman-rake db:migrate
 foreman-rake db:seed
 foreman-rake apipie:cache:index

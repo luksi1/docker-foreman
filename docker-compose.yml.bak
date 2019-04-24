@@ -1,7 +1,8 @@
-version: "3.3"
+version: "3.7"
 services:
   puppetdb-postgres:
     image: docker.io/postgres:9.6
+    hostname:
     ports:
       - "5432"
     environment:
@@ -9,13 +10,14 @@ services:
       - POSTGRES_USER=puppetdb
       - POSTGRES_DB=puppetdb
     volumes:
-      - ./volumes/puppetdb-postgres/data:/var/lib/postgresql/data/
+      - volumes/puppetdb-postgres/data:/var/lib/postgresql/data/
     networks:
       puppet-foreman-network:
         aliases:
           - puppetdb-postgres
   foreman-postgres:
     image: docker.io/postgres:9.6
+    hostname:
     ports:
       - "5433"
     environment:
@@ -23,19 +25,19 @@ services:
       - POSTGRES_USER=foreman
       - POSTGRES_DB=foreman
     volumes:
-      - ./volumes/foreman-postgres/data:/var/lib/postgresql/data/
+      - volumes/foreman-postgres/data:/var/lib/postgresql/data/
     networks:
       puppet-foreman-network:
         aliases:
           - foreman-postgres
   pupppetserver:
-    image: docker.io/luksi1/puppetserver-foreman:latest
+    image: docker.io/luksi1/puppetserver:${puppetserver_version:?err}-foreman
     ports:
       - "8140"
     volumes:
-      - ./volumes/code:/etc/puppetlabs/code/
-      - ./volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/
-      - ./volumes/puppet/serverdata:/opt/puppetlabs/server/data/puppetserver/
+      - volumes/code:/etc/puppetlabs/code/
+      - volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/
+      - volumes/puppet/serverdata:/opt/puppetlabs/server/data/puppetserver/
     networks:
       puppet-foreman-network:
         aliases:
@@ -45,10 +47,10 @@ services:
     ports:
       - "8080:8080"
       - "8081:8081"
-    environment:
+   environment:
      - PUPPETDB_DATABASE_CONNECTION=//puppetdb-postgres:5432/puppetdb
     volumes:
-      - ./volumes/puppetdb/ssl:/etc/puppetlabs/puppet/ssl/
+      - volumes/puppetdb/ssl:/etc/puppetlabs/puppet/ssl/
     networks:
       puppet-foreman-network:
         aliases:
@@ -66,13 +68,13 @@ services:
       - HOSTNAME=${foreman_servername:?err}
       - DOMAIN=${domain:?err}
     volumes:
-      - ${foreman_server_cert_file:?err}:/certs/server.crt
-      - ${foreman_server_cert_key_file:?err}:/certs/server.key
-      - ${foreman_server_cert_chain_file:?err}:/certs/server_cachain.pem
-      - ./volumes/puppet/ssl/certs/ca.pem:/certs/client_ca.pem
-      - ./volumes/puppet/ssl/ca/ca_crl.pem:/certs/client_crl.pem
-      - ./volumes/puppet/ssl/certs/${foreman_servername:?err}.${domain:?err}.pem:/certs/client.crt
-      - ./volumes/puppet/ssl/private_keys/${foreman_servername:?err}.${domain:?err}.pem:/certs/client.key
+      - ${foreman_server_cert:?err}:/certs/server.crt
+      - ${foreman_server_cert_key:?err}:/certs/server.key
+      - ${foreman_server_cert_chain:?err}:/certs/server_cachain.pem
+      - volumes/puppet/ssl/certs/ca.pem:/certs/client_ca.pem
+      - volumes/puppet/ssl/ca/ca_crl.pem:/certs/client_crl.pem
+      - volumes/puppet/ssl/certs/${foreman_servername:?err}.${domain:?err}.pem:/certs/client.crt
+      - volumes/puppet/ssl/private_keys/${foreman_servername:?err}.${domain:?err}.pem:/certs/client.key
     networks:
       puppet-foreman-network:
         aliases:
@@ -86,9 +88,9 @@ services:
       - PUPPET_VERSION=6.2.1
       - PUPPET_URL=https://puppet.${domain:?err}
     volumes:
-      - ./volumes/puppet/ssl/certs/${puppet_smartproxy_servername:?err}.${domain:?err}.pem:/certs/public.crt
-      - ./volumes/puppet/ssl/private_keys/${puppet_smartproxy_servername:?err}.${domain:?err}.pem:/certs/private.key
-      - ./volumes/puppet/ssl/certs/ca.pem:/certs/ca.pem
+      - volumes/puppet/ssl/certs/${puppet_smartproxy_servername:?err}.${domain:?err}.pem:/certs/public.crt
+      - volumes/puppet/ssl/private_keys/${puppet_smartproxy_servername:?err}.${domain:?err}.pem:/certs/private.key
+      - volumes/puppet/ssl/certs/ca.pem:/certs/ca.pem
     networks:
       puppet-foreman-network:
         aliases:
@@ -100,12 +102,8 @@ services:
     environment:
       - CONTROL_REPO=${control_repo:?err}
     volumes:
-      - ./volumes/code:/etc/puppetlabs/code/
+      - volumes/code:/etc/puppetlabs/code/
     networks:
       puppet-foreman-network:
         aliases:
           - ${r10k_servername}
-
-networks:
-  puppet-foreman-network:
-    driver: bridge

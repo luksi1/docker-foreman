@@ -3,9 +3,11 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>luksi1</groupId>
   <artifactId>puppet-foreman-stack</artifactId>
-  <version>0.1.0</version>
+  <version>1</version>
   <packaging>pom</packaging>
   <properties>
+   <timestamp>${maven.build.timestamp}</timestamp>
+   <maven.build.timestamp.format>yyyyMMdd-HHmmss</maven.build.timestamp.format>
     <domain>dummy.test</domain>
     <control.repo>https://github.com/luksi1/puppet-control-repo-example</control.repo>
     <puppet.version>6.2.1</puppet.version>
@@ -13,6 +15,7 @@
     <r10k.version>3.2.0</r10k.version>
     <puppetdb.version>6.2.0</puppetdb.version>
     <foreman.servername>foreman</foreman.servername>
+    <foreman.port>443</foreman.port>
     <puppet.smartproxy.servername>puppet-smart-proxy</puppet.smartproxy.servername>
     <puppetagent.servername>puppet-agent</puppetagent.servername>
     <r10k.servername>r10k</r10k.servername>
@@ -195,10 +198,11 @@
               </run>
             </image>
             <image>
-              <name>luksi1/puppetserver-foreman:%v</name>
+              <name>luksi1/puppetserver-foreman:${puppet.version}-%v</name>
               <alias>puppet</alias>
               <build>
                 <tags>
+                  <tag>${timestamp}</tag>
                   <tag>latest</tag>
                 </tags>
                 <dockerFileDir>${project.basedir}/src/main/puppet</dockerFileDir>
@@ -292,11 +296,12 @@
               </run>
             </image>
             <image>
-              <name>luksi1/foreman:%v</name>
+              <name>luksi1/foreman:${foreman.release}-%v</name>
               <alias>foreman</alias>
               <build>
                 <dockerFileDir>${project.basedir}/src/main/foreman</dockerFileDir>
                 <tags>
+                  <tag>${timestamp}</tag>
                   <tag>latest</tag>
                 </tags>
                 <args>
@@ -310,6 +315,8 @@
                 </ports>
                 <volumes>
                   <bind>
+                    <volume>${project.basedir}/volumes/certificates/certs/${foreman.servername}.${domain}.crt:/certs/server.crt</volume>
+                    <volume>${project.basedir}/volumes/certificates/private/${foreman.servername}.${domain}.key:/certs/server.key</volume>
                     <volume>${project.basedir}/volumes/certificates/certs/ca-chain.crt:/certs/server_cachain.pem</volume>
                     <volume>${project.basedir}/volumes/puppet/ssl/certs/ca.pem:/certs/client_ca.pem</volume>
                     <volume>${project.basedir}/volumes/puppet/ssl/ca/ca_crl.pem:/certs/client_crl.pem</volume>
@@ -326,7 +333,6 @@
                   <alias>${forman.servername}</alias>
                 </network>
                 <env>
-                   <ADMIN_PASSWORD>Abcd1234</ADMIN_PASSWORD>
                    <DATABASE_TYPE>postgresql</DATABASE_TYPE>
                    <DATABASE_HOST>foreman-postgres</DATABASE_HOST>
                    <DATABASE_PORT>5433</DATABASE_PORT>
@@ -338,11 +344,12 @@
               </run>
             </image>
             <image>
-              <name>luksi1/puppet-smart-proxy:%v</name>
+              <name>luksi1/puppet-smart-proxy:${foreman.release}-%v</name>
               <alias>puppet-smart-proxy</alias>
               <build>
                 <dockerFileDir>${project.basedir}/src/main/puppet-smart-proxy</dockerFileDir>
                 <tags>
+                  <tag>${timestamp}</tag>
                   <tag>latest</tag>
                 </tags>
                 <args>
@@ -381,11 +388,12 @@
               </run>
             </image>
             <image>
-              <name>luksi1/r10k:%v</name>
+              <name>luksi1/r10k:${r10k.version}-%v</name>
               <alias>${r10k.servername}</alias>
               <build>
                 <dockerFileDir>${project.basedir}/src/main/r10k</dockerFileDir>
                 <tags>
+                  <tag>${timestamp}</tag>
                   <tag>latest</tag>
                 </tags>
                 <args>
@@ -463,6 +471,22 @@
         <configuration>
           <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
+      </plugin>
+ <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>buildnumber-maven-plugin</artifactId>
+        <version>1.4</version>
+    <configuration>
+       <shortRevisionLength>5</shortRevisionLength>
+    </configuration>
+        <executions>
+          <execution>
+            <phase>validate</phase>
+            <goals>
+              <goal>create</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
