@@ -31,6 +31,21 @@
     <puppet.smartproxy.subject>/C=SE/ST=Vastra Gotaland/L=Gothenburg/O=Acme/CN=${puppet.smartproxy.servername}.${domain}</puppet.smartproxy.subject>
     <crl.distribution.points>URI:http://${foreman.servername}.${domain}/crl.pem</crl.distribution.points>
     <puppet.network>puppet-foreman-network</puppet.network>
+    <docker.envPropertyFile>src/main/compose/.env</docker.envPropertyFile>
+<!--
+    <env>
+                  <domain>dummy.test</domain>
+                  <foreman_servername>foreman</foreman_servername>
+                  <puppet_servername>puppet</puppet_servername>
+                  <puppet_smartproxy_servername>puppet-smart-proxy</puppet_smartproxy_servername>
+                  <r10k_servername>r10k</r10k_servername>
+                  <control_repo>https://github.com/luksi1/puppet-control-repo-example</control_repo>
+                  <foreman_server_cert_file>../../../volumes/certificates/certs/foreman.dummy.test.crt</foreman_server_cert_file>
+                  <foreman_server_cert_key_file>../../../volumes/certificates/private/foreman.dummy.test.key</foreman_server_cert_key_file>
+                  <foreman_server_cert_chain_file>../../../volumes/certificates/certs/ca-chain.crt</foreman_server_cert_chain_file>
+                  <puppetdb_version>6.2.0</puppetdb_version>
+                  <puppetserver_version>6.2.1</puppetserver_version>
+                </env>-->
   </properties>
   <dependencies>
     <dependency>
@@ -143,54 +158,23 @@
               </run>
             </image>
             <image>
-              <name>docker.io/postgres:9.6</name>
+              <name>postgres:9.6</name>
               <alias>puppetdb-postgres</alias>
-              <run>
-                <ports>
-                  <port>5432</port>
-                </ports>
-                <env>
-                   <POSTGRES_PASSWORD>puppetdb</POSTGRES_PASSWORD>
-                   <POSTGRES_USER>puppetdb</POSTGRES_USER>
-                   <POSTGRES_DB>puppetdb</POSTGRES_DB>
-                </env>
-                <volumes>
-                  <bind>
-                    <volume>${project.basedir}/volumes/puppetdb-postgres/data:/var/lib/postgresql/data/</volume>
-                  </bind>
-                </volumes>
-                <network>
-                  <name>puppet-foreman-network</name>
-                  <alias>puppetdb-postgres</alias>
-                </network>
-                <wait>
-                  <time>50000</time>
-                  <log>database system is ready to accept connections</log>
-                </wait>
-              </run>
+              <external> 
+                <type>compose</type> 
+                <basedir>src/main/compose</basedir> 
+                <composeFile>docker-compose.yml</composeFile>
+              </external>
             </image>
             <image>
               <name>docker.io/postgres:9.6</name>
               <alias>foreman-postgres</alias>
+              <external> 
+                <type>compose</type> 
+                <basedir>src/main/compose</basedir> 
+                <composeFile>docker-compose.yml</composeFile>
+              </external>
               <run>
-                <ports>
-                  <port>5433</port>
-                </ports>
-                <cmd>-p 5433</cmd>
-                <env>
-                   <POSTGRES_PASSWORD>foreman</POSTGRES_PASSWORD>
-                   <POSTGRES_USER>foreman</POSTGRES_USER>
-                   <POSTGRES_DB>foreman</POSTGRES_DB>
-                </env>
-                <volumes>
-                  <bind>
-                    <volume>${project.basedir}/volumes/foreman-postgres/data:/var/lib/postgresql/data/</volume>
-                  </bind>
-                </volumes>
-                <network>
-                  <name>puppet-foreman-network</name>
-                  <alias>foreman-postgres</alias>
-                </network>
                 <wait>
                   <time>30000</time>
                   <log>database system is ready to accept connections</log>
@@ -200,65 +184,42 @@
             <image>
               <name>luksi1/puppetserver-foreman:${puppet.version}-%v</name>
               <alias>puppet</alias>
-              <build>
-                <tags>
-                  <tag>${timestamp}</tag>
-                  <tag>latest</tag>
-                </tags>
-                <dockerFileDir>${project.basedir}/src/main/images/puppet</dockerFileDir>
-              </build>
+              <external> 
+                <type>compose</type> 
+                <basedir>src/main/compose</basedir> 
+                <composeFile>docker-compose.yml</composeFile>
+              </external>
               <run>
-                <hostname>puppet.${domain}</hostname>
                 <ports>
                   <port>puppet.port:8140</port>
                 </ports>
-                <volumes>
-                  <bind>
-                    <volume>${project.basedir}/volumes/code:/etc/puppetlabs/code/</volume>
-                    <volume>${project.basedir}/volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/</volume>
-                    <volume>${project.basedir}/volumes/puppet/serverdata:/opt/puppetlabs/server/data/puppetserver/</volume>
-                  </bind>
-                </volumes>
                 <wait>
                   <time>150000</time>
                   <log>Puppet Server has successfully started and is now ready to handle requests</log>
                 </wait>
-                <network>
-                  <name>puppet-foreman-network</name>
-                  <alias>puppet</alias>
-                </network>
               </run>
             </image>
             <image>
               <name>docker.io/puppet/puppetdb:${puppetdb.version}</name>
               <alias>puppetdb</alias>
+              <external> 
+                <type>compose</type> 
+                <basedir>src/main/compose</basedir> 
+                <composeFile>docker-compose.yml</composeFile>
+              </external>
               <run>
-                <hostname>puppetdb</hostname>
                 <ports>
                   <port>puppetdb.ssl.port:8081</port>
                   <port>puppetdb.port:8080</port>
                 </ports>
-                <env>
-                   <PUPPETDB_DATABASE_CONNECTION>//puppetdb-postgres:5432/puppetdb</PUPPETDB_DATABASE_CONNECTION>
-                </env>
-                <volumes>
-                  <bind>
-                    <volume>${project.basedir}/volumes/puppetdb/ssl:/etc/puppetlabs/puppet/ssl/</volume>
-                  </bind>
-                </volumes>
                 <wait>
                   <http>
                     <url>http://localhost:${puppetdb.port}/pdb/query/v4/nodes</url>
                     <method>GET</method>
                     <status>200</status>
                   </http>
-                  <!--<log>Starting database garbage collection</log>-->
                   <time>600000</time>
                 </wait>
-                <network>
-                  <name>puppet-foreman-network</name>
-                  <alias>puppetdb</alias>
-                </network>
               </run>
             </image>
             <image>
@@ -298,130 +259,55 @@
             <image>
               <name>luksi1/foreman:${foreman.release}-%v</name>
               <alias>foreman</alias>
-              <build>
-                <dockerFileDir>${project.basedir}/src/main/images/foreman</dockerFileDir>
-                <tags>
-                  <tag>${timestamp}</tag>
-                  <tag>latest</tag>
-                </tags>
-                <args>
-                  <FOREMAN_RELEASE>${foreman.release}</FOREMAN_RELEASE>
-                </args>
-              </build>
+              <external> 
+                <type>compose</type> 
+                <basedir>src/main/compose</basedir> 
+                <composeFile>docker-compose.yml</composeFile>
+              </external>
               <run>
-                <hostname>${foreman.servername}.${domain}</hostname>
                 <ports>
                   <port>foreman.port:443</port>
                 </ports>
-                <volumes>
-                  <bind>
-                    <volume>${project.basedir}/volumes/certificates/certs/${foreman.servername}.${domain}.crt:/certs/server.crt</volume>
-                    <volume>${project.basedir}/volumes/certificates/private/${foreman.servername}.${domain}.key:/certs/server.key</volume>
-                    <volume>${project.basedir}/volumes/certificates/certs/ca-chain.crt:/certs/server_cachain.pem</volume>
-                    <volume>${project.basedir}/volumes/puppet/ssl/certs/ca.pem:/certs/client_ca.pem</volume>
-                    <volume>${project.basedir}/volumes/puppet/ssl/ca/ca_crl.pem:/certs/client_crl.pem</volume>
-                    <volume>${project.basedir}/volumes/puppet/ssl/certs/${foreman.servername}.${domain}.pem:/certs/client.crt</volume>
-                    <volume>${project.basedir}/volumes/puppet/ssl/private_keys/${foreman.servername}.${domain}.pem:/certs/client.key</volume>
-                  </bind>
-                </volumes>
                 <wait>
                   <log>loaded module mpm_worker_module</log>
                   <time>250000</time>
                 </wait>
-                <network>
-                  <name>puppet-foreman-network</name>
-                  <alias>${forman.servername}</alias>
-                </network>
-                <env>
-                   <DATABASE_TYPE>postgresql</DATABASE_TYPE>
-                   <DATABASE_HOST>foreman-postgres</DATABASE_HOST>
-                   <DATABASE_PORT>5433</DATABASE_PORT>
-                   <DATABASE_USER>foreman</DATABASE_USER>
-                   <DATABASE_PASSWORD>foreman</DATABASE_PASSWORD>
-                   <HOSTNAME>${foreman.servername}</HOSTNAME>
-                   <DOMAIN>${domain}</DOMAIN>
-                </env>
               </run>
             </image>
             <image>
               <name>luksi1/puppet-smart-proxy:${foreman.release}-%v</name>
               <alias>puppet-smart-proxy</alias>
-              <build>
-                <dockerFileDir>${project.basedir}/src/main/images/puppet-smart-proxy</dockerFileDir>
-                <tags>
-                  <tag>${timestamp}</tag>
-                  <tag>latest</tag>
-                </tags>
-                <args>
-                  <FOREMAN_RELEASE>${foreman.release}</FOREMAN_RELEASE>
-                </args>
-              </build>
+              <external> 
+                <type>compose</type> 
+                <basedir>src/main/compose</basedir> 
+                <composeFile>docker-compose.yml</composeFile>
+              </external>
               <run>
-                <hostname>${puppet.smartproxy.servername}.${domain}</hostname>
                 <ports>
                   <port>puppet.smartproxy.port:8443</port>
                 </ports>
-                <volumes>
-                  <bind>
-                    <!--<volume>${project.basedir}/volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/</volume>-->
-                    <volume>${project.basedir}/volumes/puppet/ssl/certs/${puppet.smartproxy.servername}.${domain}.pem:/certs/public.crt</volume>
-                    <volume>${project.basedir}/volumes/puppet/ssl/private_keys/${puppet.smartproxy.servername}.${domain}.pem:/certs/private.key</volume>
-                    <volume>${project.basedir}/volumes/puppet/ssl/certs/ca.pem:/certs/ca.pem</volume>
-                  </bind>
-                </volumes>
                 <wait>
                   <log>Smart proxy has launched</log>
                   <time>120000</time>
                 </wait>
-                <env>
-                  <TRUSTED_HOSTS>foreman,foreman.${domain},puppet,puppet.${domain},puppet.${puppet.network},foreman.${puppet.network},puppet.${domain}.${puppet.network},foreman.${domain}.${puppet.network}</TRUSTED_HOSTS>
-                  <PUPPET_VERSION>${puppet.version}</PUPPET_VERSION>
-                  <PUPPET_URL>https://puppet.${domain}</PUPPET_URL>
-                  <FOREMAN_URL>https://foreman.${domain}:443</FOREMAN_URL>
-                  <FORWARD_VERIFY>false</FORWARD_VERIFY>
-                </env>
-                <network>
-                  <name>puppet-foreman-network</name>
-                  <alias>${puppet.smartproxy.servername}</alias>
-                  <alias>${puppet.smartproxy.servername}.${domain}</alias>
-                </network>
               </run>
             </image>
             <image>
               <name>luksi1/r10k:${r10k.version}-%v</name>
               <alias>${r10k.servername}</alias>
-              <build>
-                <dockerFileDir>${project.basedir}/src/main/images/r10k</dockerFileDir>
-                <tags>
-                  <tag>${timestamp}</tag>
-                  <tag>latest</tag>
-                </tags>
-                <args>
-                  <R10K_VERSION>${r10k.version}</R10K_VERSION>
-                </args>
-              </build>
+              <external> 
+                <type>compose</type> 
+                <basedir>src/main/compose</basedir> 
+                <composeFile>docker-compose.yml</composeFile>
+              </external>
               <run>
-                <hostname>${r10k.servername}.${domain}</hostname>
                 <ports>
                   <port>r10k.port:8088</port>
                 </ports>
-                <volumes>
-                  <bind>
-                    <volume>${project.basedir}/volumes/code:/etc/puppetlabs/code/</volume>
-                  </bind>
-                </volumes>
                 <wait>
                   <log>WEBrick::HTTPServer#start:</log>
                   <time>120000</time>
                 </wait>
-                <env>
-                  <CONTROL_REPO>${control.repo}</CONTROL_REPO>
-                </env>
-                <network>
-                  <name>puppet-foreman-network</name>
-                  <alias>${r10k.servername}</alias>
-                  <alias>${r10k.servername}.${domain}</alias>
-                </network>
               </run>
             </image>
           </images>
