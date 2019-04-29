@@ -167,19 +167,13 @@
               </external>
             </image>
             <image>
-              <name>docker.io/postgres:9.6</name>
+              <name>postgres:9.6</name>
               <alias>foreman-postgres</alias>
               <external> 
                 <type>compose</type> 
                 <basedir>src/main/compose</basedir> 
                 <composeFile>docker-compose.yml</composeFile>
               </external>
-              <run>
-                <wait>
-                  <time>30000</time>
-                  <log>database system is ready to accept connections</log>
-                </wait>
-              </run>
             </image>
             <image>
               <name>luksi1/puppetserver-foreman:${puppet.version}-%v</name>
@@ -189,18 +183,9 @@
                 <basedir>src/main/compose</basedir> 
                 <composeFile>docker-compose.yml</composeFile>
               </external>
-              <run>
-                <ports>
-                  <port>puppet.port:8140</port>
-                </ports>
-                <wait>
-                  <time>150000</time>
-                  <log>Puppet Server has successfully started and is now ready to handle requests</log>
-                </wait>
-              </run>
             </image>
             <image>
-              <name>docker.io/puppet/puppetdb:${puppetdb.version}</name>
+              <name>puppet/puppetdb:${puppetdb.version}</name>
               <alias>puppetdb</alias>
               <external> 
                 <type>compose</type> 
@@ -316,22 +301,6 @@
         <configuration>
           <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
-      </plugin>
- <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-        <version>1.4</version>
-    <configuration>
-       <shortRevisionLength>5</shortRevisionLength>
-    </configuration>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>create</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
