@@ -370,8 +370,7 @@
                   </bind>
                 </volumes>
                 <wait>
-                  <log>Smart proxy has launched</log>
-                  <time>120000</time>
+                  <time>30000</time>
                 </wait>
                 <env>
                   <TRUSTED_HOSTS>foreman,foreman.${domain},puppet,puppet.${domain},puppet.${puppet.network},foreman.${puppet.network},puppet.${domain}.${puppet.network},foreman.${domain}.${puppet.network}</TRUSTED_HOSTS>
@@ -471,22 +470,6 @@
         <configuration>
           <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
-      </plugin>
- <plugin>
-        <groupId>org.codehaus.mojo</groupId>
-        <artifactId>buildnumber-maven-plugin</artifactId>
-        <version>1.4</version>
-    <configuration>
-       <shortRevisionLength>5</shortRevisionLength>
-    </configuration>
-        <executions>
-          <execution>
-            <phase>validate</phase>
-            <goals>
-              <goal>create</goal>
-            </goals>
-          </execution>
-        </executions>
       </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
