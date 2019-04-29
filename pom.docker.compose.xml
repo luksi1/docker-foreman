@@ -207,20 +207,6 @@
                 <basedir>src/main/compose</basedir> 
                 <composeFile>docker-compose.yml</composeFile>
               </external>
-              <run>
-                <ports>
-                  <port>puppetdb.ssl.port:8081</port>
-                  <port>puppetdb.port:8080</port>
-                </ports>
-                <wait>
-                  <http>
-                    <url>http://localhost:${puppetdb.port}/pdb/query/v4/nodes</url>
-                    <method>GET</method>
-                    <status>200</status>
-                  </http>
-                  <time>600000</time>
-                </wait>
-              </run>
             </image>
             <image>
               <name>docker.io/puppet/puppet-agent-ubuntu:latest</name>
@@ -264,15 +250,6 @@
                 <basedir>src/main/compose</basedir> 
                 <composeFile>docker-compose.yml</composeFile>
               </external>
-              <run>
-                <ports>
-                  <port>foreman.port:443</port>
-                </ports>
-                <wait>
-                  <log>loaded module mpm_worker_module</log>
-                  <time>250000</time>
-                </wait>
-              </run>
             </image>
             <image>
               <name>luksi1/puppet-smart-proxy:${foreman.release}-%v</name>
@@ -282,15 +259,6 @@
                 <basedir>src/main/compose</basedir> 
                 <composeFile>docker-compose.yml</composeFile>
               </external>
-              <run>
-                <ports>
-                  <port>puppet.smartproxy.port:8443</port>
-                </ports>
-                <wait>
-                  <log>Smart proxy has launched</log>
-                  <time>120000</time>
-                </wait>
-              </run>
             </image>
             <image>
               <name>luksi1/r10k:${r10k.version}-%v</name>
@@ -300,15 +268,6 @@
                 <basedir>src/main/compose</basedir> 
                 <composeFile>docker-compose.yml</composeFile>
               </external>
-              <run>
-                <ports>
-                  <port>r10k.port:8088</port>
-                </ports>
-                <wait>
-                  <log>WEBrick::HTTPServer#start:</log>
-                  <time>120000</time>
-                </wait>
-              </run>
             </image>
           </images>
         </configuration>

@@ -15,7 +15,19 @@ import static groovyx.net.http.Method.GET
 // Test that our puppet agent is sending facter information to the master
 class PuppetDbIT extends GroovyTestCase {
 
-  String port = System.getProperty("puppetdbPort");
+  String getPort() {
+    String port = 8080;
+
+    // Set to a static port if we're testing with docker-compose
+    // We are unable to set the port number via the external configuration, and thus
+    // unable to dynamically allocate a port and bind it to our system variable
+    if(System.getProperty("puppetdbPort") != null && !System.getProperty("puppetdbPort").isEmpty()) {
+      port = System.getProperty("puppetdbPort");
+    }
+    return port;
+  }
+
+  String port = getPuppetDbPort();
   String url = 'http://localhost:' + port
   String node = System.getProperty("puppetAgentHostname")
   String allNodes = '/pdb/query/v4/nodes'

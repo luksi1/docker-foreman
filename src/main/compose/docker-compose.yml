@@ -6,6 +6,8 @@ services:
       - POSTGRES_PASSWORD=puppetdb
       - POSTGRES_USER=puppetdb
       - POSTGRES_DB=puppetdb
+    ports:
+      - "5432"
     volumes:
       - ../../../volumes/puppetdb-postgres/data:/var/lib/postgresql/data/
     networks:
@@ -14,6 +16,8 @@ services:
           - puppetdb-postgres
   foreman-postgres:
     image: postgres:9.6
+    ports:
+      - "5432"
     environment:
       - POSTGRES_PASSWORD=foreman
       - POSTGRES_USER=foreman
@@ -26,6 +30,8 @@ services:
           - foreman-postgres
   pupppetserver:
     image: luksi1/puppetserver-foreman:latest
+    ports:
+      - "8140:8140"
     volumes:
       - ../../../volumes/code:/etc/puppetlabs/code/
       - ../../../volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/
@@ -36,6 +42,9 @@ services:
           - puppet
   puppetdb:
     image: puppet/puppetdb:latest
+    ports:
+      - "8181:8181"
+      - "8180:8180"
     environment:
      - PUPPETDB_DATABASE_CONNECTION=//puppetdb-postgres:5432/puppetdb
     volumes:
@@ -46,6 +55,8 @@ services:
           - puppetdb
   foreman:
     image: luksi1/foreman:latest
+    ports:
+      - "443:443"
     environment:
       - DATABASE_TYPE=postgresql
       - DATABASE_HOST=foreman-postgres
@@ -61,7 +72,7 @@ services:
       - ../../../volumes/puppet/ssl/certs/ca.pem:/certs/client_ca.pem
       - ../../../volumes/puppet/ssl/ca/ca_crl.pem:/certs/client_crl.pem
       - ../../../volumes/puppet/ssl/certs/foreman.dummy.test.pem:/certs/client.crt
-      - ./volumes/puppet/ssl/private_keys/foreman.dummy.test.pem:/certs/client.key
+      - ../../../volumes/puppet/ssl/private_keys/foreman.dummy.test.pem:/certs/client.key
     networks:
       puppet-foreman-network:
         aliases:
@@ -83,6 +94,8 @@ services:
           - puppet-smart-proxy
   r10k:
     image: luksi1/r10k:latest
+    ports:
+      - "8088:8088"
     environment:
       - CONTROL_REPO=https://github.com/luksi1/puppet-control-repo-example
     volumes:

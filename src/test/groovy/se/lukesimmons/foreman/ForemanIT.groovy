@@ -45,11 +45,21 @@ public class Foreman {
 
 class ForemanIT extends GroovyTestCase {
 
+  String getForemanPort() {
+    String port = 443;
+
+    // Set to static port if we're testing with docker-compose
+    // We are unable to set the port number via the external configuration, and thus
+    // unable to dynamically allocate a port and bind it to our system variable
+    if(System.getProperty("foremanPort") != null && !System.getProperty("foremanPort").isEmpty()) {
+      port = System.getProperty("foremanPort");
+    }
+    return port;
+  }
+
   void testConnectity() {
 
-    def foremanPort = System.getProperty("foremanPort");
-
-    String url = "https://localhost:" + foremanPort
+    String url = "https://localhost:" + getPoremanPort();
     Foreman f = Foreman.getInstance()
     String user = 'admin'
     String password = f.adminPassword
@@ -71,9 +81,8 @@ class ForemanIT extends GroovyTestCase {
 
   void testAddingPuppetSmartProxy() {
 
-    def foremanPort = System.getProperty("foremanPort");
 
-    String url = "https://localhost:" + foremanPort
+    String url = "https://localhost:" + getForemanPort();
     println(url)
     Foreman f = Foreman.getInstance()
     String user = 'admin'
