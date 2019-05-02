@@ -152,7 +152,7 @@
                 <env>
                    <POSTGRES_PASSWORD>puppetdb</POSTGRES_PASSWORD>
                    <POSTGRES_USER>puppetdb</POSTGRES_USER>
-                   <POSTGRES_DB>puppetdb</POSTGRES_DB>
+		   <POSTGRES_DB>puppetdb</POSTGRES_DB>
                 </env>
                 <volumes>
                   <bind>

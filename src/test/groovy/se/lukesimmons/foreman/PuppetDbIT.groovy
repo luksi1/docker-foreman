@@ -16,7 +16,7 @@ import static groovyx.net.http.Method.GET
 class PuppetDbIT extends GroovyTestCase {
 
   String getPort() {
-    String port = 8080;
+    String port = "8080";
 
     // Set to a static port if we're testing with docker-compose
     // We are unable to set the port number via the external configuration, and thus
@@ -27,7 +27,7 @@ class PuppetDbIT extends GroovyTestCase {
     return port;
   }
 
-  String port = getPuppetDbPort();
+  String port = getPort();
   String url = 'http://localhost:' + port
   String node = System.getProperty("puppetAgentHostname")
   String allNodes = '/pdb/query/v4/nodes'

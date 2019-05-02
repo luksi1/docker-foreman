@@ -27,15 +27,20 @@ before_install:
 jobs:
   include:
     - stage: syntax
-      name: "Dockerfile checks with Hadolint"
+      name: "Hadolint"
       script: docker run --rm -i hadolint/hadolint < src/main/foreman/Dockerfile
       script: docker run --rm -i hadolint/hadolint < src/main/puppet/Dockerfile
     -
-      name: "Shellscript checks with shellchecker"
+      name: "Shellchecker"
       script: docker run --rm -v "$(pwd)":/mnt koalaman/shellcheck:stable src/main/foreman/*.sh
     - stage: integration
-      name: "docker-maven-plugin integration tests"
+      name: "Integration tests (docker-maven-plugin)"
       script: mvn verify
+    -
+      name: "docker-compose"
+      script: docker-compose up -f src/main/docker/docker-compose.yml
+      script: sleep 200
+      script: mvn failsafe:integration-test
     - stage: deploy
       name: "Deploy to DockerHub"
       script: 
