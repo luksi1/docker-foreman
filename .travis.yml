@@ -23,11 +23,11 @@ jobs:
     - stage: syntax
       name: "Hadolint"
       script:
-        - docker run --rm -i hadolint/hadolint < src/main/foreman/Dockerfile
-        - docker run --rm -i hadolint/hadolint < src/main/puppet/Dockerfile
+        - docker run --rm -i hadolint/hadolint < src/main/images/foreman/Dockerfile
+        - docker run --rm -i hadolint/hadolint < src/main/images/puppet/Dockerfile
     -
       name: "Shellchecker"
-      script: docker run --rm -v "$(pwd)":/mnt koalaman/shellcheck:stable src/main/foreman/*.sh
+      script: docker run --rm -v "$(pwd)":/mnt koalaman/shellcheck:stable src/main/images/foreman/*.sh
     - stage: integration
       name: "Integration tests (docker-maven-plugin)"
       script: mvn verify
