@@ -1,8 +1,4 @@
 ---
-language: java
-jdk:
-- oraclejdk8
-
 sudo: required
 
 stages:
@@ -20,16 +16,15 @@ env:
     - secure: aw8Sc2rOjTY7fRyA2F7IHV+yTTLQ97thFqcY7aMSOw5/m7D6vezvrFVYtOZlSo8ZQ/oXRziDqLMkek+eKuxbk7DbX+pse9rPVUdIazauWKEKz8mXZ+1ZXs1ft+DIfREAUT4oKP90jVdhvaSAPwmDehf5Ad7THfB+2vR2HHjU15Gvv2jl2AdnRiwezlfm8KdGlCR7CPdXA83xpESBmyQWe4X6p3FaRZ5f4+314MNMvvv2alrq0K96r8J6/7/TM6hMmW6rVU295ftgoCXcqVRB7vJXjcQ9xWaQTXbC61hVoKIbrOl5B4I+bXs+3xPBl58diMUUWqAQKAN/nOxd99G8dD8P/SUvor9ndeLL524ZyT5OzawV15upw+t02p6LZHvtzFS8ImMIzIb10Y3Ll1j2yuKqCMyOk+Xdbc0QoW7Y4xIeruf1sbFyjNXZwohMgRew3+egyV9ChyGw0CSro8RFU425cIffkpJkPAhORK3ivEK59zLbEpCWXiODxpVZ7VB3+CzMFoyBEtoIVR9Ey/lpxawDfTbuduEDUCm3Nlgk72PNiYWkZdmLZXA17xK8eqzrMvohemZ94Bikm1XMju5HXoFSc9GVMUnWZuc6t61BwG/olZ+laQ+HkgVmgyJws7SRa0n8CHvgy04U/yqU/81G1pSpspBlfj8dD6TacnERmcQ=
 
 before_install:
-  - sudo apt-get update && sudo apt-get install -y openssl
-  - docker pull lukasmartinelli/hadolint
-  - docker pull koalaman/shellcheck:stable
+  - sudo apt-get update && sudo apt-get install -y openssl maven openjdk-8-jdk
 
 jobs:
   include:
     - stage: syntax
       name: "Hadolint"
-      script: docker run --rm -i hadolint/hadolint < src/main/foreman/Dockerfile
-      script: docker run --rm -i hadolint/hadolint < src/main/puppet/Dockerfile
+      script:
+        - docker run --rm -i hadolint/hadolint < src/main/foreman/Dockerfile
+        - docker run --rm -i hadolint/hadolint < src/main/puppet/Dockerfile
     -
       name: "Shellchecker"
       script: docker run --rm -v "$(pwd)":/mnt koalaman/shellcheck:stable src/main/foreman/*.sh
@@ -38,9 +33,12 @@ jobs:
       script: mvn verify
     -
       name: "docker-compose"
-      script: docker-compose up -f src/main/docker/docker-compose.yml
-      script: sleep 200
-      script: mvn failsafe:integration-test
+      script: 
+        - sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+        - sudo chmod +x /usr/local/bin/docker-compose
+        - docker-compose -d -f src/main/docker/docker-compose.yml up
+        - sleep 200
+        - mvn failsafe:integration-test
     - stage: deploy
       name: "Deploy to DockerHub"
       script: 
