@@ -31,7 +31,7 @@ jobs:
       script: 
         - sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         - sudo chmod +x /usr/local/bin/docker-compose
-        - docker-compose -d -f src/main/docker/docker-compose.yml up
+        - docker-compose -f src/main/docker/docker-compose.yml up -d
         - sleep 200
         - mvn failsafe:integration-test
     - stage: deploy
