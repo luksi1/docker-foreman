@@ -19,6 +19,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     wget \
     nscd \
     gnupg \
+    netcat \
     && rm -rf /var/lib/apt/lists/*
 
 # Enable en_US.utf8 for Foreman

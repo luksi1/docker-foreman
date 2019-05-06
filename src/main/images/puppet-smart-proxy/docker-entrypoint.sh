@@ -8,7 +8,7 @@ fi
 update-ca-certificates
 /usr/local/bin/confd -onetime -backend env
 
-while ! wget -q --spider -T 1 ${FOREMAN_URL}; do
+while ! nc -z foreman 443; do
   sleep 1
 done
 

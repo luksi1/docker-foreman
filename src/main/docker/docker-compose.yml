@@ -64,16 +64,16 @@ services:
       DATABASE_PORT: '5432'
       DATABASE_USER: 'foreman'
       DATABASE_PASSWORD: 'foreman'
-      HOSTNAME: 'foreman'
-      DOMAIN: 'dummy.test'
+      HOSTNAME: ${foreman_hostname}
+      DOMAIN: ${domain}
     volumes:
-      - ../../../volumes/certificates/certs/foreman.dummy.test.crt:/certs/server.crt
-      - ../../../volumes/certificates/private/foreman.dummy.test.key:/certs/server.key
-      - ../../../volumes/certificates/certs/ca-chain.crt:/certs/server_cachain.pem
+      - ${foreman_server_cert_file}:/certs/server.crt
+      - ${foreman_server_cert_key_file}:/certs/server.key
+      - ${foreman_server_cert_chain_file}:/certs/server_cachain.pem
       - ../../../volumes/puppet/ssl/certs/ca.pem:/certs/client_ca.pem
       - ../../../volumes/puppet/ssl/ca/ca_crl.pem:/certs/client_crl.pem
-      - ../../../volumes/puppet/ssl/certs/foreman.dummy.test.pem:/certs/client.crt
-      - ../../../volumes/puppet/ssl/private_keys/foreman.dummy.test.pem:/certs/client.key
+      - ../../../volumes/puppet/ssl/certs/${foreman_hostname}.${domain}.pem:/certs/client.crt
+      - ../../../volumes/puppet/ssl/private_keys/${foreman_hostname}.${domain}.pem:/certs/client.key
     networks:
       puppet-foreman-network:
         aliases:
@@ -81,24 +81,25 @@ services:
   puppet-smart-proxy:
     image: luksi1/puppet-smart-proxy:latest
     environment:
-      TRUSTED_HOSTS: 'foreman,foreman.dummy.test,puppet,puppet.dummy.test'
-      PUPPET_VERSION: '6.2.1'
-      PUPPET_URL: 'https://puppet.dummy.test'
-      FOREMAN_URL: 'https://foreman'
+      TRUSTED_HOSTS: "${foreman_hostname},${foreman_hostname}.${domain},${puppet_hostname},${puppet_hostname}.${domain}"
+      PUPPET_VERSION: "${puppetserver_version}"
+      PUPPET_URL: "https://${puppet_hostname}"
+      FOREMAN_URL: "https://${foreman_hostname}"
     volumes:
-      - ../../../volumes/puppet/ssl/certs/puppet-smart-proxy.dummy.test.pem:/certs/public.crt
-      - ../../../volumes/puppet/ssl/private_keys/puppet-smart-proxy.dummy.test.pem:/certs/private.key
+      - ../../../volumes/puppet/ssl/certs/${puppet_smartproxy_hostname}.${domain}.pem:/certs/public.crt
+      - ../../../volumes/puppet/ssl/private_keys/${puppet_smartproxy_hostname}.${domain}.pem:/certs/private.key
       - ../../../volumes/puppet/ssl/certs/ca.pem:/certs/ca.pem
     networks:
       puppet-foreman-network:
         aliases:
           - puppet-smart-proxy
+          - puppet-smart-proxy.dummy.test
   r10k:
     image: luksi1/r10k:latest
     ports:
       - "8088:8088"
     environment:
-      CONTROL_REPO: 'https://github.com/luksi1/puppet-control-repo-example'
+      CONTROL_REPO: ${control_repo}
     volumes:
       - ../../../volumes/code:/etc/puppetlabs/code/
     networks:

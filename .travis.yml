@@ -24,17 +24,17 @@ jobs:
       name: "Shellchecker"
       script: docker run --rm -v "$(pwd)":/mnt koalaman/shellcheck:stable src/main/images/foreman/*.sh
     - stage: integration
-      name: "Integration tests (docker-maven-plugin)"
+      name: "Fabric8 docker-maven-plugin"
       script: 
-        - sudo docker ps
         - sudo mvn verify
     -
       name: "docker-compose"
       script: 
         - sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         - sudo chmod +x /usr/local/bin/docker-compose
-        - sudo docker-compose -f src/main/docker/docker-compose.yml up -d
-        - sleep 200
+        - cd ./src/main/docker
+        - sudo docker-compose up -d
+        - sleep 180
         - sudo mvn failsafe:integration-test
     - stage: deploy
       name: "Deploy to DockerHub"
