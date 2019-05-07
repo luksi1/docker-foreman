@@ -9,7 +9,7 @@ services:
     ports:
       - "5432"
     volumes:
-      - ./volumes/puppetdb-postgres/data:/var/lib/postgresql/data/
+      - ../../volumes/puppetdb-postgres/data:/var/lib/postgresql/data/
     networks:
       puppet-foreman-network:
         aliases:
@@ -24,7 +24,7 @@ services:
       POSTGRES_USER: 'foreman'
       POSTGRES_DB: 'foreman'
     volumes:
-      - ./volumes/foreman-postgres/data:/var/lib/postgresql/data/
+      - ../../volumes/foreman-postgres/data:/var/lib/postgresql/data/
     networks:
       puppet-foreman-network:
         aliases:
@@ -34,9 +34,9 @@ services:
     ports:
       - "8140:8140"
     volumes:
-      - ./volumes/code:/etc/puppetlabs/code/
-      - ./volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/
-      - ./volumes/puppet/serverdata:/opt/puppetlabs/server/data/puppetserver/
+      - ../../volumes/code:/etc/puppetlabs/code/
+      - ../../volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/
+      - ../../volumes/puppet/serverdata:/opt/puppetlabs/server/data/puppetserver/
     networks:
       puppet-foreman-network:
         aliases:
@@ -49,7 +49,7 @@ services:
     environment:
       PUPPETDB_DATABASE_CONNECTION: '//puppetdb-postgres:5432/puppetdb'
     volumes:
-      - ./volumes/puppetdb/ssl:/etc/puppetlabs/puppet/ssl/
+      - ../../volumes/puppetdb/ssl:/etc/puppetlabs/puppet/ssl/
     networks:
       puppet-foreman-network:
         aliases:
@@ -70,10 +70,10 @@ services:
       - ${foreman_server_cert_file}:/certs/server.crt
       - ${foreman_server_cert_key_file}:/certs/server.key
       - ${foreman_server_cert_chain_file}:/certs/server_cachain.pem
-      - ./volumes/puppet/ssl/certs/ca.pem:/certs/client_ca.pem
-      - ./volumes/puppet/ssl/ca/ca_crl.pem:/certs/client_crl.pem
-      - ./volumes/puppet/ssl/certs/${foreman_hostname}.${domain}.pem:/certs/client.crt
-      - ./volumes/puppet/ssl/private_keys/${foreman_hostname}.${domain}.pem:/certs/client.key
+      - ../../volumes/puppet/ssl/certs/ca.pem:/certs/client_ca.pem
+      - ../../volumes/puppet/ssl/ca/ca_crl.pem:/certs/client_crl.pem
+      - ../../volumes/puppet/ssl/certs/${foreman_hostname}.${domain}.pem:/certs/client.crt
+      - ../../volumes/puppet/ssl/private_keys/${foreman_hostname}.${domain}.pem:/certs/client.key
     networks:
       puppet-foreman-network:
         aliases:
@@ -86,9 +86,9 @@ services:
       PUPPET_URL: "https://${puppet_hostname}"
       FOREMAN_URL: "https://${foreman_hostname}"
     volumes:
-      - ./volumes/puppet/ssl/certs/${puppet_smartproxy_hostname}.${domain}.pem:/certs/public.crt
-      - ./volumes/puppet/ssl/private_keys/${puppet_smartproxy_hostname}.${domain}.pem:/certs/private.key
-      - ./volumes/puppet/ssl/certs/ca.pem:/certs/ca.pem
+      - ../../volumes/puppet/ssl/certs/${puppet_smartproxy_hostname}.${domain}.pem:/certs/public.crt
+      - ../../volumes/puppet/ssl/private_keys/${puppet_smartproxy_hostname}.${domain}.pem:/certs/private.key
+      - ../../volumes/puppet/ssl/certs/ca.pem:/certs/ca.pem
     networks:
       puppet-foreman-network:
         aliases:
@@ -101,7 +101,7 @@ services:
     environment:
       CONTROL_REPO: ${control_repo}
     volumes:
-      - ./volumes/code:/etc/puppetlabs/code/
+      - ../../volumes/code:/etc/puppetlabs/code/
     networks:
       puppet-foreman-network:
         aliases:
