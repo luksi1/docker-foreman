@@ -34,6 +34,8 @@ jobs:
         - cd examples/docker-compose
         - sudo docker-compose up -d
         - sleep 180
+        - cd $TRAVIS_BUILD_DIR
+        - pwd
         - sudo docker ps
         - sudo mvn failsafe:integration-test
       after_script:
