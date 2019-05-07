@@ -23,39 +23,27 @@ jobs:
 #    -
 #      name: "Shellchecker"
 #      script: docker run --rm -v "$(pwd)":/mnt koalaman/shellcheck:stable src/main/images/foreman/*.sh
-    - stage: integration
-      name: "docker-compose"
-      env:
-        - DOCKER_COMPOSE_VERSION=1.23.1
-      before_script:
-        - sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        - sudo chmod +x /usr/local/bin/docker-compose
-      script:
-        - cd examples/docker-compose
-        - sudo docker-compose up -d
-        - sleep 180
-        - cd $TRAVIS_BUILD_DIR
-        - pwd
-        - sudo docker ps
-        - sudo mvn failsafe:integration-test
-      after_script:
-        - sudo docker ps | xargs sudo docker rm -f
-        
-
 #    - stage: integration
-#      name: "Fabric8 docker-maven-plugin"
-#      script: 
-#        - sudo mvn verify
-#    -
 #      name: "docker-compose"
-#      script: 
-#        - sudo curl -L "https://github.com/docker/compose/releases/download/1.23.1/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+#      env:
+#        - DOCKER_COMPOSE_VERSION=1.23.1
+#      before_script:
+#        - sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 #        - sudo chmod +x /usr/local/bin/docker-compose
-#        - cd ./src/main/docker
-#        - sleep 180
+#      script:
+#        - cd examples/docker-compose
 #        - sudo docker-compose up -d
 #        - sleep 180
+#        - cd $TRAVIS_BUILD_DIR
+#        - pwd
+#        - sudo docker ps
 #        - sudo mvn failsafe:integration-test
+#      after_script:
+#        - sudo docker ps | xargs sudo docker rm -f
+    - stage: integration
+      name: "Fabric8 docker-maven-plugin"
+      script: 
+        - sudo mvn verify
     - stage: deploy
       name: "Deploy to DockerHub"
       script: 
