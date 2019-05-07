@@ -2,6 +2,10 @@ FROM ruby:2.3-jessie
 
 ARG R10K_VERSION
 
+LABEL org.label-schema.name="r10k" \
+      org.label-schema.version=$R10K_VERSION \
+      org.label-schema.vcs-url="https://github.com/luksi1/docker-foreman"
+
 ENV PUPPET_AGENT_VERSION="1.8.3" UBUNTU_CODENAME="xenial" PREFIX="false" CACHEDIR="/var/cache/r10k" BASEDIR="/etc/puppetlabs/code/environments"
 
 # install confd

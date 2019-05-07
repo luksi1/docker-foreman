@@ -2,12 +2,9 @@ FROM ubuntu:18.04
 
 ARG FOREMAN_RELEASE
 
-LABEL org.label-schema.maintainer="Luke Simmons <luksi1>" \
-      org.label-schema.name="Foreman" \
-      org.label-schema.license="Apache-2.0" \
+LABEL org.label-schema.name="foreman" \
       org.label-schema.version=$FOREMAN_RELEASE \
-      org.label-schema.vcs-url="https://github.com/luksi1/docker-foreman" \
-      org.label-schema.dockerfile="/Dockerfile"
+      org.label-schema.vcs-url="https://github.com/luksi1/docker-foreman"
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
