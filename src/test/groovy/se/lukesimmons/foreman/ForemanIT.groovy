@@ -26,12 +26,10 @@ public class Foreman {
   public String adminPassword;
 
   private Foreman(){
-    (["/usr/bin/sudo","/usr/bin/docker","ps"].execute().text =~ /(\S+).*foreman:latest.*/).each { 
-      fullContainerId, containerId -> 
-        (["/usr/bin/sudo","/usr/bin/docker","exec","-t",containerId,"foreman-rake","permissions:reset"].execute().text =~ /Reset to user: admin, password: (\S+)\s+/).each { 
-          full, match -> 
-            adminPassword = match
-        }
+    String containerId = "/usr/bin/sudo","/usr/bin/docker","ps","-aqf","label=org.label-schema.name=foreman".execute().text
+    (["/usr/bin/sudo","/usr/bin/docker","exec","-t",containerId,"foreman-rake","permissions:reset"].execute().text =~ /Reset to user: admin, password: (\S+)\s+/).each {
+      full, match ->
+        adminPassword = match
     }
   }
     
