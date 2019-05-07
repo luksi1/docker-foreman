@@ -30,6 +30,9 @@ jobs:
 #      before_script:
 #        - sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
 #        - sudo chmod +x /usr/local/bin/docker-compose
+#        - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
+#        # We need to run some certificate signing images to get everything up to snuff
+#        - mvn verify
 #      script:
 #        - cd examples/docker-compose
 #        - sudo docker-compose up -d
