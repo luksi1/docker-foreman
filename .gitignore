@@ -10,8 +10,6 @@ volumes/*
 
 target/*
 
-.env
-
 # Postgres data files
 volumes/postgres/data/*
 
