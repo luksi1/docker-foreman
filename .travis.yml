@@ -42,7 +42,8 @@ jobs:
 #        - sudo docker ps | xargs sudo docker rm -f
     - stage: integration
       name: "Fabric8 docker-maven-plugin"
-      script: 
+      script:
+        - sudo mvn docker:build
         - sudo mvn verify
     - stage: deploy
       name: "Deploy to DockerHub"
