@@ -26,15 +26,10 @@ public class Foreman {
   public String adminPassword;
 
   private Foreman(){
-    String processes = ["/usr/bin/sudo","/usr/bin/docker","ps"].execute().text
-    println(processes)
-    String containerId = ["/usr/bin/sudo","/usr/bin/docker","ps","-aqf","label=org.label-schema.name=foreman"].execute().text
+    String containerId = ["/usr/bin/sudo","/usr/bin/docker","ps","-aqf","label=org.label-schema.name=foreman"].execute().text.trim()
     println(containerId)
-    String password = ["/usr/bin/sudo","/usr/bin/docker","exec","-t",containerId,"foreman-rake","permissions:reset"].execute().text
-    println(password)
     (["/usr/bin/sudo","/usr/bin/docker","exec","-t",containerId,"foreman-rake","permissions:reset"].execute().text =~ /Reset to user: admin, password: (\S+)\s+/).each {
       full, match ->
-        println(full)
         println(match)
         adminPassword = match
     }
