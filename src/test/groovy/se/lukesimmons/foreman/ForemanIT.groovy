@@ -16,7 +16,7 @@ import static groovyx.net.http.Method.*
 
 /**
 Run foreman-rake against the image to reset and grab Foreman's admin password.
-We should be able to run commands from the Docker Engine API, but for simplicity, just grab it from the
+We should use a Java Docker client for this, but for simplicity, just grab it from the
 command line.
 */
 public class Foreman {
