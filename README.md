@@ -1,3 +1,5 @@
+[![](https://images.microbadger.com/badges/image/luksi1/foreman.svg)](https://microbadger.com/images/luksi1/foreman "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/license/luksi1/foreman.svg)](https://microbadger.com/images/luksi1/foreman "Get your own license badge on microbadger.com") [![](https://images.microbadger.com/badges/version/luksi1/foreman.svg)](https://microbadger.com/images/luksi1/foreman "Get your own version badge on microbadger.com")
+
 # docker-foreman
 
 A docker-compose stack for Foreman and Puppet using R10K for versioning.
