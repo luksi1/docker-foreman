@@ -103,13 +103,14 @@ class ForemanIT extends GroovyTestCase {
       response.success = { resp, json ->
         def puppetSmartProxyId  = json.id
         println "id: ${puppetSmartProxyId}"
+        println "status: ${resp.status}"
         assertEquals((int)resp.status, 201)
       }
       response.failure = { resp, json ->
+        println(json)
         throw new Exception("Stopping at item POST: uri: " + uri + "\n" +
-            "   Unknown error trying to create item: ${resp.status}, not creating Item.")
+          "   Unknown error trying to create item: ${resp.status}, not creating Item.")
       }
-
     }
   }
 
