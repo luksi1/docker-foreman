@@ -93,7 +93,7 @@ services:
       puppet-foreman-network:
         aliases:
           - puppet-smart-proxy
-          - puppet-smart-proxy.dummy.test
+          - puppet-smart-proxy.${domain}
   r10k:
     image: luksi1/r10k:latest
     ports:

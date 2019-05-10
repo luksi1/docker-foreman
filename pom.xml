@@ -160,7 +160,7 @@
                   </bind>
                 </volumes>
                 <network>
-                  <name>puppet-foreman-network</name>
+                  <name>${puppet.network}</name>
                   <alias>puppetdb-postgres</alias>
                 </network>
                 <wait>
@@ -188,7 +188,7 @@
                   </bind>
                 </volumes>
                 <network>
-                  <name>puppet-foreman-network</name>
+                  <name>${puppet.network}</name>
                   <alias>foreman-postgres</alias>
                 </network>
                 <wait>
@@ -224,7 +224,7 @@
                   <log>Puppet Server has successfully started and is now ready to handle requests</log>
                 </wait>
                 <network>
-                  <name>puppet-foreman-network</name>
+                  <name>${puppet.network}</name>
                   <alias>puppet</alias>
                 </network>
               </run>
@@ -256,7 +256,7 @@
                   <time>600000</time>
                 </wait>
                 <network>
-                  <name>puppet-foreman-network</name>
+                  <name>${puppet.network}</name>
                   <alias>puppetdb</alias>
                 </network>
               </run>
@@ -274,7 +274,7 @@
                   <time>10000</time>
                 </wait>
                 <network>
-                  <name>puppet-foreman-network</name>
+                  <name>${puppet.network}</name>
                 </network>
               </run>
             </image>
@@ -291,7 +291,7 @@
                   <time>10000</time>
                 </wait>
                 <network>
-                  <name>puppet-foreman-network</name>
+                  <name>${puppet.network}</name>
                 </network>
               </run>
             </image>
@@ -329,8 +329,8 @@
                   <time>250000</time>
                 </wait>
                 <network>
-                  <name>puppet-foreman-network</name>
-                  <alias>${forman.servername}</alias>
+                  <name>${puppet.network}</name>
+                  <alias>${foreman.servername}</alias>
                 </network>
                 <env>
                    <DATABASE_TYPE>postgresql</DATABASE_TYPE>
@@ -380,7 +380,7 @@
                   <FORWARD_VERIFY>false</FORWARD_VERIFY>
                 </env>
                 <network>
-                  <name>puppet-foreman-network</name>
+                  <name>${puppet.network}</name>
                   <alias>${puppet.smartproxy.servername}</alias>
                   <alias>${puppet.smartproxy.servername}.${domain}</alias>
                 </network>
@@ -417,7 +417,7 @@
                   <CONTROL_REPO>${control.repo}</CONTROL_REPO>
                 </env>
                 <network>
-                  <name>puppet-foreman-network</name>
+                  <name>${puppet.network}</name>
                   <alias>${r10k.servername}</alias>
                   <alias>${r10k.servername}.${domain}</alias>
                 </network>
