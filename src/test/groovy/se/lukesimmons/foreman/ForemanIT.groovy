@@ -24,13 +24,12 @@ public class Foreman {
   private static Foreman instance;
 
   public String adminPassword;
+  public String puppetSmartProxyId;
 
   private Foreman(){
     String containerId = ["/usr/bin/sudo","/usr/bin/docker","ps","-aqf","label=org.label-schema.name=foreman"].execute().text.trim()
-    println(containerId)
     (["/usr/bin/sudo","/usr/bin/docker","exec","-t",containerId,"foreman-rake","permissions:reset"].execute().text =~ /Reset to user: admin, password: (\S+)\s+/).each {
       full, match ->
-        println(match)
         adminPassword = match
     }
   }
@@ -101,9 +100,7 @@ class ForemanIT extends GroovyTestCase {
       requestContentType = ContentType.JSON
       body = ["smart_proxy": ["name": "puppet", "url": "https://puppet-smart-proxy.dummy.test:8443"]]
       response.success = { resp, json ->
-        def puppetSmartProxyId  = json.id
-        println "id: ${puppetSmartProxyId}"
-        println "status: ${resp.status}"
+        puppetSmartProxyId = json.id
         assertEquals((int)resp.status, 201)
       }
       response.failure = { resp, json ->
@@ -114,13 +111,9 @@ class ForemanIT extends GroovyTestCase {
     }
   }
 
-  /**
   void testDeletePuppetSmartProxy() {
 
-    def foremanPort = System.getProperty("foremanPort");
-
-    String url = "https://localhost:" + foremanPort
-    println(url)
+    String url = "https://localhost:" + getPort();
     Foreman f = Foreman.getInstance()
     String user = 'admin'
     String password = f.adminPassword
@@ -131,8 +124,8 @@ class ForemanIT extends GroovyTestCase {
     remote.ignoreSSLIssues()
     remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"])
 
-    remote.request(POST) {
-      uri.path = "/api/v2/smart_proxies"
+    remote.request(DELETE) {
+      uri.path = "/api/v2/smart_proxies/${puppetSmartProxyId}"
       headers.'Accept' = 'application/json'
       requestContentType = ContentType.JSON
       body = ["smart_proxy": ["name": "puppet", "url": "https://puppet-smart-proxy.dummy.test:8443"]]
@@ -141,10 +134,10 @@ class ForemanIT extends GroovyTestCase {
         assertEquals((int)resp.status, 201)
       }
       response.failure = { resp, json ->
+        println(json)
         throw new Exception("Stopping at item POST: uri: " + uri + "\n" +
             "   Unknown error trying to create item: ${resp.status}, not creating Item.")
       }
-
     }
-  }*/
+  }
 }
