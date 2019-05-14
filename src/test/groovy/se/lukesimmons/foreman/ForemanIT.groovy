@@ -24,7 +24,6 @@ public class Foreman {
   private static Foreman instance;
 
   public String adminPassword;
-  public String puppetSmartProxyId;
 
   private Foreman(){
     String containerId = ["/usr/bin/sudo","/usr/bin/docker","ps","-aqf","label=org.label-schema.name=foreman"].execute().text.trim()
@@ -43,6 +42,8 @@ public class Foreman {
 }
 
 class ForemanIT extends GroovyTestCase {
+
+  String puppetSmartProxyId = "1";
 
   String getPort() {
     String port = "443";
@@ -80,7 +81,6 @@ class ForemanIT extends GroovyTestCase {
 
   void testAddingPuppetSmartProxy() {
 
-
     String url = "https://localhost:" + getPort();
     println(url)
     Foreman f = Foreman.getInstance()
@@ -102,6 +102,7 @@ class ForemanIT extends GroovyTestCase {
       response.success = { resp, json ->
         puppetSmartProxyId = json.id
         assertEquals((int)resp.status, 201)
+        println(puppetSmartProxyId)
       }
       response.failure = { resp, json ->
         println(json)
@@ -113,6 +114,7 @@ class ForemanIT extends GroovyTestCase {
 
   void testDeletePuppetSmartProxy() {
 
+    println(puppetSmartProxyId)
     String url = "https://localhost:" + getPort();
     Foreman f = Foreman.getInstance()
     String user = 'admin'
@@ -124,14 +126,14 @@ class ForemanIT extends GroovyTestCase {
     remote.ignoreSSLIssues()
     remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"])
 
-    remote.request(DELETE) {
-      uri.path = "/api/v2/smart_proxies/${puppetSmartProxyId}"
+    remote.request(Method.DELETE) { req ->
+      uri.path = "/api/v2/smart_proxies/" + puppetSmartProxyId
       headers.'Accept' = 'application/json'
       requestContentType = ContentType.JSON
-      body = ["smart_proxy": ["name": "puppet", "url": "https://puppet-smart-proxy.dummy.test:8443"]]
+      // body = ["smart_proxy": ["name": "puppet", "url": "https://puppet-smart-proxy.dummy.test:8443"]]
       response.success = { resp ->
-        println "POST response status: ${resp.statusLine}"
-        assertEquals((int)resp.status, 201)
+        println("successfully deleted puppet smartproxy with id:" + puppetSmartProxyId)
+        assertEquals((int)resp.status, 200)
       }
       response.failure = { resp, json ->
         println(json)
