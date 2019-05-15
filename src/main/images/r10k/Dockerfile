@@ -19,7 +19,7 @@ RUN apt-get update && \
     apt-get install --no-install-recommends -y wget ca-certificates lsb-release && \
     # install puppet agent from the puppetlabs repository
     # wget https://apt.puppetlabs.com/puppetlabs-release-pc1-"$UBUNTU_CODENAME".deb && \
-    wget https://apt.puppetlabs.com/puppet-release-"$UBUNTU_CODE_NAME".deb && \
+    wget https://apt.puppetlabs.com/puppet-release-"$UBUNTU_CODENAME".deb && \
     dpkg -i puppetlabs-release-"$UBUNTU_CODENAME".deb && \
     rm puppetlabs-release-"$UBUNTU_CODENAME".deb && \
     apt-get update && \
