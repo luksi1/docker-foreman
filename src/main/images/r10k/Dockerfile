@@ -23,7 +23,7 @@ RUN apt-get update && \
     dpkg -i puppet-release-"$UBUNTU_CODENAME".deb && \
     rm puppet-release-"$UBUNTU_CODENAME".deb && \
     apt-get update && \
-    apt-get install --no-install-recommends -y puppet-agent="$PUPPET_AGENT_VERSION"-1"$UBUNTU_CODENAME" && \
+    apt-get install --no-install-recommends -y puppet-agent && \
     apt-get remove --purge -y wget && \
     apt-get autoremove -y && \
     apt-get clean && \
