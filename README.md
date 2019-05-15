@@ -1,5 +1,5 @@
-[![SonarCloud Bugs](https://sonarcloud.io/api/badges/measure?key=luksi1_docker-foreman&metric=bugs)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=luksi1_docker-foreman)
-[![SonarCloud Vulnerabilities](https://sonarcloud.io/api/badges/measure?key=luksi1_docker-foreman&metric=vulnerabilities)](https://sonarcloud.io/component_measures/metric/security_rating/list?id=luksi1_docker-foreman)
+[![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=luksi1_docker-foreman&metric=bugs)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=luksi1_docker-foreman)
+[![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=luksi1_docker-foreman&metric=vulnerabilities)](https://sonarcloud.io/component_measures/metric/security_rating/list?id=luksi1_docker-foreman)
 
 # docker-foreman
 
