@@ -31,7 +31,8 @@ RUN sed -i -e 's/# en_US.UTF-8 UTF-8/en_US.UTF-8 UTF-8/' /etc/locale.gen && \
 
 # Enable Puppet repo
 # This is simply done here to speed up the foreman-installer
-ADD https://apt.puppetlabs.com/puppetlabs-release-pc1-xenial.deb /tmp/puppetlabs.deb
+#ADD https://apt.puppetlabs.com/puppetlabs-release-pc1-xenial.deb /tmp/puppetlabs.deb
+ADD https://apt.puppetlabs.com/puppet-release-xenial.deb /tmp/puppetlabs.deb
 # Enable Foreman repo
 # hadolint ignore=DL3008
 RUN dpkg -i /tmp/puppetlabs.deb && \
