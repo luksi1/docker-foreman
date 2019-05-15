@@ -1,8 +1,20 @@
-[![](https://images.microbadger.com/badges/image/luksi1/foreman.svg)](https://microbadger.com/images/luksi1/foreman "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/license/luksi1/foreman.svg)](https://microbadger.com/images/luksi1/foreman "Get your own license badge on microbadger.com") [![](https://images.microbadger.com/badges/version/luksi1/foreman.svg)](https://microbadger.com/images/luksi1/foreman "Get your own version badge on microbadger.com")
+[![SonarCloud Bugs](https://sonarcloud.io/api/badges/measure?key=luksi1_docker-foreman&metric=bugs)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=luksi1_docker-foreman)
+[![SonarCloud Vulnerabilities](https://sonarcloud.io/api/badges/measure?key=luksi1_docker-foreman&metric=vulnerabilities)](https://sonarcloud.io/component_measures/metric/security_rating/list?id=luksi1_docker-foreman)
 
 # docker-foreman
 
 A docker-compose stack for Foreman and Puppet using R10K for versioning.
+
+## Images
+
+**luksi1/foreman**
+[![](https://images.microbadger.com/badges/image/luksi1/foreman.svg)](https://microbadger.com/images/luksi1/foreman "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/license/luksi1/foreman.svg)](https://microbadger.com/images/luksi1/foreman "Get your own license badge on microbadger.com") [![](https://images.microbadger.com/badges/version/luksi1/foreman.svg)](https://microbadger.com/images/luksi1/foreman "Get your own version badge on microbadger.com")
+
+**luksi1/puppet-foreman**
+
+**luksi1/r10k**
+
+**luksi1/puppet-foreman-smartproxy**
 
 ## Description
 
