@@ -165,7 +165,11 @@
                 </network>
                 <wait>
                   <time>50000</time>
-                  <log>database system is ready to accept connections</log>
+                  <tcp>
+                    <ports>
+                      <port>5432</port>
+                    </ports>
+                  </tcp>
                 </wait>
               </run>
             </image>
@@ -193,7 +197,11 @@
                 </network>
                 <wait>
                   <time>30000</time>
-                  <log>database system is ready to accept connections</log>
+                  <tcp>
+                    <ports>
+                      <port>5433</port>
+                    </ports>
+                  </tcp>
                 </wait>
               </run>
             </image>
