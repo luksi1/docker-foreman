@@ -46,6 +46,7 @@ services:
           - puppet
   puppetdb:
     container_name: puppetdb
+    hostname: puppetdb
     image: puppet/puppetdb:latest
     ports:
       - "8081:8080"
@@ -87,9 +88,9 @@ services:
     container_name: puppet-smart-proxy
     image: luksi1/puppet-smart-proxy:latest
     environment:
-      TRUSTED_HOSTS: "${foreman_hostname},${foreman_hostname}.${domain},${puppet_hostname},${puppet_hostname}.${domain}"
+      TRUSTED_HOSTS: "${foreman_hostname},${foreman_hostname}.${domain},${puppetserver_hostname},${puppetserver_hostname}.${domain}"
       PUPPET_VERSION: "${puppetserver_version}"
-      PUPPET_URL: "https://${puppet_hostname}"
+      PUPPET_URL: "https://${puppetserver_hostname}"
       FOREMAN_URL: "https://${foreman_hostname}"
     volumes:
       - ../../volumes/puppet/ssl/certs/${puppet_smartproxy_hostname}.${domain}.pem:/certs/public.crt
