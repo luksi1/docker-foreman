@@ -388,7 +388,7 @@
                 <env>
                   <TRUSTED_HOSTS>foreman,foreman.${domain},puppet,puppet.${domain},puppet.${puppet.network},foreman.${puppet.network},puppet.${domain}.${puppet.network},foreman.${domain}.${puppet.network}</TRUSTED_HOSTS>
                   <PUPPET_VERSION>${puppet.version}</PUPPET_VERSION>
-                  <PUPPET_URL>https://puppet.${domain}</PUPPET_URL>
+                  <PUPPET_URL>https://${puppetserver.servername}.${domain}:8140</PUPPET_URL>
                   <FOREMAN_URL>https://foreman.${domain}:443</FOREMAN_URL>
                   <FORWARD_VERIFY>false</FORWARD_VERIFY>
                 </env>
