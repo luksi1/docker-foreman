@@ -137,6 +137,16 @@ authorization: {
           name: "puppetlabs environment classes"
         },
         {
+            match-request: {
+                path: "/status/v1/simple"
+                type: path
+                method: get
+            }
+            allow: "*"
+            sort-order: 500
+            name: "puppetlabs status service - simple"
+        },
+        {
           # Deny everything else. This ACL is not strictly
           # necessary, but illustrates the default policy
           match-request: {
