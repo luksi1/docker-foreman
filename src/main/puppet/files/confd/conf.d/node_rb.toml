@@ -1,3 +1,0 @@
-[template]
-src = "node.rb.tmpl"
-dest = "/etc/puppetlabs/puppet/node.rb"

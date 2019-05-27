@@ -1,4 +1,0 @@
-[template]
-src = "run.confd.sh.tmpl"
-dest = "/docker-entrypoint.d/run.confd.sh"
-mode = "0744"

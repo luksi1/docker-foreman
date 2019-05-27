@@ -1,3 +1,0 @@
-[template]
-src = "foreman.yaml.tmpl"
-dest = "/etc/puppetlabs/puppet/foreman.yaml"
