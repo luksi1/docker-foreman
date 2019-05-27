@@ -1,6 +1,7 @@
 version: "3.2"
 services:
   puppetdb-postgres:
+    container_name: puppetdb-postgres
     image: postgres:9.6
     environment:
       POSTGRES_PASSWORD: puppetdb
@@ -16,6 +17,7 @@ services:
           - puppetdb-postgres
           - postgres
   foreman-postgres:
+    container_name: foreman-postgres
     image: postgres:9.6
     ports:
       - "5432"
@@ -29,7 +31,8 @@ services:
       puppet-foreman-network:
         aliases:
           - foreman-postgres
-  puppet:
+  puppetserver:
+    container_name: puppetserver
     image: luksi1/puppetserver-foreman:latest
     ports:
       - "8140:8140"
@@ -42,6 +45,7 @@ services:
         aliases:
           - puppet
   puppetdb:
+    container_name: puppetdb
     image: puppet/puppetdb:latest
     ports:
       - "8081:8080"
@@ -55,6 +59,7 @@ services:
         aliases:
           - puppetdb
   foreman:
+    container_name: foreman
     image: luksi1/foreman:latest
     ports:
       - "443:443"
@@ -79,6 +84,7 @@ services:
         aliases:
           - foreman
   puppet-smart-proxy:
+    container_name: puppet-smart-proxy
     image: luksi1/puppet-smart-proxy:latest
     environment:
       TRUSTED_HOSTS: "${foreman_hostname},${foreman_hostname}.${domain},${puppet_hostname},${puppet_hostname}.${domain}"
@@ -95,6 +101,7 @@ services:
           - puppet-smart-proxy
           - puppet-smart-proxy.${domain}
   r10k:
+    container_name: r10k
     image: luksi1/r10k:latest
     ports:
       - "8088:8088"

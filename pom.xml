@@ -15,6 +15,7 @@
     <r10k.version>3.2.0</r10k.version>
     <puppetdb.version>6.2.0</puppetdb.version>
     <foreman.servername>foreman</foreman.servername>
+    <puppetserver.servername>puppet</puppetserver.servername>
     <foreman.port>443</foreman.port>
     <puppet.smartproxy.servername>puppet-smart-proxy</puppet.smartproxy.servername>
     <puppetagent.servername>puppet-agent</puppetagent.servername>
@@ -227,6 +228,10 @@
                     <volume>${project.basedir}/volumes/puppet/serverdata:/opt/puppetlabs/server/data/puppetserver/</volume>
                   </bind>
                 </volumes>
+                <env>
+                  <FOREMAN_HOSTNAME>${foreman.servername}.${domain}</FOREMAN_HOSTNAME>
+                  <PUPPETSERVER_HOSTNAME>${puppetserver.servername}.${domain}</PUPPETSERVER_HOSTNAME>
+                </env>
                 <wait>
                   <time>150000</time>
                   <log>Puppet Server has successfully started and is now ready to handle requests</log>

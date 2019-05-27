@@ -1,0 +1,3 @@
+[template]
+src = "auth.conf.tmpl"
+dest = "/etc/puppetlabs/puppet/auth.conf"
