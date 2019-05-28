@@ -1,8 +1,8 @@
 ---
 # Update for your Foreman and Puppet master hostname(s)
-:url: "https://{{ getenv "FOREMAN_HOSTNAME" }}.{{ getenv "DOMAIN" }}"
-:ssl_cert: /etc/puppetlabs/puppet/ssl/certs/{{ getenv "PUPPETSERVER_HOSTNAME" }}.{{ getenv "DOMAIN" }}.pem
-:ssl_key: /etc/puppetlabs/puppet/ssl/private_keys/{{ getenv "PUPPETSERVER_HOSTNAME" }}.{{ getenv "DOMAIN" }}.pem
+:url: "https://{{ getenv "FOREMAN_HOSTNAME" }}"
+:ssl_cert: /etc/puppetlabs/puppet/ssl/certs/{{ getenv "PUPPETSERVER_HOSTNAME" }}.pem
+:ssl_key: /etc/puppetlabs/puppet/ssl/private_keys/{{ getenv "PUPPETSERVER_HOSTNAME" }}.pem
 :ssl_ca: {{ getenv "FOREMAN_WEB_CA_CERTIFICATE" }}
 
 :puppetdir: "/opt/puppetlabs/server/data/puppetserver"
