@@ -90,8 +90,8 @@ services:
     networks:
       puppet-foreman-network:
         aliases:
-          - ${foreman_servername}
-          - ${foreman_servername}.${domain}
+          - ${foreman_hostname}
+          - ${foreman_hostname}.${domain}
   puppet-smart-proxy:
     container_name: puppet-smart-proxy
     image: luksi1/puppet-smart-proxy:latest
