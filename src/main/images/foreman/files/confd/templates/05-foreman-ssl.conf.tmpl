@@ -4,7 +4,7 @@
 # ************************************
 
 <VirtualHost *:443>
-  ServerName {{getenv "HOSTNAME"}}.{{getenv "DOMAIN"}}
+  ServerName {{getenv "HOSTNAME"}}
 
   ## Vhost docroot
   DocumentRoot "/usr/share/foreman/public"
@@ -91,7 +91,7 @@
   PassengerRuby /usr/bin/foreman-ruby
   PassengerMinInstances 1
   PassengerStartTimeout 600
-  PassengerPreStart https://{{ getenv "HOSTNAME" }}.{{ getenv "DOMAIN" }}:443
+  PassengerPreStart https://{{ getenv "HOSTNAME" }}:443
 
   AddDefaultCharset UTF-8
   KeepAlive on
