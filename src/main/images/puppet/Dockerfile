@@ -14,7 +14,8 @@ COPY files/confd /etc/confd
 COPY files/99-run.confd.sh /docker-entrypoint.d/
 RUN chmod +x /docker-entrypoint.d/99-run.confd.sh \
     && chmod +x /usr/local/bin/confd \
-    && mkdir -p /etc/puppetlabs/foreman/ssl/
+    && mkdir -p /etc/puppetlabs/foreman/ssl/ \
+    && mkdir -p /etc/puppetlabs/puppet/keys
 
 ADD https://raw.githubusercontent.com/theforeman/puppet-foreman/master/lib/puppet/parser/functions/foreman.rb /opt/puppetlabs/puppet/lib/ruby/vendor_ruby/puppet/reports/foreman.rb
 
