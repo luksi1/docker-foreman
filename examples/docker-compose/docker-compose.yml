@@ -39,7 +39,7 @@ services:
       - "8140:8140"
     environment:
       PUPPETSERVER_HOSTNAME: ${puppetserver_hostname}.${domain}
-      FOREMAN_HOSTNAME: ${foreman_hostname}
+      FOREMAN_HOSTNAME: ${foreman_hostname}.${domain}
       FOREMAN_WEB_CA_CERTIFICATE: /etc/puppetlabs/foreman/ssl/ca.pem
     volumes:
       - ../../volumes/code:/etc/puppetlabs/code/
