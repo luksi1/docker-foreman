@@ -44,7 +44,7 @@ services:
       - ../../volumes/code:/etc/puppetlabs/code/
       - ../../volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/
       - ../../volumes/puppet/serverdata:/opt/puppetlabs/server/data/puppetserver/
-      - ../../volumes/certificates/certs/ca-chain.crt:/etc/puppetlabs/foreman/ssl/ca.pem
+      - ${foreman_server_cert_chain_file}:/etc/puppetlabs/foreman/ssl/ca.pem
     networks:
       puppet-foreman-network:
         aliases:
@@ -67,7 +67,7 @@ services:
           - puppetdb
   foreman:
     container_name: foreman
-    hostname: ${foreman_servername}.${domain}
+    hostname: ${foreman_hostname}.${domain}
     image: luksi1/foreman:latest
     ports:
       - "443:443"
@@ -90,16 +90,16 @@ services:
     networks:
       puppet-foreman-network:
         aliases:
-          - ${foreman_servername}
-          - ${foreman_servername}.${domain}
+          - ${foreman_hostname}
+          - ${foreman_hostname}.${domain}
   puppet-smart-proxy:
     container_name: puppet-smart-proxy
     image: luksi1/puppet-smart-proxy:latest
     environment:
       TRUSTED_HOSTS: "${foreman_hostname},${foreman_hostname}.${domain},${puppetserver_hostname},${puppetserver_hostname}.${domain}"
       PUPPET_VERSION: "${puppetserver_version}"
-      PUPPET_URL: "https://${puppetserver_hostname}:8140"
-      FOREMAN_URL: "https://${foreman_hostname}"
+      PUPPET_URL: "https://${puppetserver_hostname}.${domain}:8140"
+      FOREMAN_URL: "https://${foreman_hostname}.${domain}"
     volumes:
       - ../../volumes/puppet/ssl/certs/${puppet_smartproxy_hostname}.${domain}.pem:/certs/public.crt
       - ../../volumes/puppet/ssl/private_keys/${puppet_smartproxy_hostname}.${domain}.pem:/certs/private.key
