@@ -44,7 +44,7 @@ services:
       - ../../volumes/code:/etc/puppetlabs/code/
       - ../../volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/
       - ../../volumes/puppet/serverdata:/opt/puppetlabs/server/data/puppetserver/
-      - ${foreman_cert_server_chain_file}:/etc/puppetlabs/foreman/ssl/ca.pem
+      - ${foreman_server_cert_chain_file}:/etc/puppetlabs/foreman/ssl/ca.pem
     networks:
       puppet-foreman-network:
         aliases:
