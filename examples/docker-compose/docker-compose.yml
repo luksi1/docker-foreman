@@ -36,6 +36,9 @@ services:
     image: luksi1/puppetserver-foreman:latest
     ports:
       - "8140:8140"
+    environment:
+      PUPPETSERVER_HOSTNAME: ${puppetserver_hostname}.${domain}
+      FOREMAN_HOSTNAME: ${foreman_hostname}
     volumes:
       - ../../volumes/code:/etc/puppetlabs/code/
       - ../../volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/
