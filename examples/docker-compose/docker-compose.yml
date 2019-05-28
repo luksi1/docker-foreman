@@ -48,7 +48,8 @@ services:
     networks:
       puppet-foreman-network:
         aliases:
-          - puppet
+          - ${puppetserver_hostname}
+          - ${puppetserver_hostname}.${domain}
   puppetdb:
     container_name: puppetdb
     hostname: puppetdb
