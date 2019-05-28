@@ -67,7 +67,7 @@ services:
           - puppetdb
   foreman:
     container_name: foreman
-    hostname: ${foreman_servername}.${domain}
+    hostname: ${foreman_hostname}.${domain}
     image: luksi1/foreman:latest
     ports:
       - "443:443"
