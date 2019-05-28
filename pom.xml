@@ -353,8 +353,7 @@
                    <DATABASE_PORT>5433</DATABASE_PORT>
                    <DATABASE_USER>foreman</DATABASE_USER>
                    <DATABASE_PASSWORD>foreman</DATABASE_PASSWORD>
-                   <HOSTNAME>${foreman.servername}</HOSTNAME>
-                   <DOMAIN>${domain}</DOMAIN>
+                   <HOSTNAME>${foreman.servername}.${domain}</HOSTNAME>
                 </env>
               </run>
             </image>
