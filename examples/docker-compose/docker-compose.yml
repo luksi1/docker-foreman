@@ -33,6 +33,7 @@ services:
           - foreman-postgres
   puppetserver:
     container_name: puppetserver
+    hostname: ${puppetserver_hostname}.${domain}
     image: luksi1/puppetserver-foreman:latest
     ports:
       - "8140:8140"
