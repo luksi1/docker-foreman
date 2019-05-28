@@ -6,6 +6,7 @@ LABEL org.label-schema.name="puppetserver" \
 # Set the default Foreman web CA certificate
 # But allow it to be overidden
 ENV FOREMAN_WEB_CA_CERTIFICATE="/etc/puppetlabs/puppet/ssl/certs/ca.pem"
+ENV AUTOSIGN="true"
 
 # confd
 ADD https://github.com/kelseyhightower/confd/releases/download/v0.10.0/confd-0.10.0-linux-amd64 /usr/local/bin/confd
