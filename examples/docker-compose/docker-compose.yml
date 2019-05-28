@@ -39,10 +39,12 @@ services:
     environment:
       PUPPETSERVER_HOSTNAME: ${puppetserver_hostname}.${domain}
       FOREMAN_HOSTNAME: ${foreman_hostname}
+      FOREMAN_WEB_CA_CERTIFICATE: /etc/puppetlabs/foreman/ssl/ca.pem
     volumes:
       - ../../volumes/code:/etc/puppetlabs/code/
       - ../../volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/
       - ../../volumes/puppet/serverdata:/opt/puppetlabs/server/data/puppetserver/
+      - ../../volumes/certificates/certs/ca-chain.crt:/etc/puppetlabs/foreman/ssl/ca.pem
     networks:
       puppet-foreman-network:
         aliases:
