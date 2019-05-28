@@ -226,11 +226,13 @@
                     <volume>${project.basedir}/volumes/code:/etc/puppetlabs/code/</volume>
                     <volume>${project.basedir}/volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/</volume>
                     <volume>${project.basedir}/volumes/puppet/serverdata:/opt/puppetlabs/server/data/puppetserver/</volume>
+                    <volume>${project.basedir}/volumes/certificates/certs/ca-chain.crt:/etc/puppetlabs/foreman/ssl/ca.pem</volume>
                   </bind>
                 </volumes>
                 <env>
                   <FOREMAN_HOSTNAME>${foreman.servername}.${domain}</FOREMAN_HOSTNAME>
                   <PUPPETSERVER_HOSTNAME>${puppetserver.servername}.${domain}</PUPPETSERVER_HOSTNAME>
+                  <FOREMAN_WEB_CA_CERTIFICATE>/etc/puppetlabs/foreman/ssl/ca.pem</FOREMAN_WEB_CA_CERTIFICATE>
                 </env>
                 <wait>
                   <time>150000</time>
