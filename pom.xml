@@ -240,7 +240,8 @@
                 </wait>
                 <network>
                   <name>${puppet.network}</name>
-                  <alias>puppet</alias>
+                  <alias>${puppetserver.servername}</alias>
+                  <alias>${puppetserver.servername}.${domain}</alias>
                 </network>
               </run>
             </image>
@@ -346,6 +347,7 @@
                 <network>
                   <name>${puppet.network}</name>
                   <alias>${foreman.servername}</alias>
+                  <alias>${foreman.servername}.${domain}</alias>
                 </network>
                 <env>
                    <DATABASE_TYPE>postgresql</DATABASE_TYPE>
@@ -377,7 +379,6 @@
                 </ports>
                 <volumes>
                   <bind>
-                    <!--<volume>${project.basedir}/volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl/</volume>-->
                     <volume>${project.basedir}/volumes/puppet/ssl/certs/${puppet.smartproxy.servername}.${domain}.pem:/certs/public.crt</volume>
                     <volume>${project.basedir}/volumes/puppet/ssl/private_keys/${puppet.smartproxy.servername}.${domain}.pem:/certs/private.key</volume>
                     <volume>${project.basedir}/volumes/puppet/ssl/certs/ca.pem:/certs/ca.pem</volume>
