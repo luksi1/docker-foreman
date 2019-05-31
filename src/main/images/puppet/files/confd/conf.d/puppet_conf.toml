@@ -2,5 +2,6 @@
 src = "puppet.conf.tmpl"
 dest = "/etc/puppetlabs/puppet/puppet.conf"
 mode = "0644"
-owner = "999"
-group = "999"
+uid = 999
+gid = 999
+

@@ -2,5 +2,5 @@
 src = "node.rb.tmpl"
 dest = "/etc/puppetlabs/puppet/node.rb"
 mode = "0755"
-owner = "999"
-group = "999"
+uid = 999
+gid = 999
