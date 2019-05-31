@@ -1,3 +1,5 @@
 [template]
 src = "foreman.yaml.tmpl"
 dest = "/etc/puppetlabs/puppet/foreman.yaml"
+owner = "999"
+group = "999"

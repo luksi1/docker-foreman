@@ -1,3 +1,5 @@
 [template]
 src = "auth.conf.tmpl"
 dest = "/etc/puppetlabs/puppetserver/conf.d/auth.conf"
+owner = "999"
+group = "999"
