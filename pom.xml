@@ -12,7 +12,7 @@
     <control.repo>https://github.com/luksi1/puppet-control-repo-example</control.repo>
     <puppet.version>6.2.1</puppet.version>
     <foreman.release>1.20</foreman.release>
-    <r10k.version>3.2.0</r10k.version>
+    <r10k.version>2.6.5</r10k.version>
     <puppetdb.version>6.2.0</puppetdb.version>
     <foreman.servername>foreman</foreman.servername>
     <puppetserver.servername>puppet</puppetserver.servername>
@@ -39,6 +39,22 @@
       <artifactId>hamcrest-all</artifactId>
       <version>1.3</version>
       <scope>test</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.spotify</groupId>
+      <artifactId>docker-client</artifactId>
+      <classifier>shaded</classifier>
+      <version>8.14.0</version>
+    </dependency>
+    <dependency>
+       <groupId>org.slf4j</groupId>
+       <artifactId>slf4j-api</artifactId>
+       <version>1.7.26</version>
+    </dependency>
+    <dependency>
+       <groupId>org.slf4j</groupId>
+       <artifactId>slf4j-log4j12</artifactId>
+       <version>1.7.26</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
