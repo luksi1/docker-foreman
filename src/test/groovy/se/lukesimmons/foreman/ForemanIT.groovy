@@ -1,18 +1,20 @@
 #!/usr/bin/env groovy
 
-import groovyx.net.http.*
-import org.apache.http.auth.*
-import org.apache.http.impl.client.*
-import org.apache.http.client.params.*
-import org.apache.http.auth.params.*
-import groovy.xml.*
-import junit.framework.Test
-import junit.textui.TestRunner
-import org.apache.commons.text.StringEscapeUtils
-import groovy.json.JsonSlurper
-import static org.junit.matchers.JUnitMatchers.*
-import static groovyx.net.http.ContentType.*
-import static groovyx.net.http.Method.*
+import groovyx.net.http.*;
+import org.apache.http.auth.*;
+import org.apache.http.impl.client.*;
+import org.apache.http.client.params.*;
+import org.apache.http.auth.params.*;
+import groovy.xml.*;
+import junit.framework.Test;
+import junit.textui.TestRunner;
+import org.apache.commons.text.StringEscapeUtils;
+import groovy.json.JsonSlurper;
+import com.spotify.docker.client.*;
+import com.spotify.docker.client.messages.*;
+import static org.junit.matchers.JUnitMatchers.*;
+import static groovyx.net.http.ContentType.*;
+import static groovyx.net.http.Method.*;
 
 /**
 Run foreman-rake against the image to reset and grab Foreman's admin password.
@@ -39,11 +41,95 @@ public class Foreman {
     }
     return instance;
   }
+
+  public int getTrustedHostsId(String port) {
+
+    String url = "https://localhost:" + port;
+    String user = 'admin'
+    String password = adminPassword
+    String usernamePassword = user + ":" + password
+    String base64UsernamePassword = usernamePassword.bytes.encodeBase64().toString()
+    HTTPBuilder remote = new HTTPBuilder(url)
+    remote.ignoreSSLIssues()
+    remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"])
+
+    remote.request(Method.GET) { req ->
+      uri.path = "/api/v2/settings/?search=trusted_hosts"
+      response.success = { resp, json ->
+        return json.id
+      }
+    }
+  }
+}
+
+public class MyDockerClient() {
+
+  DockerClient docker;
+
+  public MyDockerClient() {
+    docker = DefaultDockerClient.fromEnv().build();
+  }
+
+  public String getNetworkId(String name) {
+    def list = docker.listNetworks();
+    for (def item: list) {
+      if name.equals(item.name) {
+        return item.id
+      }
+    }
+    throw new RuntimeException(name + "was not a docker network name");
+  }
+
+  public String getContainerIdByLabel(String label, String value) {
+    def list = docker.listContainers(DockerClient.ListContainersParam.withLabel(label, value));
+    if (list.length > 1) {
+      throw new RuntimeException("This should have only netted one result, but netted: " + list.length);
+    }
+    return list[0].id
+  }
+
+  public String executeCommand(String containerId, String command) {
+    String[] cmd = ["sh","-c",command];
+    def exec = docker.execCreate(containerId, 
+      cmd,
+      DockerClient.ExecCreateParam.attachStdout(),
+      DockerClient.ExecCreateParam.attachStderr());
+
+    def execId = exec.id();
+    LogStream stream = docker.execStart(execId);
+    final String execOutput = stream.readFully();
+    return execOutput;
+  }
+}
+
+public class PuppetAgent {
+
+  public run(String hostname) {
+
+    String networkName = "puppet-foreman-network";
+    String image = "puppet/puppet-agent-ubuntu";
+    final DockerClient docker = DefaultDockerClient.fromEnv().build();
+
+    // get image
+    docker.pull(image)
+
+    final ContainerConfig containerConfig = ContainerConfig.builder()
+      .hostname(hostname)
+      .image(image)
+      .build();
+
+    final ContainerCreation creation = docker.createContainer(containerConfig);
+    final String id = creation.id();
+    docker.connectToNetwork(foreman.getNetworkId(networkName));
+    docker.startContainer(id);
+  }
 }
 
 class ForemanIT extends GroovyTestCase {
 
   String puppetSmartProxyId = "1";
+  Foreman f = Foreman.getInstance();
+  String foremanPassword = f.adminPassword;
 
   String getPort() {
     String port = "443";
@@ -112,6 +198,14 @@ class ForemanIT extends GroovyTestCase {
     }
   }
 
+  void testAgentRun() {
+
+    PuppetAgent agent = new PuppetAgent();
+    def a = agent.run("foo.dummy.test");
+    println(a)
+
+  }
+
   void testDeletePuppetSmartProxy() {
 
     println(puppetSmartProxyId)
@@ -130,7 +224,6 @@ class ForemanIT extends GroovyTestCase {
       uri.path = "/api/v2/smart_proxies/" + puppetSmartProxyId
       headers.'Accept' = 'application/json'
       requestContentType = ContentType.JSON
-      // body = ["smart_proxy": ["name": "puppet", "url": "https://puppet-smart-proxy.dummy.test:8443"]]
       response.success = { resp ->
         println("successfully deleted puppet smartproxy with id:" + puppetSmartProxyId)
         assertEquals((int)resp.status, 200)
