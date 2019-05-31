@@ -2,8 +2,8 @@
 storeconfigs_backend = puppetdb
 storeconfigs = true
 reports = puppetdb
-certname = {{ getenv "PUPPETSERVER_HOSTNAME" }}.{{ getenv "DOMAIN" }}
-server = {{ getenv "PUPPETSERVER_HOSTNAME" }}.{{ getenv "DOMAIN" }}
+certname = {{ getenv "PUPPETSERVER_HOSTNAME" }}
+server = {{ getenv "PUPPETSERVER_HOSTNAME" }}
 # This file can be used to override the default puppet settings.
 # See the following links for more details on what settings are available:
 # - https://puppet.com/docs/puppet/latest/config_important_settings.html
