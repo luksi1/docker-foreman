@@ -75,7 +75,7 @@ public class MyDockerClient {
   public String getNetworkId(String name) {
     def list = docker.listNetworks();
     for (def item: list) {
-      if name.equals(item.name) {
+      if (name.equals(item.name)) {
         return item.id
       }
     }
