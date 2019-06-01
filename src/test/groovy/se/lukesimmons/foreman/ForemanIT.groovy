@@ -64,7 +64,7 @@ public class Foreman {
   }
 }
 
-public class MyDockerClient() {
+public class MyDockerClient {
 
   DockerClient docker;
 
