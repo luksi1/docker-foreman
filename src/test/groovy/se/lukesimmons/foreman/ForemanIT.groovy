@@ -112,6 +112,7 @@ public class PuppetAgent {
     String image = "puppet/puppet-agent-ubuntu";
     final DockerClient docker = DefaultDockerClient.fromEnv().build();
     MyDockerClient myDockerClient = new MyDockerClient();
+    String networkId = myDockerClient.getNetworkId(networkName);
 
     // get image
     docker.pull(image)
@@ -123,7 +124,7 @@ public class PuppetAgent {
 
     final ContainerCreation creation = docker.createContainer(containerConfig);
     final String id = creation.id();
-    docker.connectToNetwork(myDockerClient.getNetworkId(networkName));
+    docker.connectToNetwork(networkId);
     docker.startContainer(id);
   }
 }
