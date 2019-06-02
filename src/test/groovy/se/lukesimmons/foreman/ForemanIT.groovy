@@ -122,7 +122,7 @@ public class PuppetAgent {
 
     final ContainerCreation creation = docker.createContainer(containerConfig);
     final String id = creation.id();
-    docker.connectToNetwork(foreman.getNetworkId(networkName));
+    docker.connectToNetwork(docker.getNetworkId(networkName));
     docker.startContainer(id);
   }
 }
