@@ -123,9 +123,9 @@ public class PuppetAgent {
       .build();
 
     final ContainerCreation creation = docker.createContainer(containerConfig);
-    final String id = creation.id();
-    docker.connectToNetwork(networkId);
-    docker.startContainer(id);
+    final String containerId = creation.id();
+    docker.connectToNetwork(containerId, networkId);
+    docker.startContainer(containerId);
   }
 }
 
