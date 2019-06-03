@@ -44,7 +44,7 @@ public class Foreman {
     return instance;
   }
 
-  public int getTrustedHostsId(String port) {
+  public int getSettingId(String port, String name) {
 
     String url = "https://localhost:" + port;
     String user = 'admin'
@@ -56,11 +56,44 @@ public class Foreman {
     remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"])
 
     remote.request(Method.GET) { req ->
-      uri.path = "/api/v2/settings/?search=trusted_hosts"
+      uri.path = '/api/v2/settings?search=' + name
       response.success = { resp, json ->
         return json.id
       }
+      response.failure = { resp, json ->
+        println(json)
+        throw new Exception("Stopping at item GET: uri: " + uri + "\n" +
+          "   Unknown error trying to create item: ${resp.status}, not creating Item.")
+      }
     }
+  }
+
+  public void updateSetting(String port, int id) {
+
+    String url = "https://localhost:" + port;
+    String user = 'admin'
+    String password = adminPassword
+    String usernamePassword = user + ":" + password
+    String base64UsernamePassword = usernamePassword.bytes.encodeBase64().toString()
+    HTTPBuilder remote = new HTTPBuilder(url)
+    remote.ignoreSSLIssues()
+    remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"])
+
+    remote.request(PUT) {
+      uri.path = "/api/v2/settings/" + Integer.toString(id)
+      headers.'Accept' = 'application/json'
+      requestContentType = ContentType.JSON
+      body = ["setting": ["value": "[ puppet ]"]]
+      response.success = { resp, json ->
+        println(json)
+      }
+      response.failure = { resp, json ->
+        println(json)
+        throw new Exception("Stopping at item PUT: uri: " + uri + "\n" +
+          "   Unknown error trying to create item: ${resp.status}, not creating Item.")
+      }
+    }
+
   }
 }
 
@@ -126,6 +159,7 @@ public class PuppetAgent {
     final String containerId = creation.id();
     docker.connectToNetwork(containerId, networkId);
     docker.startContainer(containerId);
+    docker.close();
   }
 }
 
@@ -134,8 +168,9 @@ class ForemanIT extends GroovyTestCase {
   String puppetSmartProxyId = "1";
   Foreman f = Foreman.getInstance();
   String foremanPassword = f.adminPassword;
+  String trustedHostsId = f.getSettingId(getPort(), "trusted_hosts");
 
-  String getPort() {
+  private String getPort() {
     String port = "443";
 
     // Set to static port if we're testing with docker-compose
@@ -147,10 +182,9 @@ class ForemanIT extends GroovyTestCase {
     return port;
   }
 
-  void testConnectity() {
+  public void testConnectity() {
 
     String url = "https://localhost:" + getPort();
-    Foreman f = Foreman.getInstance()
     String user = 'admin'
     String password = f.adminPassword
     String usernamePassword = user + ":" + password
@@ -169,7 +203,12 @@ class ForemanIT extends GroovyTestCase {
     }
   }
 
-  void testAddingPuppetSmartProxy() {
+  public void testAddingPuppetToTrustedHosts() {
+    println(trustedHostsId);
+    f.updateSetting(getPort(), trustedHostsId);
+  }
+
+  public void testAddingPuppetSmartProxy() {
 
     String url = "https://localhost:" + getPort();
     println(url)
