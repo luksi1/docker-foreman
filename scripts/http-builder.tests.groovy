@@ -25,7 +25,8 @@ HTTPBuilder remote = new HTTPBuilder(url)
 remote.ignoreSSLIssues()
 remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"])
 remote.request(Method.GET) { req ->
-  uri.path = '/api/v2/settings?search=trusted_hosts'
+  uri.path = '/api/v2/settings'
+  uri.
   response.success = { resp, json ->
     println(json.id)
   }

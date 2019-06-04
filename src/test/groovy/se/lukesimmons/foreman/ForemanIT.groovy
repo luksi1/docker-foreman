@@ -1,5 +1,6 @@
 #!/usr/bin/env groovy
 
+import org.apache.groovy.json.internal.LazyMap;
 import groovyx.net.http.*;
 import org.apache.http.auth.*;
 import org.apache.http.impl.client.*;
@@ -27,14 +28,20 @@ public class Foreman {
 
   private static Foreman instance;
 
-  public String adminPassword;
+  public String url;
+  public String user = 'admin';
+  public base64UsernamePassword;
 
   private Foreman(){
-    String containerId = ["/usr/bin/sudo","/usr/bin/docker","ps","-aqf","label=org.label-schema.name=foreman"].execute().text.trim()
+    private String adminPassword;
+    private String containerId = ["/usr/bin/sudo","/usr/bin/docker","ps","-aqf","label=org.label-schema.name=foreman"].execute().text.trim()
     (["/usr/bin/sudo","/usr/bin/docker","exec","-t",containerId,"foreman-rake","permissions:reset"].execute().text =~ /Reset to user: admin, password: (\S+)\s+/).each {
       full, match ->
         adminPassword = match
     }
+    url = "https://localhost:" + Integer.toString(getPort());
+    private String usernamePassword = user + ":" + adminPassword
+    base64UsernamePassword = usernamePassword.bytes.encodeBase64().toString()
   }
     
   public static Foreman getInstance(){
@@ -44,21 +51,28 @@ public class Foreman {
     return instance;
   }
 
-  public int getSettingId(String port, String name) {
+  private int getPort() {
+    int port = 443;
+    // Set to static port if we're testing with docker-compose
+    // We are unable to set the port number via the external configuration, and thus
+    // unable to dynamically allocate a port and bind it to our system variable
+    if(System.getProperty("foremanPort") != null && !System.getProperty("foremanPort").isEmpty()) {
+      port = Integer.parseInt(System.getProperty("foremanPort"));
+    }
+    return port;
+  }
 
-    String url = "https://localhost:" + port;
-    String user = 'admin'
-    String password = adminPassword
-    String usernamePassword = user + ":" + password
-    String base64UsernamePassword = usernamePassword.bytes.encodeBase64().toString()
-    HTTPBuilder remote = new HTTPBuilder(url)
-    remote.ignoreSSLIssues()
-    remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"])
+  public int getSettingId(String name) {
+
+    HTTPBuilder remote = new HTTPBuilder(url);
+    remote.ignoreSSLIssues();
+    remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"]);
 
     remote.request(Method.GET) { req ->
-      uri.path = '/api/v2/settings?search=' + name
+      uri.path = "/api/v2/settings"
+      uri.query = [search: "${name}"]
       response.success = { resp, json ->
-        return json.id
+        return json.results.id[0]
       }
       response.failure = { resp, json ->
         println(json)
@@ -68,16 +82,11 @@ public class Foreman {
     }
   }
 
-  public void updateSetting(String port, int id) {
+  public updateSetting(int id) {
 
-    String url = "https://localhost:" + port;
-    String user = 'admin'
-    String password = adminPassword
-    String usernamePassword = user + ":" + password
-    String base64UsernamePassword = usernamePassword.bytes.encodeBase64().toString()
-    HTTPBuilder remote = new HTTPBuilder(url)
-    remote.ignoreSSLIssues()
-    remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"])
+    HTTPBuilder remote = new HTTPBuilder(url);
+    remote.ignoreSSLIssues();
+    remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"]);
 
     remote.request(PUT) {
       uri.path = "/api/v2/settings/" + Integer.toString(id)
@@ -85,7 +94,7 @@ public class Foreman {
       requestContentType = ContentType.JSON
       body = ["setting": ["value": "[ puppet ]"]]
       response.success = { resp, json ->
-        println(json)
+        return resp
       }
       response.failure = { resp, json ->
         println(json)
@@ -93,7 +102,83 @@ public class Foreman {
           "   Unknown error trying to create item: ${resp.status}, not creating Item.")
       }
     }
+  }
 
+  public LazyMap getSmartProxyByName(String name) {
+
+    HTTPBuilder remote = new HTTPBuilder(url);
+    remote.ignoreSSLIssues();
+    remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"]);
+    // Wrap name in a regex for searching in the API
+    String regExName = "name ~ \"${name}\""
+
+    remote.request(Method.GET) { req ->
+      uri.path = "/api/v2/smart_proxies"
+      uri.query = [search: regExName]
+      response.success = { resp, json ->
+        return json
+      }
+      response.failure = { resp, json ->
+        println(json)
+        throw new Exception("Stopping at item GET: uri: " + uri + "\n" +
+          "   Unknown error trying to create item: ${resp.status}, not creating Item.")
+      }
+    }
+  }
+
+  public LazyMap addSmartProxy(String name, String smartProxyUrl) {
+
+    HTTPBuilder remote = new HTTPBuilder(url);
+    remote.ignoreSSLIssues();
+    remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"]);
+
+    remote.request(POST) {
+      uri.path = "/api/v2/smart_proxies"
+      headers.'Accept' = 'application/json'
+      requestContentType = ContentType.JSON
+      body = ["smart_proxy": ["name": name, "url": smartProxyUrl]]
+      response.success = { resp, json ->
+        return json
+      }
+      response.failure = { resp, json ->
+        return json
+      }
+    }
+  }
+
+  public LazyMap deleteSmartProxy(int smartProxyId) {
+
+    HTTPBuilder remote = new HTTPBuilder(url);
+    remote.ignoreSSLIssues();
+    remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"]);
+
+    remote.request(Method.DELETE) { req ->
+      uri.path = "/api/v2/smart_proxies/" + Integer.toString(smartProxyId)
+      headers.'Accept' = 'application/json'
+      requestContentType = ContentType.JSON
+      response.success = { resp, json ->
+        return json
+      }
+      response.failure = { resp, json ->
+        println(json)
+        throw new Exception("Stopping at item POST: uri: " + uri + "\n" +
+            "   Unknown error trying to create item: ${resp.status}, not creating Item.")
+      }
+    }
+  }
+
+  public LazyMap getDashboardInformation() {
+
+    HTTPBuilder remote = new HTTPBuilder(url)
+    remote.ignoreSSLIssues()
+    remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"])
+
+    remote.request(Method.GET) { req ->
+      uri.path = "/api/v2/dashboard"
+      response.success = { resp, json ->
+        return json;
+      }
+    }
   }
 }
 
@@ -165,79 +250,27 @@ public class PuppetAgent {
 
 class ForemanIT extends GroovyTestCase {
 
-  String puppetSmartProxyId = "1";
   Foreman f = Foreman.getInstance();
-  String foremanPassword = f.adminPassword;
-  String trustedHostsId = f.getSettingId(getPort(), "trusted_hosts");
-
-  private String getPort() {
-    String port = "443";
-
-    // Set to static port if we're testing with docker-compose
-    // We are unable to set the port number via the external configuration, and thus
-    // unable to dynamically allocate a port and bind it to our system variable
-    if(System.getProperty("foremanPort") != null && !System.getProperty("foremanPort").isEmpty()) {
-      port = System.getProperty("foremanPort");
-    }
-    return port;
-  }
 
   public void testConnectity() {
-
-    String url = "https://localhost:" + getPort();
-    String user = 'admin'
-    String password = f.adminPassword
-    String usernamePassword = user + ":" + password
-    String base64UsernamePassword = usernamePassword.bytes.encodeBase64().toString()
-
-    HTTPBuilder remote = new HTTPBuilder(url)
-    remote.ignoreSSLIssues()
-    remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"])
-
-    remote.request(Method.GET) { req ->
-      uri.path = "/api/v2/dashboard"
-      response.success = { resp, json ->
-        assertEquals((int)resp.status, 200)
-        assertEquals((int)json.total_hosts, 0)
-      }
-    }
+    def json = f.getDashboardInformation();
+    assertEquals((int)json.total_hosts, 0);
   }
 
-  public void testAddingPuppetToTrustedHosts() {
-    println(trustedHostsId);
-    f.updateSetting(getPort(), trustedHostsId);
+  public void testAddingPuppetServerToTrustedHosts() {
+    private int trustedHostsId = f.getSettingId("trusted_hosts");
+    def response = f.updateSetting(trustedHostsId);
+    assertEquals((int)response.status, 200);
   }
 
   public void testAddingPuppetSmartProxy() {
 
-    String url = "https://localhost:" + getPort();
-    println(url)
-    Foreman f = Foreman.getInstance()
-    String user = 'admin'
-    String password = f.adminPassword
-    String usernamePassword = user + ":" + password
-    println usernamePassword
-    String base64UsernamePassword = usernamePassword.bytes.encodeBase64().toString()
-
-    HTTPBuilder remote = new HTTPBuilder(url)
-    remote.ignoreSSLIssues()
-    remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"])
-
-    remote.request(POST) {
-      uri.path = "/api/v2/smart_proxies"
-      headers.'Accept' = 'application/json'
-      requestContentType = ContentType.JSON
-      body = ["smart_proxy": ["name": "puppet", "url": "https://puppet-smart-proxy.dummy.test:8443"]]
-      response.success = { resp, json ->
-        puppetSmartProxyId = json.id
-        assertEquals((int)resp.status, 201)
-        println(puppetSmartProxyId)
-      }
-      response.failure = { resp, json ->
-        println(json)
-        throw new Exception("Stopping at item POST: uri: " + uri + "\n" +
-          "   Unknown error trying to create item: ${resp.status}, not creating Item.")
-      }
+    def json = f.addSmartProxy("puppet", "https://puppet-smart-proxy.dummy.test:8443");
+    if (json.error.errors.name[0].equals("has already been taken")) {
+       def proxy = f.getSmartProxyByName("puppet");
+       int proxyId = proxy.results.id[0];
+       f.deleteSmartProxy(proxyId);
+       json = f.addSmartProxy("puppet", "https://puppet-smart-proxy.dummy.test:8443");
     }
   }
 
@@ -245,37 +278,14 @@ class ForemanIT extends GroovyTestCase {
 
     PuppetAgent agent = new PuppetAgent();
     def a = agent.run("foo.dummy.test");
-    println(a)
 
   }
 
   void testDeletePuppetSmartProxy() {
 
-    println(puppetSmartProxyId)
-    String url = "https://localhost:" + getPort();
-    Foreman f = Foreman.getInstance()
-    String user = 'admin'
-    String password = f.adminPassword
-    String usernamePassword = user + ":" + password
-    String base64UsernamePassword = usernamePassword.bytes.encodeBase64().toString()
+    def proxy = f.getSmartProxyByName("puppet");
+    def json = f.deleteSmartProxy(proxy.results.id[0]);
+    println(json);
 
-    HTTPBuilder remote = new HTTPBuilder(url)
-    remote.ignoreSSLIssues()
-    remote.setHeaders([Authorization: "Basic ${base64UsernamePassword}"])
-
-    remote.request(Method.DELETE) { req ->
-      uri.path = "/api/v2/smart_proxies/" + puppetSmartProxyId
-      headers.'Accept' = 'application/json'
-      requestContentType = ContentType.JSON
-      response.success = { resp ->
-        println("successfully deleted puppet smartproxy with id:" + puppetSmartProxyId)
-        assertEquals((int)resp.status, 200)
-      }
-      response.failure = { resp, json ->
-        println(json)
-        throw new Exception("Stopping at item POST: uri: " + uri + "\n" +
-            "   Unknown error trying to create item: ${resp.status}, not creating Item.")
-      }
-    }
   }
 }
