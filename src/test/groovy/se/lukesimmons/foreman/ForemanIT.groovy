@@ -266,11 +266,13 @@ class ForemanIT extends GroovyTestCase {
   public void testAddingPuppetSmartProxy() {
 
     def json = f.addSmartProxy("puppet", "https://puppet-smart-proxy.dummy.test:8443");
-    if (json.error.errors.name[0].equals("has already been taken")) {
-       def proxy = f.getSmartProxyByName("puppet");
-       int proxyId = proxy.results.id[0];
-       f.deleteSmartProxy(proxyId);
-       json = f.addSmartProxy("puppet", "https://puppet-smart-proxy.dummy.test:8443");
+    if (json.error != null) {
+      if (json.error.errors.name[0].equals("has already been taken")) {
+        def proxy = f.getSmartProxyByName("puppet");
+        int proxyId = proxy.results.id[0];
+        f.deleteSmartProxy(proxyId);
+        json = f.addSmartProxy("puppet", "https://puppet-smart-proxy.dummy.test:8443");
+      }
     }
   }
 
