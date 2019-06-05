@@ -1,0 +1,5 @@
+[template]
+src = "puppetca_hostname_whitelisting.yml.tmpl"
+dest = "/etc/foreman-proxy/settings.d/puppetca_hostname_whitelisting.yml"
+mode = "0666"
+

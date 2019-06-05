@@ -1,7 +1,7 @@
 [main]
 storeconfigs_backend = puppetdb
 storeconfigs = true
-reports = puppetdb
+reports = puppetdb,foreman,log
 certname = {{ getenv "PUPPETSERVER_HOSTNAME" }}
 server = {{ getenv "PUPPETSERVER_HOSTNAME" }}
 # This file can be used to override the default puppet settings.

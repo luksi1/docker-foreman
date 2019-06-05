@@ -104,6 +104,7 @@ RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
 EXPOSE 443
+EXPOSE 8443
 
 # server certificates used for external access
 VOLUME /certs/server.crt

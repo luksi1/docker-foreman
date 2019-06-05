@@ -1,0 +1,7 @@
+---
+{{ if getenv "HTTP_ENABLED" }}
+:enabled: http
+{{ else }}
+:enabled: https
+{{ end }}
+:puppet_version: {{ getenv "PUPPET_VERSION" }}

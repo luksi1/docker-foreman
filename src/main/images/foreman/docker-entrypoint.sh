@@ -34,4 +34,5 @@ foreman-rake db:migrate
 foreman-rake db:seed
 foreman-rake apipie:cache:index
 
+# Start foreman in the foreground
 apachectl -d /etc/apache2 -f /etc/apache2/apache2.conf -e debug -DFOREGROUND
