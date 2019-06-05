@@ -18,6 +18,7 @@ import com.spotify.docker.client.LogStream;
 import static org.junit.matchers.JUnitMatchers.*;
 import static groovyx.net.http.ContentType.*;
 import static groovyx.net.http.Method.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 
 /**
 Run foreman-rake against the image to reset and grab Foreman's admin password.
@@ -266,12 +267,18 @@ class ForemanIT extends GroovyTestCase {
   public void testAddingPuppetSmartProxy() {
 
     def json = f.addSmartProxy("puppet", "https://puppet-smart-proxy.dummy.test:8443");
-    if (json.error != null && json.error.errors.name[0].equals("has already been taken")) {
-      def proxy = f.getSmartProxyByName("puppet");
-      int proxyId = proxy.results.id[0];
-      f.deleteSmartProxy(proxyId);
-      json = f.addSmartProxy("puppet", "https://puppet-smart-proxy.dummy.test:8443");
+    if (json.error != null) {
+      if (json.error.errors.name[0].equals("has already been taken")) {
+        def proxy = f.getSmartProxyByName("puppet");
+        int proxyId = proxy.results.id[0];
+        f.deleteSmartProxy(proxyId);
+        json = f.addSmartProxy("puppet", "https://puppet-smart-proxy.dummy.test:8443");
+      } else {
+        throw new RuntimeException("API called errored out and was not due to a duplicate smart porxy: " + json)
+      }
     }
+    assertThat((int)json.id, is(greaterThan(0)));
+    assertEquals(json.name, "puppet");
   }
 
   void testAgentRun() {

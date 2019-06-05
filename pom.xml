@@ -6,8 +6,8 @@
   <version>1</version>
   <packaging>pom</packaging>
   <properties>
-   <timestamp>${maven.build.timestamp}</timestamp>
-   <maven.build.timestamp.format>yyyyMMdd-HHmmss</maven.build.timestamp.format>
+    <timestamp>${maven.build.timestamp}</timestamp>
+    <maven.build.timestamp.format>yyyyMMdd-HHmmss</maven.build.timestamp.format>
     <domain>dummy.test</domain>
     <control.repo>https://github.com/luksi1/puppet-control-repo-example</control.repo>
     <puppet.version>6.2.1</puppet.version>
@@ -195,9 +195,9 @@
               <alias>foreman-postgres</alias>
               <run>
                 <ports>
-                  <port>5433</port>
+                  <port>5432</port>
                 </ports>
-                <cmd>-p 5433</cmd>
+                <!--<cmd>-p 5433</cmd>-->
                 <env>
                    <POSTGRES_PASSWORD>foreman</POSTGRES_PASSWORD>
                    <POSTGRES_USER>foreman</POSTGRES_USER>
@@ -216,7 +216,7 @@
                   <time>30000</time>
                   <tcp>
                     <ports>
-                      <port>5433</port>
+                      <port>5432</port>
                     </ports>
                   </tcp>
                 </wait>
@@ -368,7 +368,7 @@
                 <env>
                    <DATABASE_TYPE>postgresql</DATABASE_TYPE>
                    <DATABASE_HOST>foreman-postgres</DATABASE_HOST>
-                   <DATABASE_PORT>5433</DATABASE_PORT>
+                   <DATABASE_PORT>5432</DATABASE_PORT>
                    <DATABASE_USER>foreman</DATABASE_USER>
                    <DATABASE_PASSWORD>foreman</DATABASE_PASSWORD>
                    <HOSTNAME>${foreman.servername}.${domain}</HOSTNAME>
