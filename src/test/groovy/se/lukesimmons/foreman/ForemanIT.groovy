@@ -258,6 +258,8 @@ class ForemanIT extends GroovyTestCase {
     assertEquals((int)json.reports_missing, 0);
   }
 
+  // This needs to be done or else not trust will be created for puppetserver
+  // This should probably be moved to a setup phase
   public void testAddingPuppetServerToTrustedHosts() {
     private int trustedHostsId = f.getSettingId("trusted_hosts");
     def response = f.updateSetting(trustedHostsId);
@@ -269,9 +271,18 @@ class ForemanIT extends GroovyTestCase {
     assertEquals("puppet", json.name);
   }
 
-  void testAgentRun() {
+  public void testThatFooDummyTestWasAdded() {
+    // before puppet run there should not be any hosts
+    def json = f.getDashboardInformation();
+    assertEquals((int)json.total_hosts, 0);
+
+    // run puppet from host foo.dummy.test
     PuppetAgent agent = new PuppetAgent();
-    def a = agent.run("foo.dummy.test");
+    agent.run("foo.dummy.test");
+
+    // after puppet run there should one host
+    def json = f.getDashboardInformation();
+    assertEquals((int)json.total_hosts, 1);
   }
 
   void testDeletePuppetSmartProxy() {
