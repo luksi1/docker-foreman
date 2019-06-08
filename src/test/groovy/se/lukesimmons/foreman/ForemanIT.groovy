@@ -255,7 +255,6 @@ class ForemanIT extends GroovyTestCase {
 
   public void testConnectity() {
     def json = f.getDashboardInformation();
-    println("dashboard: " + json);
     assertEquals((int)json.reports_missing, 0);
   }
 
@@ -267,7 +266,6 @@ class ForemanIT extends GroovyTestCase {
 
   public void testAddingPuppetSmartProxy() {
     def json = f.addSmartProxy("puppet", "https://puppet-smart-proxy.dummy.test:8443");
-    println("Adding: " + json);
     assertEquals("puppet", json.name);
   }
 
@@ -278,9 +276,8 @@ class ForemanIT extends GroovyTestCase {
 
   void testDeletePuppetSmartProxy() {
     def proxy = f.getSmartProxyByName("puppet");
-    println("Proxy: " + proxy.results[0].id);
-    // def json = f.deleteSmartProxy(proxy.results[0].id);
-    // println("Deleting:" + json.results[0]);
-    // assertEquals(json.results.name, "puppet");
+    def json = f.deleteSmartProxy(proxy.results[0].id);
+    println("Deleting - json.results: " + json.results);
+    assertEquals("puppet", json.results.name);
   }
 }
