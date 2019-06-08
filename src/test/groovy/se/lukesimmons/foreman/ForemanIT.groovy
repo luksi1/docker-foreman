@@ -273,16 +273,16 @@ class ForemanIT extends GroovyTestCase {
 
   public void testThatFooDummyTestWasAdded() {
     // before puppet run there should not be any hosts
-    def json = f.getDashboardInformation();
-    assertEquals((int)json.total_hosts, 0);
+    def noHosts = f.getDashboardInformation();
+    assertEquals((int)noHosts.total_hosts, 0);
 
     // run puppet from host foo.dummy.test
     PuppetAgent agent = new PuppetAgent();
     agent.run("foo.dummy.test");
 
     // after puppet run there should one host
-    def json = f.getDashboardInformation();
-    assertEquals((int)json.total_hosts, 1);
+    def oneHost = f.getDashboardInformation();
+    assertEquals((int)oneHost.total_hosts, 1);
   }
 
   void testDeletePuppetSmartProxy() {
