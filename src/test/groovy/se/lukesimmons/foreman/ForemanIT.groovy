@@ -282,13 +282,17 @@ class ForemanIT extends GroovyTestCase {
 
     // after puppet run there should one host
     def oneHost = f.getDashboardInformation();
+    prtinln(oneHost);
     assertEquals((int)oneHost.total_hosts, 1);
   }
-
+  /**
+  // No reason to test that we can delete the proxy
+  // This was actually added to test locally
   void testDeletePuppetSmartProxy() {
     def proxy = f.getSmartProxyByName("puppet");
     def json = f.deleteSmartProxy(proxy.results[0].id);
     println("Deleting - json.results: " + json.results);
     assertEquals("puppet", json.results.name);
   }
+  */
 }
