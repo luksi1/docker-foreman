@@ -282,7 +282,7 @@ class ForemanIT extends GroovyTestCase {
 
     // after puppet run there should one host
     def oneHost = f.getDashboardInformation();
-    prtinln(oneHost);
+    println(oneHost);
     assertEquals((int)oneHost.total_hosts, 1);
   }
   // No reason to test that we can delete the proxy
