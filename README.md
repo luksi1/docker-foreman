@@ -59,7 +59,7 @@ https://puppet:puppet@puppet-test.domain.com:8088/payload
 
 ## Up and running with maven (foreman.dummy.test)
 
-Running "mvn docker:run" should get you an entire stack with https://foreman.dummy.test as your web url.
+Running "mvn docker:run" should get you an entire stack with https://foreman.dummy.test as your web url. Be sure to add foreman.dummy.test to your hosts file!
 
 ## Up and running with docker-compose (foreman.dummy.test)
 
