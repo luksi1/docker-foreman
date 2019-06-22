@@ -59,7 +59,7 @@ https://puppet:puppet@puppet-test.domain.com:8088/payload
 
 ## Up and running with maven (foreman.dummy.test)
 
-Simply running "mvn docker:run" should get you an entire stack with foreman.dummy.test as your entrypoint.
+Running "mvn docker:run" should get you an entire stack with https://foreman.dummy.test as your web url.
 
 ## Up and running with docker-compose (foreman.dummy.test)
 
@@ -127,7 +127,7 @@ foreman_server_cert_chain_file=../../volumes/certificates/certs/ca-chain.crt
 
 ### Certificate handling
 
-One tip if you need to create certificates signed by your Puppet CA is simply to boot up your environment with out puppet:
+One tip if you need to create certificates signed by your Puppet CA is simply to boot up your environment without puppet:
 
 ```
 docker-compose up puppetserver
@@ -198,7 +198,7 @@ Edit your host's crontab accordingly
 ### Usage
 
 ```
-mvn docker:run
+mvn verify
 ``` 
 
 #### Coverage
@@ -211,19 +211,6 @@ mvn docker:run
 
 ## Notes
 
-- If you would like to re-run the post-configuration steps, you'll need to remove the file `.configured` in `/opt/foreman/volumes/post_scripts/`
-- Starting up this stack can take some time. Approx. 2 minutes.
+- Starting up this stack can take some time. Approx. 1 minute.
 - Startup time is partly due to the fact that R10K will perform a pull of all of it's modules. To speed up the time, there is a volume under `/opt/foreman/volumes/puppet/code` so that a fresh clone does not need to occur for each run.
 - Postgres only listens locally.
-- If you get a DH key pair error add the following to the bottom of your public foreman certificate: 
-```
------BEGIN DH PARAMETERS-----
-MIGHAoGBAP//////////yQ/aoiFowjTExmKLgNwc0SkCTgiKZ8x0Agu+pjsTmyJR
-Sgh5jjQE3e+VGbPNOkMbMCsKbfJfFDdP4TVtbVHCReSFtXZiXn7G9ExC6aY37WsL
-/1y29Aa37e44a/taiZ+lrp8kEXxLH+ZJKGZR7OZTgf//////////AgEC
------END DH PARAMETERS-----
-```
-
-## To Do
-
-- Add MCollective
