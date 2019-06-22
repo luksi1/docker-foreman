@@ -4,13 +4,13 @@
 
 # docker-foreman
 
-A docker-compose stack for Foreman and Puppet using R10K for versioning.
+A docker stack for Puppet, using Foreman as the external node classifier, R10K for version control, and PuppetDB. 
 
 ## Images
 
 **luksi1/foreman**
 
-[![](https://images.microbadger.com/badges/image/luksi1/foreman.svg)](https://microbadger.com/images/luksi1/foreman "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/license/luksi1/foreman.svg)](https://microbadger.com/images/luksi1/foreman "Get your own license badge on microbadger.com") [![](https://images.microbadger.com/badges/version/luksi1/foreman.svg)](https://microbadger.com/images/luksi1/foreman "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/luksi1/foreman:1.20-1.svg)](https://microbadger.com/images/luksi1/foreman:1.20-1 "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/luksi1/foreman:1.20-1.svg)](https://microbadger.com/images/luksi1/foreman:1.20-1 "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/license/luksi1/foreman:1.20-1.svg)](https://microbadger.com/images/luksi1/foreman:1.20-1 "Get your own license badge on microbadger.com")
 
 **luksi1/puppet-foreman**
 
@@ -20,16 +20,15 @@ A docker-compose stack for Foreman and Puppet using R10K for versioning.
 
 ## Description
 
+**Foreman** is a free open source project used to automate tasks, deploy application, and manage a server's life cycle, either bare-metal, virtual, or in the cloud.
 
-Foreman is a tool for infrastructure provisioning for bare metal, virtual machines, and/or configuration management.
+**Puppet** is a configuration management tool provided by PuppetLabs, allowing system administrators to use "Infrastructure as Code" to define a server's state.
 
-Puppet is a configuration management tool provided by PuppetLabs. 
+**PuppetDB** is a backend, providing an easy way to query your infrastructure's operating systems, versions, network cards... 
 
-PuppetDB is a backend, which provides an easy way to query your infrastructure: operating systems, versions, network cards... 
+**R10K** is a Ruby gem that allows you to pull Puppet modules directly into your configuration management stack from a version control system.
 
-R10K is simply a Ruby gem that allows you to pull Puppet modules directly into your configuration management stack.
-
-PostgreSQL is used as a backend for PuppetDB and Foreman.
+**PostgreSQL** is used as a backend for PuppetDB and Foreman.
 
 This stack binds these components together in a seamless and easy way. All you need to do is input your infrastructure's parameters in an .env file, K8s cluster, or simply run an image on the side.
 
