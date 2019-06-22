@@ -13,6 +13,7 @@ A docker stack for Puppet, using Foreman as the external node classifier, R10K f
 [![](https://images.microbadger.com/badges/image/luksi1/foreman:1.20-1.svg)](https://microbadger.com/images/luksi1/foreman:1.20-1 "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/luksi1/foreman:1.20-1.svg)](https://microbadger.com/images/luksi1/foreman:1.20-1 "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/license/luksi1/foreman:1.20-1.svg)](https://microbadger.com/images/luksi1/foreman:1.20-1 "Get your own license badge on microbadger.com")
 
 **luksi1/puppet-foreman**
+[![](https://images.microbadger.com/badges/image/luksi1/puppetserver-foreman.svg)](https://microbadger.com/images/luksi1/puppetserver-foreman "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/luksi1/puppetserver-foreman:6.2.1-2.svg)](https://microbadger.com/images/luksi1/puppetserver-foreman:6.2.1-2 "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/commit/luksi1/puppetserver-foreman:6.2.1-2.svg)](https://microbadger.com/images/luksi1/puppetserver-foreman:6.2.1-2 "Get your own commit badge on microbadger.com") [![](https://images.microbadger.com/badges/license/luksi1/puppetserver-foreman:6.2.1-2.svg)](https://microbadger.com/images/luksi1/puppetserver-foreman:6.2.1-2 "Get your own license badge on microbadger.com")
 
 **luksi1/r10k**
 
