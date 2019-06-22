@@ -45,7 +45,7 @@
       <groupId>com.spotify</groupId>
       <artifactId>docker-client</artifactId>
       <classifier>shaded</classifier>
-      <version>8.14.0</version>
+      <version>8.16.0</version>
     </dependency>
     <dependency>
        <groupId>org.slf4j</groupId>
