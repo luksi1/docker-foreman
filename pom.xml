@@ -15,6 +15,8 @@
     <foreman.release>1.20</foreman.release>
     <r10k.version>2.6.5</r10k.version>
     <puppetdb.version>6.2.0</puppetdb.version>
+    <puppetdb.postgres.version>9.6.8</puppetdb.postgres.version>
+    <foreman.postgres.version>9.6.8</foreman.postgres.version>
     <foreman.servername>foreman</foreman.servername>
     <puppetserver.servername>puppet</puppetserver.servername>
     <foreman.port>443</foreman.port>
@@ -161,7 +163,7 @@
               </run>
             </image>
             <image>
-              <name>docker.io/postgres:9.6</name>
+              <name>docker.io/postgres:${puppetdb.postgres.version}</name>
               <alias>puppetdb-postgres</alias>
               <run>
                 <ports>
@@ -180,6 +182,7 @@
                 <network>
                   <name>${puppet.network}</name>
                   <alias>puppetdb-postgres</alias>
+                  <alias>postgres</alias>
                 </network>
                 <wait>
                   <time>50000</time>
@@ -192,7 +195,7 @@
               </run>
             </image>
             <image>
-              <name>docker.io/postgres:9.6</name>
+              <name>docker.io/postgres:${foreman.postgres.version}</name>
               <alias>foreman-postgres</alias>
               <run>
                 <ports>
@@ -272,7 +275,9 @@
                   <port>puppetdb.port:8080</port>
                 </ports>
                 <env>
-                   <PUPPETDB_DATABASE_CONNECTION>//puppetdb-postgres:5432/puppetdb</PUPPETDB_DATABASE_CONNECTION>
+                   <!--<PUPPETDB_DATABASE_CONNECTION>//puppetdb-postgres:5432/puppetdb</PUPPETDB_DATABASE_CONNECTION>-->
+                   <PUPPETDB_POSTGRES_HOSTNAME>puppetdb-postgres</PUPPETDB_POSTGRES_HOSTNAME>
+                   <PUPPETDB_POSTGRES_PORT>5432</PUPPETDB_POSTGRES_PORT>
                 </env>
                 <volumes>
                   <bind>
