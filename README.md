@@ -111,11 +111,13 @@ puppet_smartproxy_hostname: puppet-smart-proxy
 ```
 
 **Path to Foreman's public certificate**
+This is the public facing web server public certificate.
 ```
 foreman_server_cert_file=../../volumes/certificates/certs/foreman.dummy.test.crt
 ```
 
 **Path to Foreman's private certificate**
+This is the public facing web server certificate's private key.
 ```
 foreman_server_cert_key_file=../../volumes/certificates/private/foreman.dummy.test.key
 ```
@@ -213,4 +215,4 @@ mvn verify
 
 - Starting up this stack can take some time. Approx. 1 minute.
 - Startup time is partly due to the fact that R10K will perform a pull of all of it's modules. To speed up the time, there is a volume under `/opt/foreman/volumes/puppet/code` so that a fresh clone does not need to occur for each run.
-- Postgres only listens locally.
+- Postgres only listens locally on the docker network by default. You will not be able access it remotely.
