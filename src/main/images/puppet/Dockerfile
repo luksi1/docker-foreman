@@ -1,4 +1,4 @@
-FROM puppet/puppetserver:6.2.1
+FROM puppet/puppetserver:6.5.0
 
 LABEL org.label-schema.name="puppetserver" \
       org.label-schema.vcs-url="https://github.com/luksi1/docker-foreman"
