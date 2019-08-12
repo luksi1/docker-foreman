@@ -25,7 +25,7 @@
     <r10k.servername>r10k</r10k.servername>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Version of theFabric8 Docker Maven plugin. -->
-    <docker-maven-plugin.version>0.30.0</docker-maven-plugin.version>
+    <docker-maven-plugin.version>0.31.0</docker-maven-plugin.version>
     <!--Log output during creation of Docker image to standard out. -->
     <docker.verbose>true</docker.verbose>
     <docker.autoCreateCustomNetworks>true</docker.autoCreateCustomNetworks>
