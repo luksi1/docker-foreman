@@ -1,0 +1,4 @@
+[template]
+src = "logs.yml.tmpl"
+dest = "/etc/foreman-proxy/settings.d/logs.yml"
+mode = "0666"

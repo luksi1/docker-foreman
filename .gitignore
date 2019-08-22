@@ -3,8 +3,12 @@ foreman/certs/*
 
 # Foreman passwords
 tests/foreman/foreman_properties.py
+volumes/certificates/*
+volumes/puppetdb/ssl/*
 
-.env
+volumes/*
+
+target/*
 
 # Postgres data files
 volumes/postgres/data/*

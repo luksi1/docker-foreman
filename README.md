@@ -1,120 +1,165 @@
+[![Build Status](https://travis-ci.org/luksi1/docker-foreman.svg?branch=docker-maven-plugin)](https://travis-ci.org/luksi1/docker-foreman)
+[![SonarCloud Bugs](https://sonarcloud.io/api/project_badges/measure?project=luksi1_docker-foreman&metric=bugs)](https://sonarcloud.io/component_measures/metric/reliability_rating/list?id=luksi1_docker-foreman)
+[![SonarCloud Vulnerabilities](https://sonarcloud.io/api/project_badges/measure?project=luksi1_docker-foreman&metric=vulnerabilities)](https://sonarcloud.io/component_measures/metric/security_rating/list?id=luksi1_docker-foreman)
+
 # docker-foreman
 
-A docker-compose stack for Foreman and Puppet using R10K for versioning.
+A docker stack for Puppet, using Foreman as the external node classifier, R10K for version control, and PuppetDB. 
+
+## Images
+
+**luksi1/foreman**
+
+[![](https://images.microbadger.com/badges/image/luksi1/foreman:1.20-1.svg)](https://microbadger.com/images/luksi1/foreman:1.20-1 "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/luksi1/foreman:1.20-1.svg)](https://microbadger.com/images/luksi1/foreman:1.20-1 "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/license/luksi1/foreman:1.20-1.svg)](https://microbadger.com/images/luksi1/foreman:1.20-1 "Get your own license badge on microbadger.com")
+
+**luksi1/puppet-foreman**
+
+[![](https://images.microbadger.com/badges/image/luksi1/puppetserver-foreman.svg)](https://microbadger.com/images/luksi1/puppetserver-foreman "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/luksi1/puppetserver-foreman:6.2.1-2.svg)](https://microbadger.com/images/luksi1/puppetserver-foreman:6.2.1-2 "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/commit/luksi1/puppetserver-foreman:6.2.1-2.svg)](https://microbadger.com/images/luksi1/puppetserver-foreman:6.2.1-2 "Get your own commit badge on microbadger.com") [![](https://images.microbadger.com/badges/license/luksi1/puppetserver-foreman:6.2.1-2.svg)](https://microbadger.com/images/luksi1/puppetserver-foreman:6.2.1-2 "Get your own license badge on microbadger.com")
+
+**luksi1/r10k**
+
+[![](https://images.microbadger.com/badges/image/luksi1/r10k:2.6.5-2.svg)](https://microbadger.com/images/luksi1/r10k:2.6.5-2 "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/luksi1/r10k:2.6.5-2.svg)](https://microbadger.com/images/luksi1/r10k:2.6.5-2 "Get your own version badge on microbadger.com")
+
+**luksi1/puppet-smart-proxy**
+
+[![](https://images.microbadger.com/badges/image/luksi1/puppet-smart-proxy:1.20-2.svg)](https://microbadger.com/images/luksi1/puppet-smart-proxy:1.20-2 "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/luksi1/puppet-smart-proxy:1.20-2.svg)](https://microbadger.com/images/luksi1/puppet-smart-proxy:1.20-2 "Get your own version badge on microbadger.com")
 
 ## Description
 
-Foreman is a tool for infrastructure provisioning. Puppet is a configuration management tool. PuppetDB is a backend, which provides an easy way to query how your infrastructure is provisioned as well as what is occuring in your infrastructure. R10K is simply a Ruby gem that allows you to pull Puppet modules directly into your configuration management stack. This docker-compose stack binds these components together in a seamless and easy way. All you need to do is input your infrastructure's parameters in an .env file.
+**Foreman** is a free open source project used to automate tasks, deploy application, and manage a server's life cycle, either bare-metal, virtual, or in the cloud.
 
-PostgreSQL is used as a backend for PuppetDB and Foreman.
+**Puppet** is a configuration management tool provided by PuppetLabs, allowing system administrators to use "Infrastructure as Code" to define a server's state.
 
-A post-configuration docker image is also used to import Puppet classes from your control repository and add Puppet as a smart proxy.
+**PuppetDB** is a backend, providing an easy way to query your infrastructure's operating systems, versions, network cards... 
+
+**R10K** is a Ruby gem that allows you to pull Puppet modules directly into your configuration management stack from a version control system.
+
+**PostgreSQL** is used as a backend for PuppetDB and Foreman.
+
+This stack binds these components together in a seamless and easy way. All you need to do is input your infrastructure's parameters in an .env file, K8s cluster, or simply run an image on the side.
 
 ## Dependencies
 
 #### Binaries
-- docker-compose
 - docker
+- docker-compose
 
 #### Control repo
-- a functional control repo. See the following urls if you are unsure about this:
-
+A functional control repo. See the following urls if you are unsure about this:
   - https://docs.puppet.com/pe/latest/r10k.html
   - https://docs.puppet.com/pe/latest/cmgmt_control_repo.html
   - https://github.com/puppetlabs/control-repo
-  
-- add a webhook for each repository you want to trigger a pull when pushing to. Go to the settings for your repository you want to use as a trigger and add a webhook. Something like:
+
+Add a webhook for each repository you want to trigger a pull when pushing to. Go to the settings for your repository you want to use as a trigger and add a webhook. Something like:
 ```
 https://puppet:puppet@puppet-test.domain.com:8088/payload
 ```
 
-## Setup
+## Up and running with maven (foreman.dummy.test)
+
+Running "mvn docker:run" should get you an entire stack with https://foreman.dummy.test as your web url. Be sure to add foreman.dummy.test to your hosts file!
+
+## Up and running with docker-compose (foreman.dummy.test)
+
+```
+cd examples/docker-compose
+docker-compose up
+```
+
+## Configure hostnames, domains, and certificates for use with docker-compose
 
 Go through the following to setup your environment:
 
-1. Setup your .env file
+1. Setup your .env file 
 2. Copy in SSL certificates and import your database if you are migrating from an existing instance
 3. Run
 
-#### .env
+### .env
 
-###### Mandatory
+#### Mandatory
 
-The location of your R10K control repo
+**Your domain**
 ```
-R10K_REPO=https://github.com/myname/control-repo
-```
-
-The prefix in which your docker containers will have. 
-```
-IMAGE_PREFIX=foo
+domain=domain.com
 ```
 
-The tag of your images. Ex. test,prod,latest
+**The location of your R10K control repo**
 ```
-IMAGE_TAG=latest
-```
-
-The domain of your infrastructure. This domain will be used for all of the docker containers.
-```
-DOMAIN=foo.com
+control_repo=https://github.com/myname/control-repo
 ```
 
-The Puppet server's hostname. Do <b>NOT</b> include your domain!
+**Foreman's hostname (do not include the domain name)**
 ```
-PUPPET_HOSTNAME=puppet
-```
-
-The Foreman's hostname. Do <b>NOT</b> include your domain!
-```
-FOREMAN_HOSTNAME=foreman
+foreman_hostname=foreman
 ```
 
-PuppetDB's hostname. Do <b>NOT</b> include your domain!
+**Puppetserver's hostname (do not include the domain name)**
 ```
-PUPPETDB_HOSTNAME=puppetdb
-```
-
-Reset admin password and send output to /opt/foreman/volumes/foreman/accounts/admin.
-You will need to use this if using the post configuration docker image. This image is "post" and will
-run API calls to Foreman to import your Puppet classes and add Puppet as a smart proxy. If you are unsure about any of this, simply leave this as is. 
-
-To turn this off, simply comment this out.
-```
-RESET_ADMIN_PASSWORD=true
+puppet_hostname=puppet
 ```
 
-###### Optional
-If you want to use your own certificates for the Foreman GUI, specify them here
-and place the certificates under foreman/certs.
+**R10K's hostname (do not include the domain name)**
 ```
-FOREMAN_WEB_CA=foreman_ca.pem
-FOREMAN_WEB_PUBLIC_CERT=foreman_public.crt
-FOREMAN_WEB_PRIVATE_CERT=foreman_private.key
+r10k_hostname=r10k
 ```
 
-Specify how many max-active-instances of J-Ruby you want to start
+**Puppet smartproxy's hostname (do not include the domain name)**
 ```
-MAX_ACTIVE_INSTANCES=1
-```
-
-Autosign.conf
-```
-AUTOSIGN=*.foo.com
+puppet_smartproxy_hostname: puppet-smart-proxy
 ```
 
-Java heap
+**Path to Foreman's public certificate**
+This is the public facing web server public certificate.
+```
+foreman_server_cert_file=../../volumes/certificates/certs/foreman.dummy.test.crt
+```
+
+**Path to Foreman's private certificate**
+This is the public facing web server certificate's private key.
+```
+foreman_server_cert_key_file=../../volumes/certificates/private/foreman.dummy.test.key
+```
+
+**Path to Foreman's certificate authority chain**
+```
+foreman_server_cert_chain_file=../../volumes/certificates/certs/ca-chain.crt
+```
+
+### Certificate handling
+
+One tip if you need to create certificates signed by your Puppet CA is simply to boot up your environment without puppet:
+
+```
+docker-compose up puppetserver
+```
+
+and then proceed to create your server certificates, for instance, this would create a puppet-smart-proxy:
+
+```
+docker run -it -v $(pwd)/volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl --hostname puppet-smart-proxy.dummy.test puppet/puppet-agent
+```
+
+#### Optional
+
+**Java heap for Puppetserver**
 ```
 PUPPETSERVER_JAVA_ARGS=-Xms1024m -Xmx1024m
 ```
 
-#### If you are migrating an existing instance
+**Autosigning certificates (default true)**
+```
+AUTOSIGN="false"
+```
 
-###### SSL
+### If you are migrating an existing instance
 
-Copy SSL certificates to /opt/foreman/volumes/puppet/ssl/
+#### SSL
 
-###### PostgreSQL Database
+Copy SSL certificates to /opt/docker-foreman/volumes/puppet/ssl/
+
+#### PostgreSQL Database
 
 1. Dump your PostgreSQL database and place the dump file in /opt/foreman/volumes/postgres/data/
 2. Change the PostgreSQL docker image to match your PostgreSQL database that you are migrating from.
@@ -122,7 +167,7 @@ Copy SSL certificates to /opt/foreman/volumes/puppet/ssl/
 4. Log in to your Postgres image with: `docker exec -it $(docker ps | grep postgres | awk '{print $1}') /bin/bash`
 5. Perform your import. You dump file will be located under /var/postgres/data
 
-#### If you are starting from a fresh install
+### If you are starting from a fresh install
 
 - You will get some errors as the database is not yet seeded. This will be taken care of efter the Foreman installer has run. Nothing to worry about!
 - You will need to create your puppet server certificates (CA, public, and private) and Foreman certificates and place it in /opt/foreman/volumes/puppet/ssl/. You can do this on a host with puppet installed or you can use docker:
@@ -130,11 +175,14 @@ Copy SSL certificates to /opt/foreman/volumes/puppet/ssl/
 docker run -v /opt/foreman/volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppet-agent cert --generate YOUR_HOSTNAME
 ```
 
-## Usage
+## Standard Operating Procedures
 
-#### Starting your configuration management stack
+### Starting your foreman stack
 
-Once you have completed all the steps in the setup phase, simply run `docker-compose up` from the root directory.
+```
+cd examples/docker-compose/
+docker-compose up -d
+```
 
 #### Setting up your stack to start on boot
 
@@ -145,9 +193,15 @@ Edit your host's crontab accordingly
 
 ## Testing
 
-#### Usage
+### Dependencies
 
-Simply run `tests/run.test.sh`. This will start docker-compose, perform the following tests under "Coverage" and stop your instance.
+- maven
+
+### Usage
+
+```
+mvn verify
+``` 
 
 #### Coverage
 
@@ -159,19 +213,6 @@ Simply run `tests/run.test.sh`. This will start docker-compose, perform the foll
 
 ## Notes
 
-- If you would like to re-run the post-configuration steps, you'll need to remove the file `.configured` in `/opt/foreman/volumes/post_scripts/`
-- Starting up this stack can take some time. Approx. 2 minutes.
+- Starting up this stack can take some time. Approx. 1 minute.
 - Startup time is partly due to the fact that R10K will perform a pull of all of it's modules. To speed up the time, there is a volume under `/opt/foreman/volumes/puppet/code` so that a fresh clone does not need to occur for each run.
-- Postgres only listens locally.
-- If you get a DH key pair error add the following to the bottom of your public foreman certificate: 
-```
------BEGIN DH PARAMETERS-----
-MIGHAoGBAP//////////yQ/aoiFowjTExmKLgNwc0SkCTgiKZ8x0Agu+pjsTmyJR
-Sgh5jjQE3e+VGbPNOkMbMCsKbfJfFDdP4TVtbVHCReSFtXZiXn7G9ExC6aY37WsL
-/1y29Aa37e44a/taiZ+lrp8kEXxLH+ZJKGZR7OZTgf//////////AgEC
------END DH PARAMETERS-----
-```
-
-## To Do
-
-- Add MCollective
+- Postgres only listens locally on the docker network by default. You will not be able access it remotely.

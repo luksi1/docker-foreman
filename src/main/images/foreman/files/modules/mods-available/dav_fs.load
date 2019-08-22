@@ -1,0 +1,1 @@
+LoadModule dav_fs_module /usr/lib/apache2/modules/mod_dav_fs.so
