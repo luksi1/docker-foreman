@@ -25,7 +25,7 @@
     <r10k.servername>r10k</r10k.servername>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <!-- Version of theFabric8 Docker Maven plugin. -->
-    <docker-maven-plugin.version>0.30.0</docker-maven-plugin.version>
+    <docker-maven-plugin.version>0.31.0</docker-maven-plugin.version>
     <!--Log output during creation of Docker image to standard out. -->
     <docker.verbose>true</docker.verbose>
     <docker.autoCreateCustomNetworks>true</docker.autoCreateCustomNetworks>
@@ -52,17 +52,17 @@
     <dependency>
        <groupId>org.slf4j</groupId>
        <artifactId>slf4j-api</artifactId>
-       <version>1.7.26</version>
+       <version>1.7.28</version>
     </dependency>
     <dependency>
        <groupId>org.slf4j</groupId>
        <artifactId>slf4j-log4j12</artifactId>
-       <version>1.7.26</version>
+       <version>1.7.28</version>
     </dependency>
     <dependency>
       <groupId>org.apache.commons</groupId>
       <artifactId>commons-text</artifactId>
-      <version>1.3</version>
+      <version>1.8</version>
     </dependency>
     <dependency>
       <groupId>org.codehaus.groovy.modules</groupId>
@@ -79,7 +79,7 @@
     <dependency>
       <groupId>org.codehaus.groovy</groupId>
       <artifactId>groovy-json</artifactId>
-      <version>2.5.6</version>
+      <version>2.5.8</version>
     </dependency>
   </dependencies>
   <build>
@@ -483,7 +483,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-compiler-plugin</artifactId>
-        <version>2.3.2</version>
+        <version>3.8.1</version>
       </plugin>
       <plugin>
         <groupId>org.codehaus.gmaven</groupId>
@@ -503,7 +503,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
-        <version>2.1.1</version>
+        <version>3.2.3</version>
         <configuration>
           <failOnMissingWebXml>false</failOnMissingWebXml>
         </configuration>
@@ -511,7 +511,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-failsafe-plugin</artifactId>
-        <version>2.12</version>
+        <version>2.22.2</version>
         <configuration>
           <systemPropertyVariables>
             <puppetAgentHostname>${puppet.smartproxy.servername}.${domain}</puppetAgentHostname>
