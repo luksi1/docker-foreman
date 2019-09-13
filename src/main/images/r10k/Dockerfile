@@ -29,6 +29,7 @@ RUN apt-get update && \
     apt-get clean && \
     rm -rf /var/lib/apt/lists/* && \
     # install r10k and the puppet webhook
+    gem install sidekiq -v 5.2.7 && \
     gem install r10k:${R10K_VERSION} puppet_webhook json && \
     # docker-entrypoint.sh needs to be executable
     chmod +x /docker-entrypoint.sh && \
