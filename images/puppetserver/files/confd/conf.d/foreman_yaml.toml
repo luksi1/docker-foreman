@@ -1,0 +1,5 @@
+[template]
+src = "foreman.yaml.tmpl"
+dest = "/etc/puppetlabs/puppet/foreman.yaml"
+uid = 999
+gid = 999

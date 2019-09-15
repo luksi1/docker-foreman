@@ -1,8 +1,13 @@
 ---
 sudo: required
 
+env:
+  global: 
+    - TAG="$(date -Is)-$(git log -1 --pretty=%h)"
+
 stages:
   - syntax
+  - build
   - integration
   - name: deploy
     if: branch = master
@@ -23,6 +28,32 @@ jobs:
     -
       name: "Shellchecker"
       script: docker run --rm -v "$(pwd)":/mnt koalaman/shellcheck:stable src/main/images/foreman/*.sh
+    - stage: build
+      before_script:
+        - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+      name: "Build Puppet image"
+      script:
+        - cd images/puppetserver
+        - docker build -t luksi1/puppetserver-docker:${TAG} .
+        - docker push luksi1/puppetserver-docker:${TAG}
+    -
+      name: "Build Foreman image"
+      script:
+        - cd images/foreman
+        - docker build -t luksi1/foreman:${TAG}
+        - docker push luksi1/foreman:${TAG}
+    -
+      name: "Build Foreman Puppet Smart Proxy image"
+      script:
+        - cd images/puppet-smart-proxy
+        - docker build -t luksi1/puppet-smart-proxy:${TAG}
+        - docker push luksi1/puppet-smart-proxy:${TAG}
+    -
+      name: "Build R10K"
+      script:
+        - cd images/r10k
+        - docker build -t luksi1/r10k:${TAG}
+        - docker push luksi1/r10k:${TAG}
     - stage: integration
       name: "docker-compose"
       env:

@@ -1,0 +1,4 @@
+[template]
+src = "settings_yaml.tmpl"
+dest = "/etc/foreman/settings.yaml"
+mode = "0666"

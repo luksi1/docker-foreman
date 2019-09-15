@@ -296,7 +296,7 @@
 					"raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"https://puppet-smart-proxy.dummy.test:8443\" }}"
 				},
 				"url": {
-					"raw": "https://localhost/api/v2/smart_proxies/14",
+					"raw": "https://localhost/api/v2/smart_proxies/1",
 					"protocol": "https",
 					"host": [
 						"127",
@@ -308,7 +308,7 @@
 						"api",
 						"v2",
 						"smart_proxies",
-						"14"
+						"1"
 					]
 				}
 			},
