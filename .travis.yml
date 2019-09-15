@@ -62,22 +62,13 @@ jobs:
       before_script:
         - sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         - sudo chmod +x /usr/local/bin/docker-compose
-        - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-        # We need to run some certificate signing images to get everything up to snuff
-        # We should be able to change this out with some puppet certificate commands
-        - mvn verify
+        - echo "create certificates here and install them"
       script:
         - cd examples/docker-compose
         - sudo docker-compose up -d
         - sleep 180
         - cd $TRAVIS_BUILD_DIR
         - docker ps
-        - mvn failsafe:integration-test
-    -
-      name: "Fabric8 docker-maven-plugin"
-      script:
-        - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-        - mvn verify
     - stage: deploy
       name: "Deploy to DockerHub"
       script: 
