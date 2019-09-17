@@ -59,16 +59,26 @@ jobs:
       env:
         - DOCKER_COMPOSE_VERSION=1.23.1
         - DOCKER_HOST=tcp://127.0.0.1:2375
+        - UBUNTU_VERSION=bionic
+        - PUPPETSERVER_URL=puppet.domain.com
+        - FOREMAN_URL=foreman.domain.com
       before_script:
         - sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         - sudo chmod +x /usr/local/bin/docker-compose
-        - echo "create certificates here and install them"
+        - wget https://apt.puppetlabs.com/puppetlabs-release-${UBUNTU_VERSION}.deb
+        - sudo dpkg -i puppetlabs-release-${UBUNTU_VERSION}.deb
+        - sudo apt-get update
+        - sudo apt-get install puppetserver
+        - sudo puppetserver ca setup --ca-name puppet.domain.com
+        # Allow this to fail, since we haven't started our puppetserver yet
+        # We simply need to the public/private keys anyway
+        - sudo puppetserver ca generate  --certname foreman.domain.com || true
+        - echo "create foreman web certificate with openssl"
       script:
         - cd examples/docker-compose
         - sudo docker-compose up -d
         - sleep 180
-        - cd $TRAVIS_BUILD_DIR
-        - docker ps
+        # - newman run foreman.json --insecure
     - stage: deploy
       name: "Deploy to DockerHub"
       script: 
