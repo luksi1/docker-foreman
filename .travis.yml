@@ -5,6 +5,9 @@ sudo: required
 env:
   global:
   - TAG="$(date +%s)-$(git log -1 --pretty=%h)"
+  - FOREMAN_RELEASE=1.20
+  - PUPPET_VERSION=6.5.0
+  - R10K_VERSION=6.2.1
 stages:
 - syntax
 - build
@@ -39,17 +42,17 @@ jobs:
   - name: Build Foreman image
     script:
     - cd $TRAVIS_BUILD_DIR/images/foreman
-    - docker build -t luksi1/foreman:${TAG} .
+    - docker build --build-arg FOREMAN_RELEASE=${FOREMAN_RELEASE} -t luksi1/foreman:${TAG} .
     - docker push luksi1/foreman:${TAG}
-  - name: Build Foreman Puppet Smart Proxy image
+  - name: Build Puppet Smart Proxy image
     script:
     - cd $TRAVIS_BUILD_DIR/images/puppet-smart-proxy
-    - docker build -t luksi1/puppet-smart-proxy:${TAG} .
+    - docker build --build-arg FOREMAN_RELEASE=${FOREMAN_RELEASE} -t luksi1/puppet-smart-proxy:${TAG} .
     - docker push luksi1/puppet-smart-proxy:${TAG}
   - name: Build R10K
     script:
     - cd $TRAVIS_BUILD_DIR/images/r10k
-    - docker build -t luksi1/r10k:${TAG} .
+    - docker build --build-arg R10K_VERSION=${R10K_VERSION} -t luksi1/r10k:${TAG} .
     - docker push luksi1/r10k:${TAG}
   - stage: integration
     name: docker-compose
