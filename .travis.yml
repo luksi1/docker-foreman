@@ -4,7 +4,7 @@ node_js:
 sudo: required
 env:
   global:
-  - TAG="$(date -Is)-$(git log -1 --pretty=%h)"
+  - TAG="$(date +%s)-$(git log -1 --pretty=%h)"
 stages:
 - syntax
 - build
