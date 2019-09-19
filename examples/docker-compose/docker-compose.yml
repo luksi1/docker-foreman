@@ -34,7 +34,7 @@ services:
   puppetserver:
     container_name: puppetserver
     hostname: ${puppetserver_hostname}.${domain}
-    image: luksi1/puppetserver-foreman:latest
+    image: luksi1/puppetserver-foreman:${TAG}
     ports:
       - "8140:8140"
     environment:
@@ -69,7 +69,7 @@ services:
   foreman:
     container_name: foreman
     hostname: ${foreman_hostname}.${domain}
-    image: luksi1/foreman:latest
+    image: luksi1/foreman:${TAG}
     ports:
       - "443:443"
     environment:
@@ -95,7 +95,7 @@ services:
           - ${foreman_hostname}.${domain}
   puppet-smart-proxy:
     container_name: puppet-smart-proxy
-    image: luksi1/puppet-smart-proxy:latest
+    image: luksi1/puppet-smart-proxy:${TAG}
     environment:
       TRUSTED_HOSTS: "${foreman_hostname},${foreman_hostname}.${domain},${puppetserver_hostname},${puppetserver_hostname}.${domain}"
       PUPPET_VERSION: "${puppetserver_version}"
@@ -112,7 +112,7 @@ services:
           - puppet-smart-proxy.${domain}
   r10k:
     container_name: r10k
-    image: luksi1/r10k:latest
+    image: luksi1/r10k:${TAG}
     ports:
       - "8088:8088"
     environment:
@@ -123,7 +123,6 @@ services:
       puppet-foreman-network:
         aliases:
           - r10k
-
 networks:
   puppet-foreman-network:
     driver: bridge

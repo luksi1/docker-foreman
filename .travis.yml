@@ -1,4 +1,8 @@
 ---
+language: node_js
+node_js:
+  - "8.2.1"
+
 sudo: required
 
 env:
@@ -60,9 +64,9 @@ jobs:
         - DOCKER_COMPOSE_VERSION=1.23.1
         - DOCKER_HOST=tcp://127.0.0.1:2375
         - UBUNTU_VERSION=bionic
-        - PUPPETSERVER_URL=puppet.domain.com
-        - FOREMAN_URL=foreman.domain.com
-      before_script:
+        - PUPPETSERVER_URL=puppet.domain.test
+        - FOREMAN_URL=foreman.domain.test
+      before_install:
         - sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
         - sudo chmod +x /usr/local/bin/docker-compose
         - wget https://apt.puppetlabs.com/puppetlabs-release-${UBUNTU_VERSION}.deb
@@ -70,15 +74,21 @@ jobs:
         - sudo apt-get update
         - sudo apt-get install puppetserver
         - sudo puppetserver ca setup --ca-name puppet.domain.com
-        # Allow this to fail, since we haven't started our puppetserver yet
-        # We simply need to the public/private keys anyway
+        # Allow this to fail, since we haven't started our puppetserver yet, the API call in the end will fail
+        # But we simply need to get the public/private keys
         - sudo puppetserver ca generate  --certname foreman.domain.com || true
-        - echo "create foreman web certificate with openssl"
-      script:
+        - openssl req -new -newkey rsa:4096 -days 1 -nodes -x509 -subj "/C=SE/L=Gothenburg/CN=${FOREMAN_URL}" -keyout /tmp/foreman.key -out /tmp/foreman.crt
+      install:
+        - npm install newman
         - cd examples/docker-compose
         - sudo docker-compose up -d
         - sleep 180
-        # - newman run foreman.json --insecure
+      script:
+        - cd $TRAVIS_BUILD_DIR
+        - node_modules/.bin/newman run tests/foreman.json --insecure
+      after_script:
+        - docker-compose stop
+        - docker-compose rm -f
     - stage: deploy
       name: "Deploy to DockerHub"
       script: 
