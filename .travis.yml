@@ -69,8 +69,8 @@ jobs:
     - sudo dpkg -i puppet$(echo $PUPPET_VERSION | awk -F. '{print $1}')-release-${UBUNTU_CODENAME}.deb
     - sudo apt-get update
     - sudo apt-get install puppetserver
-    - sudo puppetserver ca setup --ca-name puppet.domain.com
-    - sudo puppetserver ca generate  --certname foreman.domain.com || true
+    - sudo /opt/puppetlabs/server/bin/puppetserver ca setup --ca-name puppet.domain.com
+    - sudo /opt/puppetlabs/server/bin/puppetserver ca generate  --certname foreman.domain.com || true
     - openssl req -new -newkey rsa:4096 -days 1 -nodes -x509 -subj "/C=SE/L=Gothenburg/CN=${FOREMAN_URL}" -keyout /tmp/foreman.key -out /tmp/foreman.crt
     install:
     - npm install newman
