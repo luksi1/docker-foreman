@@ -60,7 +60,7 @@ jobs:
     - sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname
       -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     - sudo chmod +x /usr/local/bin/docker-compose
-    - wget https://apt.puppetlabs.com/puppetlabs-release-${UBUNTU_CODENAME}.deb
+    - wget https://apt.puppetlabs.com/puppet$(echo $PUPPET_VERSION | awk -F. '{print $1}')-release-${UBUNTU_CODENAME}.deb
     - sudo dpkg -i puppet$(echo $PUPPET_VERSION | awk -F. '{print $1}')-release-${UBUNTU_CODENAME}.deb
     - sudo apt-get update
     - sudo apt-get install puppetserver
