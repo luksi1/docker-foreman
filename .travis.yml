@@ -61,7 +61,7 @@ jobs:
       -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     - sudo chmod +x /usr/local/bin/docker-compose
     - wget https://apt.puppetlabs.com/puppetlabs-release-${UBUNTU_CODENAME}.deb
-    - sudo dpkg -i puppetlabs-release-${UBUNTU_CODENAME}.deb
+    - sudo dpkg -i puppet$(echo $PUPPET_VERSION | awk -F. '{print $1}')-release-${UBUNTU_CODENAME}.deb
     - sudo apt-get update
     - sudo apt-get install puppetserver
     - sudo puppetserver ca setup --ca-name puppet.domain.com
