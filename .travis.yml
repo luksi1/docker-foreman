@@ -4,7 +4,7 @@ node_js:
 sudo: required
 env:
   global:
-  - TAG=${TRAVIS_COMMIT::8}
+  - TAG="$(git log -1 --pretty=%h)"
   - FOREMAN_RELEASE=1.20
   - PUPPET_VERSION=6.5.0
   - R10K_VERSION=6.2.1
