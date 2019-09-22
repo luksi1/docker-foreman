@@ -31,27 +31,21 @@ jobs:
   - name: Shellchecker
     script: docker run --rm -v "$(pwd)":/mnt koalaman/shellcheck:stable src/main/images/foreman/*.sh
   - stage: build
-    before_script:
-    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    name: Build Puppet image
+    name: Build Puppet, Foreman, Foreman Puppet smart proxy, and R10k images
     script:
     - cd $TRAVIS_BUILD_DIR/images/puppetserver
     - docker build -t luksi1/puppetserver-docker:${TAG} .
-    - docker push luksi1/puppetserver-docker:${TAG}
-  - name: Build Foreman image
-    script:
     - cd $TRAVIS_BUILD_DIR/images/foreman
     - docker build --build-arg FOREMAN_RELEASE=${FOREMAN_RELEASE} -t luksi1/foreman:${TAG} .
-    - docker push luksi1/foreman:${TAG}
-  - name: Build Puppet Smart Proxy image
-    script:
     - cd $TRAVIS_BUILD_DIR/images/puppet-smart-proxy
     - docker build --build-arg FOREMAN_RELEASE=${FOREMAN_RELEASE} -t luksi1/puppet-smart-proxy:${TAG} .
-    - docker push luksi1/puppet-smart-proxy:${TAG}
-  - name: Build R10K
-    script:
     - cd $TRAVIS_BUILD_DIR/images/r10k
     - docker build --build-arg R10K_VERSION=${R10K_VERSION} -t luksi1/r10k:${TAG} .
+    after_success:
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - docker push luksi1/puppetserver-docker:${TAG}
+    - docker push luksi1/foreman:${TAG}
+    - docker push luksi1/puppet-smart-proxy:${TAG}
     - docker push luksi1/r10k:${TAG}
   - stage: integration
     name: docker-compose
