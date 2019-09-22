@@ -1,3 +1,4 @@
+dist: bionic
 language: node_js
 node_js:
 - 8.2.1
@@ -61,6 +62,10 @@ jobs:
       -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     - sudo chmod +x /usr/local/bin/docker-compose
     - wget https://apt.puppetlabs.com/puppet$(echo $PUPPET_VERSION | awk -F. '{print $1}')-release-${UBUNTU_CODENAME}.deb
+    # workaround for:
+    # "dpkg-deb: error: archive 'puppet6-release-bionic.deb' has premature member 'control.tar.xz' before 'control.tar.gz', giving up"
+    - sudo apt-get clean
+    - sudo apt-get update
     - sudo dpkg -i puppet$(echo $PUPPET_VERSION | awk -F. '{print $1}')-release-${UBUNTU_CODENAME}.deb
     - sudo apt-get update
     - sudo apt-get install puppetserver
