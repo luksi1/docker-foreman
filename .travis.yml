@@ -51,6 +51,13 @@ jobs:
     - docker push luksi1/r10k:${TAG}
   - stage: integration
     name: docker-compose
+    addons:
+      apt:
+        sources:
+        - sourceline: 'deb http://apt.puppetlabs.com bionic puppet6'
+        - key_url: 'https://apt.puppetlabs.com/DEB-GPG-KEY-puppet'
+      packages:
+      - puppetserver
     env:
     - DOCKER_COMPOSE_VERSION=1.23.1
     - DOCKER_HOST=tcp://127.0.0.1:2375
@@ -61,14 +68,6 @@ jobs:
     - sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname
       -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     - sudo chmod +x /usr/local/bin/docker-compose
-    - wget https://apt.puppetlabs.com/puppet$(echo $PUPPET_VERSION | awk -F. '{print $1}')-release-${UBUNTU_CODENAME}.deb
-    # workaround for:
-    # "dpkg-deb: error: archive 'puppet6-release-bionic.deb' has premature member 'control.tar.xz' before 'control.tar.gz', giving up"
-    - sudo apt-get clean
-    - sudo apt-get update
-    - sudo dpkg -i puppet$(echo $PUPPET_VERSION | awk -F. '{print $1}')-release-${UBUNTU_CODENAME}.deb
-    - sudo apt-get update
-    - sudo apt-get install puppetserver
     - sudo /opt/puppetlabs/server/bin/puppetserver ca setup --ca-name puppet.domain.com
     - sudo /opt/puppetlabs/server/bin/puppetserver ca generate  --certname foreman.domain.com || true
     - openssl req -new -newkey rsa:4096 -days 1 -nodes -x509 -subj "/C=SE/L=Gothenburg/CN=${FOREMAN_URL}" -keyout /tmp/foreman.key -out /tmp/foreman.crt
