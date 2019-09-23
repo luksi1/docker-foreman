@@ -1,7 +1,4 @@
 dist: bionic
-language: node_js
-node_js:
-- 8.2.1
 sudo: required
 env:
   global:
@@ -20,8 +17,6 @@ stages:
   if: branch = master
 services:
 - docker
-before_install:
-- sudo apt-get update && sudo apt-get install -y openssl maven openjdk-8-jdk
 jobs:
   include:
   - stage: syntax
@@ -55,9 +50,13 @@ jobs:
       apt:
         sources:
         - sourceline: 'deb http://apt.puppetlabs.com bionic puppet6'
-        - key_url: 'https://apt.puppetlabs.com/DEB-GPG-KEY-puppet'
+          key_url: 'https://apt.puppetlabs.com/DEB-GPG-KEY-puppet'
+        - sourceline: 'deb https://deb.nodesource.com/node_10.x stretch main'
+          key_url: 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key'
       packages:
       - puppetserver
+      - openssl
+      - nodejs
     env:
     - DOCKER_COMPOSE_VERSION=1.23.1
     - DOCKER_HOST=tcp://127.0.0.1:2375
