@@ -53,6 +53,10 @@ jobs:
           key_url: 'https://apt.puppetlabs.com/DEB-GPG-KEY-puppet'
         - sourceline: 'deb https://deb.nodesource.com/node_10.x stretch main'
           key_url: 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key'
+        packages:
+        - puppetserver
+        - openssl
+        - nodejs
     env:
     - DOCKER_COMPOSE_VERSION=1.23.1
     - DOCKER_HOST=tcp://127.0.0.1:2375
@@ -60,7 +64,6 @@ jobs:
     - PUPPETSERVER_URL=puppet.domain.test
     - FOREMAN_URL=foreman.domain.test
     before_install:
-    - sudo apt install -y openssl puppetserver nodejs
     - sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname
       -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     - sudo chmod +x /usr/local/bin/docker-compose
