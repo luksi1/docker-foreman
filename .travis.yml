@@ -1,5 +1,6 @@
 dist: bionic
-sudo: required
+os: linux
+language: ruby
 env:
   global:
   - TAG="$(git log -1 --pretty=%h)"
@@ -17,7 +18,7 @@ stages:
   if: branch = master
 services:
 - docker
-jobs:
+matrix:
   include:
   - stage: syntax
     name: Hadolint
@@ -70,13 +71,7 @@ jobs:
       -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     - sudo chmod +x /usr/local/bin/docker-compose
     # This is bailing with
-    # Ignoring executable-hooks-1.6.0 because its extensions are not built. Try: gem pristine executable-hooks --version 1.6.0
-    # Ignoring gem-wrappers-1.4.0 because its extensions are not built. Try: gem pristine gem-wrappers --version 1.4.0
-    # Ignoring nokogiri-1.10.4 because its extensions are not built. Try: gem pristine nokogiri --version 1.10.4
-    # Traceback (most recent call last):
-	  # 2: from /opt/puppetlabs/server/apps/puppetserver/cli/apps/ca:3:in `<main>'
-	  # 1: from /opt/puppetlabs/puppet/lib/ruby/2.5.0/rubygems/core_ext/kernel_require.rb:59:in `require'
-    # /opt/puppetlabs/puppet/lib/ruby/2.5.0/rubygems/core_ext/kernel_require.rb:59:in `require': cannot load such file -- puppetserver/ca/cli (LoadError)
+    # See #5 about why this is fail 
     # - sudo /opt/puppetlabs/server/bin/puppetserver ca setup --ca-name puppet.domain.com
     # The following is a workaround
     - sudo docker run -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca setup --ca-name puppet.domain.com
