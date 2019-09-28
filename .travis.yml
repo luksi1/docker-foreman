@@ -57,6 +57,8 @@ jobs:
         - puppetserver
         - openssl
         - nodejs
+        - curl
+        - gnupg
     env:
     - DOCKER_COMPOSE_VERSION=1.23.1
     - DOCKER_HOST=tcp://127.0.0.1:2375
@@ -67,8 +69,18 @@ jobs:
     - sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname
       -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     - sudo chmod +x /usr/local/bin/docker-compose
-    - sudo /opt/puppetlabs/server/bin/puppetserver ca setup --ca-name puppet.domain.com
-    - sudo /opt/puppetlabs/server/bin/puppetserver ca generate  --certname foreman.domain.com || true
+    # This is bailing with
+    # Ignoring executable-hooks-1.6.0 because its extensions are not built. Try: gem pristine executable-hooks --version 1.6.0
+    # Ignoring gem-wrappers-1.4.0 because its extensions are not built. Try: gem pristine gem-wrappers --version 1.4.0
+    # Ignoring nokogiri-1.10.4 because its extensions are not built. Try: gem pristine nokogiri --version 1.10.4
+    # Traceback (most recent call last):
+	  # 2: from /opt/puppetlabs/server/apps/puppetserver/cli/apps/ca:3:in `<main>'
+	  # 1: from /opt/puppetlabs/puppet/lib/ruby/2.5.0/rubygems/core_ext/kernel_require.rb:59:in `require'
+    # /opt/puppetlabs/puppet/lib/ruby/2.5.0/rubygems/core_ext/kernel_require.rb:59:in `require': cannot load such file -- puppetserver/ca/cli (LoadError)
+    # - sudo /opt/puppetlabs/server/bin/puppetserver ca setup --ca-name puppet.domain.com
+    # The following is a workaround
+    - sudo docker run -it -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca setup --ca-name puppet.domain.com
+    - sudo docker run -it -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca generate --certname foreman.domain.com || true
     - openssl req -new -newkey rsa:4096 -days 1 -nodes -x509 -subj "/C=SE/L=Gothenburg/CN=${FOREMAN_URL}" -keyout /tmp/foreman.key -out /tmp/foreman.crt
     install:
     - npm install newman
