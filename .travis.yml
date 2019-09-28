@@ -62,7 +62,6 @@ matrix:
         - gnupg
     env:
     - DOCKER_COMPOSE_VERSION=1.23.1
-    - DOCKER_HOST=tcp://127.0.0.1:2375
     - UBUNTU_VERSION=bionic
     - PUPPETSERVER_URL=puppet.domain.test
     - FOREMAN_URL=foreman.domain.test
