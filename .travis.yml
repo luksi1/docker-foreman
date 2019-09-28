@@ -79,8 +79,8 @@ jobs:
     # /opt/puppetlabs/puppet/lib/ruby/2.5.0/rubygems/core_ext/kernel_require.rb:59:in `require': cannot load such file -- puppetserver/ca/cli (LoadError)
     # - sudo /opt/puppetlabs/server/bin/puppetserver ca setup --ca-name puppet.domain.com
     # The following is a workaround
-    - sudo docker run -it -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca setup --ca-name puppet.domain.com
-    - sudo docker run -it -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca generate --certname foreman.domain.com || true
+    - sudo docker run -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca setup --ca-name puppet.domain.com
+    - sudo docker run -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca generate --certname foreman.domain.com || true
     - openssl req -new -newkey rsa:4096 -days 1 -nodes -x509 -subj "/C=SE/L=Gothenburg/CN=${FOREMAN_URL}" -keyout /tmp/foreman.key -out /tmp/foreman.crt
     install:
     - npm install newman
