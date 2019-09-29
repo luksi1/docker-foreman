@@ -32,7 +32,7 @@ matrix:
     name: Build Puppet, Foreman, Foreman Puppet smart proxy, and R10k images
     script:
     - cd $TRAVIS_BUILD_DIR/images/puppetserver
-    - docker build -t luksi1/puppetserver-docker:${TAG} .
+    - docker build -t luksi1/puppetserver-foreman:${TAG} .
     - cd $TRAVIS_BUILD_DIR/images/foreman
     - docker build --build-arg FOREMAN_RELEASE=${FOREMAN_RELEASE} -t luksi1/foreman:${TAG} .
     - cd $TRAVIS_BUILD_DIR/images/puppet-smart-proxy
@@ -41,7 +41,7 @@ matrix:
     - docker build --build-arg R10K_VERSION=${R10K_VERSION} -t luksi1/r10k:${TAG} .
     after_success:
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    - docker push luksi1/puppetserver-docker:${TAG}
+    - docker push luksi1/puppetserver-foreman:${TAG}
     - docker push luksi1/foreman:${TAG}
     - docker push luksi1/puppet-smart-proxy:${TAG}
     - docker push luksi1/r10k:${TAG}
@@ -79,8 +79,9 @@ matrix:
     install:
     - npm install newman
     - cd examples/docker-compose
-    - sudo docker-compose up -d
-    - sleep 180
+    - sudo -E docker-compose up -d
+    # Wait for 3 minutes
+    - i=0 && while [ $i -lt 180 ]; do sleep 1; echo -n "."; i=$[$i+1]; done
     script:
     - cd $TRAVIS_BUILD_DIR
     - node_modules/.bin/newman run tests/foreman.json --insecure
