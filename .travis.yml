@@ -63,18 +63,18 @@ matrix:
     env:
     - DOCKER_COMPOSE_VERSION=1.23.1
     - UBUNTU_VERSION=bionic
-    - PUPPETSERVER_URL=puppet.domain.test
-    - FOREMAN_URL=foreman.domain.test
+    - PUPPETSERVER_URL=puppet.dummy.test
+    - FOREMAN_URL=foreman.dummy.test
     before_install:
     - sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname
       -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     - sudo chmod +x /usr/local/bin/docker-compose
     # This is bailing with
     # See #5 about why this is fail 
-    # - sudo /opt/puppetlabs/server/bin/puppetserver ca setup --ca-name puppet.domain.com
+    # - sudo /opt/puppetlabs/server/bin/puppetserver ca setup --ca-name puppet.dummy.test
     # The following is a workaround
-    - sudo docker run -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca setup --ca-name puppet.domain.com
-    - sudo docker run -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca generate --certname foreman.domain.com || true
+    - sudo docker run -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca setup --ca-name puppet.dummy.test
+    - sudo docker run -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca generate --certname foreman.dummy.test || true
     - openssl req -new -newkey rsa:4096 -days 1 -nodes -x509 -subj "/C=SE/L=Gothenburg/CN=${FOREMAN_URL}" -keyout /tmp/foreman.key -out /tmp/foreman.crt
     install:
     - npm install newman
@@ -83,6 +83,8 @@ matrix:
     # Wait for 3 minutes
     - i=0 && while [ $i -lt 180 ]; do sleep 1; echo -n "."; i=$[$i+1]; done
     script:
+    - export ADMIN_PASSWORD=$(/usr/bin/sudo /usr/bin/docker exec -t $(/usr/bin/sudo /usr/bin/docker ps -qaf label=org.label-schema.name=foreman) foreman-rake permissions:reset | /bin/grep 'Reset to user:' | /usr/bin/awk '{print $NF}')
+    - /usr/bin/perl -i -pe "s/2T4pNTKJTBU3ujmb/${ADMIN_PASSWORD}/g" tests/foreman.json
     - cd $TRAVIS_BUILD_DIR
     - node_modules/.bin/newman run tests/foreman.json --insecure
     after_script:
