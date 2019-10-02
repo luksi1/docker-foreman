@@ -84,8 +84,8 @@ matrix:
     - i=0 && while [ $i -lt 180 ]; do sleep 1; echo -n "."; i=$[$i+1]; done
     script:
     - export ADMIN_PASSWORD=$(/usr/bin/sudo /usr/bin/docker exec -t $(/usr/bin/sudo /usr/bin/docker ps -qaf label=org.label-schema.name=foreman) foreman-rake permissions:reset | /bin/grep 'Reset to user:' | /usr/bin/awk '{print $NF}')
-    - /usr/bin/perl -i -pe "s/2T4pNTKJTBU3ujmb/${ADMIN_PASSWORD}/g" tests/foreman.json
     - cd $TRAVIS_BUILD_DIR
+    - /usr/bin/perl -i -pe "s/2T4pNTKJTBU3ujmb/${ADMIN_PASSWORD}/g" tests/foreman.json
     - node_modules/.bin/newman run tests/foreman.json --insecure
     after_script:
     - docker-compose stop
