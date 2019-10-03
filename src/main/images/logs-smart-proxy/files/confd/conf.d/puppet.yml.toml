@@ -1,5 +1,0 @@
-[template]
-src = "puppet.yml.tmpl"
-dest = "/etc/foreman-proxy/settings.d/puppet.yml"
-mode = "0666"
-

@@ -1,5 +1,0 @@
-[template]
-src = "auth.conf.tmpl"
-dest = "/etc/puppetlabs/puppetserver/conf.d/auth.conf"
-uid = 999
-gid = 999

@@ -1,3 +1,0 @@
-[template]
-src = "05-foreman-ssl.conf.tmpl"
-dest = "/etc/apache2/sites-enabled/05-foreman-ssl.conf"

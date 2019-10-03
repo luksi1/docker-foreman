@@ -1,4 +1,0 @@
-[template]
-src = "r10k.yaml.tmpl"
-dest = "/etc/puppetlabs/r10k/r10k.yaml"
-mode = "0666"

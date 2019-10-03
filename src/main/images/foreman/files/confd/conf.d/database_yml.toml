@@ -1,4 +1,0 @@
-[template]
-src = "database_yml.tmpl"
-dest = "/etc/foreman/database.yml"
-mode = "0666"

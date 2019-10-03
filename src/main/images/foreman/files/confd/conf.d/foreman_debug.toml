@@ -1,4 +1,0 @@
-[template]
-src = "foreman_debug.tmpl"
-dest = "/etc/foreman/foreman-debug.conf"
-mode = "0666"
