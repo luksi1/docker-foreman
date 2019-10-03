@@ -50,29 +50,25 @@ matrix:
     addons:
       apt:
         sources:
-        - sourceline: 'deb http://apt.puppetlabs.com bionic puppet6'
-          key_url: 'https://apt.puppetlabs.com/DEB-GPG-KEY-puppet'
         - sourceline: 'deb https://deb.nodesource.com/node_10.x stretch main'
           key_url: 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key'
         packages:
-        - puppetserver
         - openssl
         - nodejs
         - curl
         - gnupg
+        - python3
     env:
     - DOCKER_COMPOSE_VERSION=1.23.1
     - UBUNTU_VERSION=bionic
     - PUPPETSERVER_URL=puppet.dummy.test
     - FOREMAN_URL=foreman.dummy.test
     before_install:
+    # install docker-compose
     - sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname
       -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     - sudo chmod +x /usr/local/bin/docker-compose
-    # This is bailing with
-    # See #5 about why this is fail 
-    # - sudo /opt/puppetlabs/server/bin/puppetserver ca setup --ca-name puppet.dummy.test
-    # The following is a workaround
+    # install certificates
     - sudo docker run -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca setup --ca-name puppet.dummy.test
     - sudo docker run -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca generate --certname foreman.dummy.test || true
     - openssl req -new -newkey rsa:4096 -days 1 -nodes -x509 -subj "/C=SE/L=Gothenburg/CN=${FOREMAN_URL}" -keyout /tmp/foreman.key -out /tmp/foreman.crt
@@ -80,12 +76,18 @@ matrix:
     - npm install newman
     - cd examples/docker-compose
     - sudo -E docker-compose up -d
-    # Wait for 3 minutes
+    # Wait for 3 minutes while docker-compose boots up
     - i=0 && while [ $i -lt 180 ]; do sleep 1; echo -n "."; i=$[$i+1]; done
     script:
+    # grab password from foreman
     - export ADMIN_PASSWORD=$(/usr/bin/sudo /usr/bin/docker exec -t $(/usr/bin/sudo /usr/bin/docker ps -qaf label=org.label-schema.name=foreman) foreman-rake permissions:reset | /bin/grep 'Reset to user:' | /usr/bin/awk '{print $NF}')
     - cd $TRAVIS_BUILD_DIR
+    # swap out admin password
+    - echo $ADMIN_PASSWORD
     - /usr/bin/perl -i -pe "s/2T4pNTKJTBU3ujmb/${ADMIN_PASSWORD}/g" tests/foreman.json
+    # validate json
+    - /usr/bin/python3 -m json.tool < tests/foreman.json
+    # perform tests
     - node_modules/.bin/newman run tests/foreman.json --insecure
     after_script:
     - docker-compose stop
@@ -96,3 +98,4 @@ matrix:
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - mvn docker:build
     - mvn docker:push
+
