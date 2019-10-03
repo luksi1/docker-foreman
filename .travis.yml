@@ -23,11 +23,11 @@ matrix:
   - stage: syntax
     name: Hadolint
     script:
-    - docker run --rm -i hadolint/hadolint < src/main/images/foreman/Dockerfile
-    - docker run --rm -i hadolint/hadolint < src/main/images/puppet/Dockerfile
-    - docker run --rm -i hadolint/hadolint < src/main/images/puppet-smart-proxy/Dockerfile
+    - docker run --rm -i hadolint/hadolint < images/foreman/Dockerfile
+    - docker run --rm -i hadolint/hadolint < images/puppet/Dockerfile
+    - docker run --rm -i hadolint/hadolint < images/puppet-smart-proxy/Dockerfile
   - name: Shellchecker
-    script: docker run --rm -v "$(pwd)":/mnt koalaman/shellcheck:stable src/main/images/foreman/*.sh
+    script: docker run --rm -v "$(pwd)":/mnt koalaman/shellcheck:stable images/foreman/*.sh
   - stage: build
     name: Build Puppet, Foreman, Foreman Puppet smart proxy, and R10k images
     script:
