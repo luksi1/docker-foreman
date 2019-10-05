@@ -68,10 +68,7 @@ matrix:
     - sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname
       -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     - sudo chmod +x /usr/local/bin/docker-compose
-    # install certificates
-    - sudo docker run -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca setup --ca-name puppet.dummy.test
-    - sudo docker run -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca generate --certname foreman.dummy.test || true
-    - openssl req -new -newkey rsa:4096 -days 1 -nodes -x509 -subj "/C=SE/L=Gothenburg/CN=${FOREMAN_URL}" -keyout /tmp/foreman.key -out /tmp/foreman.crt
+    - scripts/create.certificates.sh
     install:
     - npm install newman
     - cd examples/docker-compose
@@ -86,6 +83,7 @@ matrix:
     # swap out admin password
     - echo $ADMIN_PASSWORD
     - /usr/bin/perl -i -pe "s/2T4pNTKJTBU3ujmb/${ADMIN_PASSWORD}/g" tests/foreman.json
+    - cat tests/foreman.json
     # validate json
     - /usr/bin/python3 -m json.tool < tests/foreman.json
     # perform tests
