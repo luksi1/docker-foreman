@@ -30,13 +30,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://34.68.135.35/api/v2/dashboard",
+					"raw": "https://foreman.dummy.test/api/v2/dashboard",
 					"protocol": "https",
 					"host": [
-						"34",
-						"68",
-						"135",
-						"35"
+						"foreman",
+						"dummy",
+						"test"
 					],
 					"path": [
 						"api",
@@ -70,31 +69,15 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "2T4pNTKJTBU3ujmb",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "admin",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://34.68.135.35/api/v2/settings/trusted_hosts",
+					"raw": "https://foreman.dummy.test/api/v2/settings/trusted_hosts",
 					"protocol": "https",
 					"host": [
-						"34",
-						"68",
-						"135",
-						"35"
+						"foreman",
+						"dummy",
+						"test"
 					],
 					"path": [
 						"api",
@@ -127,21 +110,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "2T4pNTKJTBU3ujmb",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "admin",
-							"type": "string"
-						}
-					]
-				},
 				"method": "PUT",
 				"header": [
 					{
@@ -156,13 +124,12 @@
 					"raw": "{\r\n\t\"setting\": {\r\n\t\t\"value\": \"[puppet]\"\r\n\t}\r\n}"
 				},
 				"url": {
-					"raw": "https://34.68.135.35/api/v2/settings/72",
+					"raw": "https://foreman.dummy.test/api/v2/settings/72",
 					"protocol": "https",
 					"host": [
-						"34",
-						"68",
-						"135",
-						"35"
+						"foreman",
+						"dummy",
+						"test"
 					],
 					"path": [
 						"api",
@@ -198,13 +165,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://34.68.135.35/api/v2/smart_proxies",
+					"raw": "https://foreman.dummy.test/api/v2/smart_proxies",
 					"protocol": "https",
 					"host": [
-						"34",
-						"68",
-						"135",
-						"35"
+						"foreman",
+						"dummy",
+						"test"
 					],
 					"path": [
 						"api",
@@ -249,13 +215,12 @@
 					"raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"https://puppet-smart-proxy.dummy.test:8443\" }}"
 				},
 				"url": {
-					"raw": "https://34.68.135.35/api/v2/smart_proxies",
+					"raw": "https://foreman.dummy.test/api/v2/smart_proxies",
 					"protocol": "https",
 					"host": [
-						"34",
-						"68",
-						"135",
-						"35"
+						"foreman",
+						"dummy",
+						"test"
 					],
 					"path": [
 						"api",
@@ -296,19 +261,18 @@
 					"raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"https://puppet-smart-proxy.dummy.test:8443\" }}"
 				},
 				"url": {
-					"raw": "https://34.68.135.35/api/v2/smart_proxies/8",
+					"raw": "https://foreman.dummy.test/api/v2/smart_proxies/1",
 					"protocol": "https",
 					"host": [
-						"34",
-						"68",
-						"135",
-						"35"
+						"foreman",
+						"dummy",
+						"test"
 					],
 					"path": [
 						"api",
 						"v2",
 						"smart_proxies",
-						"8"
+						"1"
 					]
 				}
 			},
