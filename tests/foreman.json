@@ -30,13 +30,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://localhost/api/v2/dashboard",
+					"raw": "https://34.68.135.35/api/v2/dashboard",
 					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"34",
+						"68",
+						"135",
+						"35"
 					],
 					"path": [
 						"api",
@@ -70,16 +70,31 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "2T4pNTKJTBU3ujmb",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://localhost/api/v2/settings/trusted_hosts",
+					"raw": "https://34.68.135.35/api/v2/settings/trusted_hosts",
 					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"34",
+						"68",
+						"135",
+						"35"
 					],
 					"path": [
 						"api",
@@ -112,6 +127,21 @@
 				}
 			],
 			"request": {
+				"auth": {
+					"type": "basic",
+					"basic": [
+						{
+							"key": "password",
+							"value": "2T4pNTKJTBU3ujmb",
+							"type": "string"
+						},
+						{
+							"key": "username",
+							"value": "admin",
+							"type": "string"
+						}
+					]
+				},
 				"method": "PUT",
 				"header": [
 					{
@@ -126,13 +156,13 @@
 					"raw": "{\r\n\t\"setting\": {\r\n\t\t\"value\": \"[puppet]\"\r\n\t}\r\n}"
 				},
 				"url": {
-					"raw": "https://localhost/api/v2/settings/72",
+					"raw": "https://34.68.135.35/api/v2/settings/72",
 					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"34",
+						"68",
+						"135",
+						"35"
 					],
 					"path": [
 						"api",
@@ -155,7 +185,7 @@
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
-							"pm.test(\"No smart proxies exist\", function () {",
+							"pm.test(\"Your test name\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.total).to.eql(0);",
 							"});"
@@ -168,13 +198,13 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://localhost/api/v2/smart_proxies",
+					"raw": "https://34.68.135.35/api/v2/smart_proxies",
 					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"34",
+						"68",
+						"135",
+						"35"
 					],
 					"path": [
 						"api",
@@ -196,7 +226,7 @@
 							"pm.test(\"Status code is 201\", function () {",
 							"    pm.response.to.have.status(201);",
 							"});",
-							"pm.test(\"Smart proxy is Puppet\", function () {",
+							"pm.test(\"Your test name\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.name).to.eql(\"puppet\");",
 							"});"
@@ -219,13 +249,13 @@
 					"raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"https://puppet-smart-proxy.dummy.test:8443\" }}"
 				},
 				"url": {
-					"raw": "https://localhost/api/v2/smart_proxies",
+					"raw": "https://34.68.135.35/api/v2/smart_proxies",
 					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"34",
+						"68",
+						"135",
+						"35"
 					],
 					"path": [
 						"api",
@@ -266,20 +296,31 @@
 					"raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"https://puppet-smart-proxy.dummy.test:8443\" }}"
 				},
 				"url": {
-					"raw": "https://localhost/api/v2/smart_proxies/1",
+					"raw": "https://34.68.135.35/api/v2/smart_proxies/8",
 					"protocol": "https",
 					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
+						"34",
+						"68",
+						"135",
+						"35"
 					],
 					"path": [
 						"api",
 						"v2",
 						"smart_proxies",
-						"1"
+						"8"
 					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Query PuppetDB",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": ""
 				}
 			},
 			"response": []
@@ -290,7 +331,7 @@
 		"basic": [
 			{
 				"key": "password",
-				"value": "XXXXX",
+				"value": "oAXtZZAGyggXNBvC",
 				"type": "string"
 			},
 			{
@@ -321,5 +362,6 @@
 				]
 			}
 		}
-	]
+	],
+	"protocolProfileBehavior": {}
 }
