@@ -70,21 +70,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "XXXXX",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "admin",
-							"type": "string"
-						}
-					]
-				},
 				"method": "GET",
 				"header": [],
 				"url": {
@@ -127,21 +112,6 @@
 				}
 			],
 			"request": {
-				"auth": {
-					"type": "basic",
-					"basic": [
-						{
-							"key": "password",
-							"value": "2T4pNTKJTBU3ujmb",
-							"type": "string"
-						},
-						{
-							"key": "username",
-							"value": "admin",
-							"type": "string"
-						}
-					]
-				},
 				"method": "PUT",
 				"header": [
 					{
@@ -320,7 +290,7 @@
 		"basic": [
 			{
 				"key": "password",
-				"value": "2T4pNTKJTBU3ujmb",
+				"value": "XXXXX",
 				"type": "string"
 			},
 			{

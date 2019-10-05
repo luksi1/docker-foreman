@@ -83,14 +83,18 @@ matrix:
     # swap out admin password
     - echo $ADMIN_PASSWORD
     - cp tests/foreman.json tests/foreman.json.bak
-    # with sed
-    - sed -i "s/XXXXX/$ADMIN_PASSWORD/g" tests/foreman.json
-    - cat tests/foreman.json
+    # jq
+    - jq ".auth.basic[0].value = \"${ADMIN_PASSWORD}\"" tests/foreman.json > tests/foreman.json.bak
+    - mv tests/foreman.json.bak tests/foreman.json
     - /usr/bin/python3 -m json.tool < tests/foreman.json
+    # with sed
+    # - sed -i "s/XXXXX/$ADMIN_PASSWORD/g" tests/foreman.json
+    # - cat tests/foreman.json
+    # - /usr/bin/python3 -m json.tool < tests/foreman.json
     # with perl
-    - /usr/bin/perl -i -pe "s/XXXXX/$ADMIN_PASSWORD/g" tests/foreman.json.bak
-    - cat tests/foreman.json.bak
-    - /usr/bin/python3 -m json.tool < tests/foreman.json.bak
+    # - /usr/bin/perl -i -pe "s/XXXXX/$ADMIN_PASSWORD/g" tests/foreman.json.bak
+    # - cat tests/foreman.json.bak
+    # - /usr/bin/python3 -m json.tool < tests/foreman.json.bak
     # perform tests
     - node_modules/.bin/newman run tests/foreman.json --insecure
     after_script:
