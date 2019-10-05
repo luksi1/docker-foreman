@@ -78,7 +78,7 @@ matrix:
     script:
     # grab password from foreman
     - FOREMAN_CONTAINER_ID=$(/usr/bin/sudo /usr/bin/docker ps -qaf label=org.label-schema.name=foreman)
-    - ADMIN_PASSWORD=$(echo -n $(/usr/bin/sudo /usr/bin/docker exec -t $FOREMAN_CONTAINER_ID foreman-rake permissions:reset | /bin/grep 'Reset to user:' | /usr/bin/awk '{print $NF}') | xargs -n)
+    - ADMIN_PASSWORD=$(echo -n $(/usr/bin/sudo /usr/bin/docker exec -t $FOREMAN_CONTAINER_ID foreman-rake permissions:reset | /bin/grep 'Reset to user:' | /usr/bin/awk '{print $NF}'))
     - cd $TRAVIS_BUILD_DIR
     # swap out admin password
     - echo $ADMIN_PASSWORD
