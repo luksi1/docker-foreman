@@ -82,10 +82,15 @@ matrix:
     - cd $TRAVIS_BUILD_DIR
     # swap out admin password
     - echo $ADMIN_PASSWORD
-    - /usr/bin/perl -i -pe "s/2T4pNTKJTBU3ujmb/${ADMIN_PASSWORD}/g" tests/foreman.json
+    - cp tests/foreman.json tests/foreman.json.bak
+    # with sed
+    - sed -i "s/XXXXX/$ADMIN_PASSWORD/g" tests/foreman.json
     - cat tests/foreman.json
-    # validate json
     - /usr/bin/python3 -m json.tool < tests/foreman.json
+    # with perl
+    - /usr/bin/perl -i -pe "s/XXXXX/$ADMIN_PASSWORD/g" tests/foreman.json.bak
+    - cat tests/foreman.json.bak
+    - /usr/bin/python3 -m json.tool < tests/foreman.json.bak
     # perform tests
     - node_modules/.bin/newman run tests/foreman.json --insecure
     after_script:
