@@ -8,7 +8,7 @@ sudo -E docker run -h "$PUPPET_URL" -v /etc/puppetlabs/puppet/ssl:/etc/puppetlab
 sudo -E docker network create -d bridge foreman
 # Start the instance
 sudo -E docker run --network foreman -d --name puppet -h puppet.dummy.test -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest
-sleep 15
+sleep 30
 # Generate a foreman certificate signed by puppet
 sudo -E docker exec -t puppet puppetserver ca generate --certname "$FOREMAN_URL"
 # Generate a smart proxy certificate signed by puppet
