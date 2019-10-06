@@ -2,7 +2,7 @@
 
 export FOREMAN_URL='foreman.dummy.test'
 export PUPPET_URL='puppet.dummy.test'
-export PUPPET_SMARTPROXY_URL='puppet-smarty-proxy.dummy.test'
+export PUPPET_SMARTPROXY_URL='puppet-smart-proxy.dummy.test'
 
 sudo -E docker run -h "$PUPPET_URL" -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca setup
 sudo -E docker network create -d bridge foreman
