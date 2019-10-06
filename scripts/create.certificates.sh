@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 export FOREMAN_URL='foreman.dummy.test'
 export PUPPET_URL='puppet.dummy.test'
 export PUPPET_SMARTPROXY_URL='puppet-smart-proxy.dummy.test'
@@ -8,11 +10,13 @@ sudo -E docker run -h "$PUPPET_URL" -v /etc/puppetlabs/puppet/ssl:/etc/puppetlab
 sudo -E docker network create -d bridge foreman
 # Start the instance
 sudo -E docker run --network foreman -d --name puppet -h puppet.dummy.test -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest
-sleep 30
+sleep 60
 # Generate a foreman certificate signed by puppet
 sudo -E docker exec -t puppet puppetserver ca generate --certname "$FOREMAN_URL"
 # Generate a smart proxy certificate signed by puppet
 sudo -E docker exec -t puppet puppetserver ca generate --certname "$PUPPET_SMARTPROXY_URL"
+# Generate a puppetdb certificate signed by puppet
+sudo -E docker exec -t puppet puppetserver ca generate --certname "puppetdb"
 # cleanup images
 sudo -E docker rm -f puppet
 sudo -E docker network rm foreman
