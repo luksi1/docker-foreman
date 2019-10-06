@@ -88,6 +88,7 @@ matrix:
     - i=0 && while [ $i -lt 180 ]; do sleep 1; echo -n "."; i=$[$i+1]; done
     script:
     - cd $TRAVIS_BUILD_DIR
+    - export PATH="${PATH}:node_modules/.bin"
     - scripts/run.tests.sh
     after_script:
     - docker-compose stop
