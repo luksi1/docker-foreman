@@ -152,7 +152,7 @@
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
 							"});",
-							"pm.test(\"Your test name\", function () {",
+							"pm.test(\"No smart proxies exist\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.total).to.eql(0);",
 							"});"
@@ -192,7 +192,7 @@
 							"pm.test(\"Status code is 201\", function () {",
 							"    pm.response.to.have.status(201);",
 							"});",
-							"pm.test(\"Your test name\", function () {",
+							"pm.test(\"Puppet smart proxy added\", function () {",
 							"    var jsonData = pm.response.json();",
 							"    pm.expect(jsonData.name).to.eql(\"puppet\");",
 							"});"
@@ -274,17 +274,6 @@
 						"smart_proxies",
 						"1"
 					]
-				}
-			},
-			"response": []
-		},
-		{
-			"name": "Query PuppetDB",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": ""
 				}
 			},
 			"response": []
