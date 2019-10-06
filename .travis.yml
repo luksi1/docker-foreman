@@ -72,6 +72,7 @@ matrix:
     - sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname
       -s)-$(uname -m)" -o /usr/local/bin/docker-compose
     - sudo chmod +x /usr/local/bin/docker-compose
+    # create certificates
     - scripts/create.certificates.sh
     install:
     - npm install newman
@@ -87,7 +88,6 @@ matrix:
     # swap out admin password with jq
     - jq ".auth.basic[0].value = \"${ADMIN_PASSWORD}\"" tests/foreman.json > tests/foreman.json.bak
     - mv tests/foreman.json.bak tests/foreman.json
-    # - /usr/bin/python3 -m json.tool < tests/foreman.json
     # perform tests
     - node_modules/.bin/newman run tests/foreman.json --insecure
     after_script:
@@ -99,4 +99,3 @@ matrix:
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - mvn docker:build
     - mvn docker:push
-
