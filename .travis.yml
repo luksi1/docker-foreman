@@ -84,10 +84,10 @@ matrix:
     # - cd examples/docker-compose
     # - sudo -E docker-compose up -d
     - sudo -E docker-compose --project-directory examples/docker-compose -f examples/docker-compose/docker-compose.yml up -d
-    # Wait for 3 minutes while docker-compose boots up
-    - i=0 && while [ $i -lt 180 ]; do sleep 1; echo -n "."; i=$[$i+1]; done
+    # Wait for 5 minutes while docker-compose boots up
+    - i=0 && while [ $i -lt 300 ]; do sleep 1; echo -n "."; i=$[$i+1]; done
     script:
-    - cd $TRAVIS_BUILD_DIR
+    - sudo docker ps
     - export PATH="${PATH}:node_modules/.bin"
     - scripts/run.tests.sh
     after_script:

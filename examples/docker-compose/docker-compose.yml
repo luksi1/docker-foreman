@@ -43,9 +43,29 @@ services:
       FOREMAN_WEB_CA_CERTIFICATE: /etc/puppetlabs/foreman/ssl/ca.pem
     volumes:
       - /etc/puppetlabs/code:/etc/puppetlabs/code/
-      - /etc/puppetlabs/puppet/ssl/:/etc/puppetlabs/puppet/ssl/
       - /opt/puppetlabs/server/data/puppetserver/:/opt/puppetlabs/server/data/puppetserver/
       - ${foreman_server_cert_chain_file}:/etc/puppetlabs/foreman/ssl/ca.pem
+      - /etc/puppetlabs/puppet/ssl/crl.pem:/etc/puppetlabs/puppet/ssl/crl.pem
+      - /etc/puppetlabs/puppet/ssl/ca/:/etc/puppetlabs/puppet/ssl/ca/
+      - /etc/puppetlabs/puppet/ssl/certificate_requests/:/etc/puppetlabs/puppet/ssl/certificate_requests/
+      - /etc/puppetlabs/puppet/ssl/private/:/etc/puppetlabs/puppet/ssl/private/
+      - /etc/puppetlabs/puppet/ssl/public_keys/:/etc/puppetlabs/puppet/ssl/public_keys/
+      - /etc/puppetlabs/puppet/ssl/certs/${puppetserver_hostname}.${domain}.pem:/etc/puppetlabs/puppet/ssl/certs/${puppetserver_hostname}.${domain}.pem
+      - /etc/puppetlabs/puppet/ssl/private_keys/${puppetserver_hostname}.${domain}.pem:/etc/puppetlabs/puppet/ssl/private_keys/${puppetserver_hostname}.${domain}.pem
+      # - /etc/puppetlabs/puppet/ssl/ca/signed/${puppetserver_hostname}.${domain}.pem:/etc/puppetlabs/puppet/ssl/ca/signed/${puppetserver_hostname}.${domain}.pem
+      # - /etc/puppetlabs/puppet/ssl/private_keys/${puppetserver_hostname}.${domain}.pem:/etc/puppetlabs/puppet/ssl/private_keys/${puppetserver_hostname}.${domain}.pem
+      # - /etc/puppetlabs/puppet/ssl/certs/${puppetserver_hostname}.${domain}.pem:/etc/puppetlabs/puppet/ssl/certs/${puppetserver_hostname}.${domain}.pem
+      # - /etc/puppetlabs/puppet/ssl/public_keys/${puppetserver_hostname}.${domain}.pem:/etc/puppetlabs/puppet/ssl/public_keys/${puppetserver_hostname}.${domain}.pem
+      # - /etc/puppetlabs/puppet/ssl/certs/ca.pem:/etc/puppetlabs/puppet/ssl/certs/ca.pem
+      # - /etc/puppetlabs/puppet/ssl/ca/infra_crl.pem:/etc/puppetlabs/puppet/ssl/ca/infra_crl.pem
+      # - /etc/puppetlabs/puppet/ssl/ca/ca_pub.pem:/etc/puppetlabs/puppet/ssl/ca/ca_pub.pem
+      # - /etc/puppetlabs/puppet/ssl/ca/root_key.pem:/etc/puppetlabs/puppet/ssl/ca/root_key.pem
+      # - /etc/puppetlabs/puppet/ssl/ca/ca_key.pem:/etc/puppetlabs/puppet/ssl/ca/ca_key.pem
+      # - /etc/puppetlabs/puppet/ssl/ca/ca_crt.pem:/etc/puppetlabs/puppet/ssl/ca/ca_crt.pem
+      # - /etc/puppetlabs/puppet/ssl/crl.pem:/etc/puppetlabs/puppet/ssl/crl.pem
+      # - /etc/puppetlabs/puppet/ssl/ca/serial:/etc/puppetlabs/puppet/ssl/ca/serial
+      # - /etc/puppetlabs/puppet/ssl/ca/ca_crl.pem:/etc/puppetlabs/puppet/ssl/ca/ca_crl.pem
+      # - /etc/puppetlabs/puppet/ssl/ca/inventory.txt:/etc/puppetlabs/puppet/ssl/ca/inventory.txt
     networks:
       puppet-foreman-network:
         aliases:
