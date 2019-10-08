@@ -3,16 +3,15 @@
 set -e
 
 puppet_health_status() {
-  local health_status=$(sudo docker inspect --format '{{json .State.Health.Status }}' puppetserver | sed s/\"//g)
-  echo $health_status
+  sudo docker inspect --format '{{json .State.Health.Status }}' puppetserver | sed s/\"//g
 }
 
-while [[ true ]]; do
+while true; do
   if [[ $(echo $(puppet_health_status) | egrep "healthy") ]]; then
     echo "Puppetserver's health is \"$(puppet_health_status)\""
     # echo "Sleeping one minute for Foreman to come up."
     break
-  elif [[ $(echo $(puppet_health_status) | egrep "unhealthy") ]]; then
+  elif [[ $(echo $(puppet_health_status) | egrep -q "unhealthy") ]]; then
     echo "Puppetserver has not started correctly. Puppetserver's health is $(puppet_health_status)"
     exit 1
   fi
@@ -20,7 +19,7 @@ while [[ true ]]; do
   echo "Puppetserver's health is \"$(puppet_health_status)\""
 done
 
-while [[ true ]]; do
+while true; do
   if [[ ! $(nc -z foreman.dummy.test 443) ]]; then
     echo "Foreman has started"
     break
