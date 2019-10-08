@@ -38,4 +38,6 @@ sudo -E docker exec -t puppetserver puppetserver ca generate --certname "$PUPPET
 sudo -E docker rm -f puppetserver
 sudo -E docker network rm foreman
 # Create public facing public certificate
-sudo -E openssl req -new -newkey rsa:4096 -days 1 -nodes -x509 -subj "/C=SE/L=Gothenburg/CN=${FOREMAN_URL}" -keyout /tmp/foreman.key -out /tmp/foreman.crt
+sudo chmod 664 /home/travis/.rnd
+sudo chown $USER /home/travis/.rnd
+openssl req -new -newkey rsa:4096 -days 1 -nodes -x509 -subj "/C=SE/L=Gothenburg/CN=${FOREMAN_URL}" -keyout /tmp/foreman.key -out /tmp/foreman.crt
