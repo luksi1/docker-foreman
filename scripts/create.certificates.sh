@@ -16,7 +16,7 @@ sudo -E docker exec -t puppet puppetserver ca generate --certname "$FOREMAN_URL"
 # Generate a smart proxy certificate signed by puppet
 sudo -E docker exec -t puppet puppetserver ca generate --certname "$PUPPET_SMARTPROXY_URL"
 # Generate a puppetdb certificate signed by puppet
-sudo -E docker exec -t puppet puppetserver ca generate --certname "puppetdb"
+# sudo -E docker exec -t puppet puppetserver ca generate --certname "puppetdb"
 # cleanup images
 sudo -E docker rm -f puppet
 sudo -E docker network rm foreman

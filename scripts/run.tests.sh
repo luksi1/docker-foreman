@@ -2,17 +2,33 @@
 
 set -e
 
+puppet_health_status() {
+  local health_status=$(sudo docker inspect --format '{{json .State.Health.Status }}' puppetserver | sed s/\"//g)
+  echo $health_status
+}
+
 while [[ true ]]; do
-  if [[ $(sudo docker inspect --format '{{json .State.Health.Status }}' puppetserver | sed s/\"//g | egrep "healthy") ]]; then
+  if [[ $(echo $(puppet_health_status) | egrep "healthy") ]]; then
+    echo "Puppetserver's health is \"$(puppet_health_status)\""
+    # echo "Sleeping one minute for Foreman to come up."
     break
-  elif [[ $(sudo docker inspect --format '{{json .State.Health.Status }}' puppetserver | sed s/\"//g | egrep "starting") ]]; then
-    echo "Starting"
-  elif [[ $(sudo docker inspect --format '{{json .State.Health.Status }}' puppetserver | sed s/\"//g | egrep "unhealthy") ]]; then
-    echo "Puppet has not started correctly"
+  elif [[ $(echo $(puppet_health_status) | egrep "unhealthy") ]]; then
+    echo "Puppetserver has not started correctly. Puppetserver's health is $(puppet_health_status)"
     exit 1
   fi
-  sleep 1
-  echo "Puppet is $(sudo docker inspect --format '{{json .State.Health.Status }}' puppetserver | sed s/\"//g)"
+  sleep 5
+  echo "Puppetserver's health is \"$(puppet_health_status)\""
+done
+
+while [[ true ]]; do
+  if [[ ! $(nc -z foreman.dummy.test 443) ]]; then
+    echo "Foreman has started"
+    break
+  else
+    echo "Waiting for Foreman to come up..."
+    sleep 5
+    continue
+  fi
 done
 
 # grab the container ID for Foreman

@@ -10,7 +10,7 @@ services:
     ports:
       - "5432"
     volumes:
-      - /puppetdb-postgres:/var/lib/postgresql/data/
+      - /databases/puppetdb-postgres:/var/lib/postgresql/data/
     networks:
       puppet-foreman-network:
         aliases:
@@ -26,7 +26,7 @@ services:
       POSTGRES_USER: 'foreman'
       POSTGRES_DB: 'foreman'
     volumes:
-      - /foreman-postgres:/var/lib/postgresql/data/
+      - /databases/foreman-postgres:/var/lib/postgresql/data/
     networks:
       puppet-foreman-network:
         aliases:
