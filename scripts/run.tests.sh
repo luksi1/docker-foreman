@@ -23,9 +23,9 @@ done
 
 while true
 do
-  if [[ ! $(nc -z foreman.dummy.test 443) ]]; then
+  if sudo docker logs foreman 2> /dev/null | egrep -q ' \| Finished'
+  then
     echo "Foreman has started"
-    sleep 60
     break
   else
     echo "Waiting for Foreman to come up..."
