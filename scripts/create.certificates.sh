@@ -10,17 +10,22 @@ puppet_health_status() {
   sudo docker inspect --format '{{json .State.Health.Status }}' puppetserver | sed s/\"//g
 }
 
+openssl req -new -newkey rsa:4096 -days 1 -nodes -x509 -subj "/C=SE/L=Gothenburg/CN=${FOREMAN_URL}" -keyout /tmp/foreman.key -out /tmp/foreman.crt
+
 sudo -E docker run -h "$PUPPET_URL" -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca setup
 sudo -E docker network create -d bridge foreman
 # Start the instance
 sudo -E docker run --network foreman -d --name puppetserver -h puppet.dummy.test -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest
 
-while true; do
-  if [[ $(echo $(puppet_health_status) | egrep "healthy") ]]; then
+while true
+do
+  if puppet_health_status | egrep -q "healthy"
+  then
     echo "Puppetserver's health is \"$(puppet_health_status)\""
     # echo "Sleeping one minute for Foreman to come up."
     break
-  elif [[ $(echo $(puppet_health_status) | egrep -q "unhealthy") ]]; then
+  elif puppet_health_status | egrep -q "unhealthy"
+  then
     echo "Puppetserver has not started correctly. Puppetserver's health is $(puppet_health_status)"
     exit 1
   fi
@@ -37,9 +42,3 @@ sudo -E docker exec -t puppetserver puppetserver ca generate --certname "$PUPPET
 # cleanup images
 sudo -E docker rm -f puppetserver
 sudo -E docker network rm foreman
-# Create public facing public certificate
-sudo rm -f /home/travis/.rnd || true
-openssl rand -hex 40 -out .my.rnd
-openssl req -new -newkey rsa:4096 -rand .my.rnd -days 1 -nodes -x509 -subj "/C=SE/L=Gothenburg/CN=${FOREMAN_URL}" -keyout /tmp/foreman.key -out /tmp/foreman.crt
-ls -latr
-ls -latr /home/travis
