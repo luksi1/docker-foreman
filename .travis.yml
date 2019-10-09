@@ -3,7 +3,8 @@ os: linux
 language: ruby
 env:
   global:
-  - TAG="$(git log -1 --pretty=%h)"
+  # - TAG="$(git log -1 --pretty=%h)"
+  - TAG="580579f"
   - FOREMAN_RELEASE=1.20
   - PUPPET_VERSION=6.5.0
   - R10K_VERSION=3.3.1
@@ -20,31 +21,31 @@ services:
 - docker
 matrix:
   include:
-  - stage: syntax
-    name: Hadolint
-    script:
-    - docker run --rm -i hadolint/hadolint < images/foreman/Dockerfile
-    - docker run --rm -i hadolint/hadolint < images/puppetserver/Dockerfile
-    - docker run --rm -i hadolint/hadolint < images/puppet-smart-proxy/Dockerfile
-  - name: Shellchecker
-    script: docker run --rm -v "$(pwd)":/mnt koalaman/shellcheck:stable images/foreman/*.sh
-  - stage: build
-    name: Build Puppet, Foreman, Foreman Puppet smart proxy, and R10k images
-    script:
-    - cd $TRAVIS_BUILD_DIR/images/puppetserver
-    - docker build -t luksi1/puppetserver-foreman:${TAG} .
-    - cd $TRAVIS_BUILD_DIR/images/foreman
-    - docker build --build-arg FOREMAN_RELEASE=${FOREMAN_RELEASE} -t luksi1/foreman:${TAG} .
-    - cd $TRAVIS_BUILD_DIR/images/puppet-smart-proxy
-    - docker build --build-arg FOREMAN_RELEASE=${FOREMAN_RELEASE} -t luksi1/puppet-smart-proxy:${TAG} .
-    - cd $TRAVIS_BUILD_DIR/images/r10k
-    - docker build --build-arg R10K_VERSION=${R10K_VERSION} -t luksi1/r10k:${TAG} .
-    after_success:
-    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    - docker push luksi1/puppetserver-foreman:${TAG}
-    - docker push luksi1/foreman:${TAG}
-    - docker push luksi1/puppet-smart-proxy:${TAG}
-    - docker push luksi1/r10k:${TAG}
+  # - stage: syntax
+  #   name: Hadolint
+  #   script:
+  #   - docker run --rm -i hadolint/hadolint < images/foreman/Dockerfile
+  #   - docker run --rm -i hadolint/hadolint < images/puppetserver/Dockerfile
+  #   - docker run --rm -i hadolint/hadolint < images/puppet-smart-proxy/Dockerfile
+  # - name: Shellchecker
+  #   script: docker run --rm -v "$(pwd)":/mnt koalaman/shellcheck:stable images/foreman/*.sh
+  # - stage: build
+  #   name: Build Puppet, Foreman, Foreman Puppet smart proxy, and R10k images
+  #   script:
+  #   - cd $TRAVIS_BUILD_DIR/images/puppetserver
+  #   - docker build -t luksi1/puppetserver-foreman:${TAG} .
+  #   - cd $TRAVIS_BUILD_DIR/images/foreman
+  #   - docker build --build-arg FOREMAN_RELEASE=${FOREMAN_RELEASE} -t luksi1/foreman:${TAG} .
+  #   - cd $TRAVIS_BUILD_DIR/images/puppet-smart-proxy
+  #   - docker build --build-arg FOREMAN_RELEASE=${FOREMAN_RELEASE} -t luksi1/puppet-smart-proxy:${TAG} .
+  #   - cd $TRAVIS_BUILD_DIR/images/r10k
+  #   - docker build --build-arg R10K_VERSION=${R10K_VERSION} -t luksi1/r10k:${TAG} .
+  #   after_success:
+  #   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+  #   - docker push luksi1/puppetserver-foreman:${TAG}
+  #   - docker push luksi1/foreman:${TAG}
+  #   - docker push luksi1/puppet-smart-proxy:${TAG}
+  #   - docker push luksi1/r10k:${TAG}
   - stage: integration
     name: docker-compose
     addons:
