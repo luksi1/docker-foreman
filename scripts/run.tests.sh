@@ -25,6 +25,7 @@ while true
 do
   if [[ ! $(nc -z foreman.dummy.test 443) ]]; then
     echo "Foreman has started"
+    sleep 60
     break
   else
     echo "Waiting for Foreman to come up..."
