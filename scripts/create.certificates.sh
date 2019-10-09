@@ -38,6 +38,8 @@ sudo -E docker exec -t puppetserver puppetserver ca generate --certname "$PUPPET
 sudo -E docker rm -f puppetserver
 sudo -E docker network rm foreman
 # Create public facing public certificate
-# openssl rand -hex 20 -out my.rnd
 sudo rm -f /home/travis/.rnd || true
-openssl req -new -newkey rsa:4096 -rand my.rnd -days 1 -nodes -x509 -subj "/C=SE/L=Gothenburg/CN=${FOREMAN_URL}" -keyout /tmp/foreman.key -out /tmp/foreman.crt
+openssl rand -hex 40 -out .my.rnd
+openssl req -new -newkey rsa:4096 -rand .my.rnd -days 1 -nodes -x509 -subj "/C=SE/L=Gothenburg/CN=${FOREMAN_URL}" -keyout /tmp/foreman.key -out /tmp/foreman.crt
+ls -latr
+ls -latr /home/travis
