@@ -84,10 +84,11 @@ matrix:
     - npm install newman
     - sudo -E docker-compose --project-directory examples/docker-compose -f examples/docker-compose/docker-compose.yml up -d
     script:
-    - sudo docker ps
     - export PATH="${PATH}:node_modules/.bin"
     - scripts/run.tests.sh
     after_script:
+    - sudo docker ps
+    - sudo docker logs foreman
     - docker-compose stop
     - docker-compose rm -f
   - stage: deploy
