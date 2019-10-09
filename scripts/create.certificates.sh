@@ -10,6 +10,8 @@ puppet_health_status() {
   sudo docker inspect --format '{{json .State.Health.Status }}' puppetserver | sed s/\"//g
 }
 
+# Create foreman public facing certificates
+touch ~/.rnd
 openssl req -new -newkey rsa:4096 -days 1 -nodes -x509 -subj "/C=SE/L=Gothenburg/CN=${FOREMAN_URL}" -keyout /tmp/foreman.key -out /tmp/foreman.crt
 
 sudo -E docker run -h "$PUPPET_URL" -v /etc/puppetlabs/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppetserver:latest ca setup
