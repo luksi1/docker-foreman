@@ -30,12 +30,10 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://foreman.dummy.test/api/v2/dashboard",
+          "raw": "https://{{domain_name}}/api/v2/dashboard",
           "protocol": "https",
           "host": [
-            "foreman",
-            "dummy",
-            "test"
+            "{{domain_name}}"
           ],
           "path": [
             "api",
@@ -47,7 +45,7 @@
       "response": []
     },
     {
-      "name": "Get trusted_hosts ID",
+      "name": "Get trusted_hosts",
       "event": [
         {
           "listen": "test",
@@ -60,7 +58,10 @@
               "pm.test(\"trusted_hosts exists\", function () {",
               "    var jsonData = pm.response.json();",
               "    pm.expect(jsonData.full_name).to.eql(\"Trusted hosts\");",
-              "    ",
+              "});",
+              "pm.test(\"trusted_hosts has ID 72\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.id).to.eql(72);",
               "});",
               ""
             ],
@@ -72,12 +73,10 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://foreman.dummy.test/api/v2/settings/trusted_hosts",
+          "raw": "https://{{domain_name}}/api/v2/settings/trusted_hosts",
           "protocol": "https",
           "host": [
-            "foreman",
-            "dummy",
-            "test"
+            "{{domain_name}}"
           ],
           "path": [
             "api",
@@ -124,12 +123,10 @@
           "raw": "{\r\n\t\"setting\": {\r\n\t\t\"value\": \"[puppet]\"\r\n\t}\r\n}"
         },
         "url": {
-          "raw": "https://foreman.dummy.test/api/v2/settings/72",
+          "raw": "https://{{domain_name}}/api/v2/settings/72",
           "protocol": "https",
           "host": [
-            "foreman",
-            "dummy",
-            "test"
+            "{{domain_name}}"
           ],
           "path": [
             "api",
@@ -152,7 +149,7 @@
               "pm.test(\"Status code is 200\", function () {",
               "    pm.response.to.have.status(200);",
               "});",
-              "pm.test(\"No smart proxies exist\", function () {",
+              "pm.test(\"Your test name\", function () {",
               "    var jsonData = pm.response.json();",
               "    pm.expect(jsonData.total).to.eql(0);",
               "});"
@@ -165,12 +162,10 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://foreman.dummy.test/api/v2/smart_proxies",
+          "raw": "https://{{domain_name}}/api/v2/smart_proxies",
           "protocol": "https",
           "host": [
-            "foreman",
-            "dummy",
-            "test"
+            "{{domain_name}}"
           ],
           "path": [
             "api",
@@ -192,7 +187,7 @@
               "pm.test(\"Status code is 201\", function () {",
               "    pm.response.to.have.status(201);",
               "});",
-              "pm.test(\"Puppet smart proxy added\", function () {",
+              "pm.test(\"Your test name\", function () {",
               "    var jsonData = pm.response.json();",
               "    pm.expect(jsonData.name).to.eql(\"puppet\");",
               "});"
@@ -215,12 +210,10 @@
           "raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"https://puppet-smart-proxy.dummy.test:8443\" }}"
         },
         "url": {
-          "raw": "https://foreman.dummy.test/api/v2/smart_proxies",
+          "raw": "https://{{domain_name}}/api/v2/smart_proxies",
           "protocol": "https",
           "host": [
-            "foreman",
-            "dummy",
-            "test"
+            "{{domain_name}}"
           ],
           "path": [
             "api",
@@ -261,12 +254,10 @@
           "raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"https://puppet-smart-proxy.dummy.test:8443\" }}"
         },
         "url": {
-          "raw": "https://foreman.dummy.test/api/v2/smart_proxies/1",
+          "raw": "https://{{domain_name}}/api/v2/smart_proxies/1",
           "protocol": "https",
           "host": [
-            "foreman",
-            "dummy",
-            "test"
+            "{{domain_name}}"
           ],
           "path": [
             "api",
@@ -284,7 +275,7 @@
     "basic": [
       {
         "key": "password",
-        "value": "rpik2UM5eRMbP9Dv",
+        "value": "MjPEy4P9UNHMhoAU",
         "type": "string"
       },
       {
@@ -314,6 +305,14 @@
           ""
         ]
       }
+    }
+  ],
+  "variable": [
+    {
+      "id": "b545f812-686b-460e-b901-0dabfe3b070a",
+      "key": "domain_name",
+      "value": "foreman.dummy.test",
+      "type": "string"
     }
   ],
   "protocolProfileBehavior": {}

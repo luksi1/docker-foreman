@@ -41,5 +41,5 @@ ADMIN_PASSWORD=$(/usr/bin/sudo /usr/bin/docker exec -t "$FOREMAN_CONTAINER_ID" f
 # swap out admin password with jq
 jq ".auth.basic[0].value = \"${ADMIN_PASSWORD}\"" tests/foreman.json > tests/foreman.json.bak && mv tests/foreman.json.bak tests/foreman.json
 # perform tests
-newman run tests/foreman.json --insecure --verbose
+newman run tests/foreman.json --insecure
 
