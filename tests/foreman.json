@@ -54,16 +54,9 @@
             "exec": [
               "pm.test(\"Status code is 200\", function () {",
               "    pm.response.to.have.status(200);",
-              "});",
-              "pm.test(\"trusted_hosts exists\", function () {",
               "    var jsonData = pm.response.json();",
-              "    pm.expect(jsonData.full_name).to.eql(\"Trusted hosts\");",
-              "});",
-              "pm.test(\"trusted_hosts has ID 72\", function () {",
-              "    var jsonData = pm.response.json();",
-              "    pm.expect(jsonData.id).to.eql(72);",
-              "});",
-              ""
+              "    pm.globals.set(\"trusted_hosts_id\", jsonData.id);",
+              "});"
             ],
             "type": "text/javascript"
           }
@@ -89,7 +82,7 @@
       "response": []
     },
     {
-      "name": "Update trusted_hosts",
+      "name": "Update trusted_hosts with \"puppet\"",
       "event": [
         {
           "listen": "test",
@@ -123,7 +116,7 @@
           "raw": "{\r\n\t\"setting\": {\r\n\t\t\"value\": \"[puppet]\"\r\n\t}\r\n}"
         },
         "url": {
-          "raw": "https://{{domain_name}}/api/v2/settings/72",
+          "raw": "https://{{domain_name}}/api/v2/settings/{{trusted_hosts_id}}",
           "protocol": "https",
           "host": [
             "{{domain_name}}"
@@ -132,7 +125,7 @@
             "api",
             "v2",
             "settings",
-            "72"
+            "{{trusted_hosts_id}}"
           ]
         }
       },
@@ -149,7 +142,7 @@
               "pm.test(\"Status code is 200\", function () {",
               "    pm.response.to.have.status(200);",
               "});",
-              "pm.test(\"Your test name\", function () {",
+              "pm.test(\"No smart proxies exist\", function () {",
               "    var jsonData = pm.response.json();",
               "    pm.expect(jsonData.total).to.eql(0);",
               "});"
@@ -187,9 +180,10 @@
               "pm.test(\"Status code is 201\", function () {",
               "    pm.response.to.have.status(201);",
               "});",
-              "pm.test(\"Your test name\", function () {",
+              "pm.test(\"Smart proxy is added\", function () {",
               "    var jsonData = pm.response.json();",
               "    pm.expect(jsonData.name).to.eql(\"puppet\");",
+              "    pm.globals.set(\"puppet_smart_proxy_id\", jsonData.id);",
               "});"
             ],
             "type": "text/javascript"
@@ -254,7 +248,7 @@
           "raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"https://puppet-smart-proxy.dummy.test:8443\" }}"
         },
         "url": {
-          "raw": "https://{{domain_name}}/api/v2/smart_proxies/1",
+          "raw": "https://{{domain_name}}/api/v2/smart_proxies/{{puppet_smart_proxy_id}}",
           "protocol": "https",
           "host": [
             "{{domain_name}}"
@@ -263,7 +257,7 @@
             "api",
             "v2",
             "smart_proxies",
-            "1"
+            "{{puppet_smart_proxy_id}}"
           ]
         }
       },
@@ -275,7 +269,7 @@
     "basic": [
       {
         "key": "password",
-        "value": "MjPEy4P9UNHMhoAU",
+        "value": "rAsCEbq8LgoYU7cp",
         "type": "string"
       },
       {
