@@ -1,4 +1,7 @@
 #!/bin/bash
+# Description
+# Helper script to create a public facing service certificate for Foreman,
+# a Puppetserver certificate, and a certificate for our Puppet smart proxy
 
 set -e
 
@@ -40,7 +43,7 @@ sudo -E docker exec -t puppetserver puppetserver ca generate --certname "$FOREMA
 # Generate a smart proxy certificate signed by puppet
 sudo -E docker exec -t puppetserver puppetserver ca generate --certname "$PUPPET_SMARTPROXY_URL"
 # Generate a puppetdb certificate signed by puppet
-# sudo -E docker exec -t puppet puppetserver ca generate --certname "puppetdb"
+sudo -E docker exec -t puppetserver puppetserver ca generate --certname "puppetdb"
 # cleanup images
 sudo -E docker rm -f puppetserver
 sudo -E docker network rm foreman

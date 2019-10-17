@@ -2,13 +2,14 @@ version: "3.2"
 services:
   puppetdb-postgres:
     container_name: puppetdb-postgres
+    hostname: postgres
     image: postgres:9.6
     environment:
       POSTGRES_PASSWORD: puppetdb
       POSTGRES_USER: puppetdb
       POSTGRES_DB: puppetdb
     ports:
-      - "5432"
+      - 5432
     volumes:
       - /databases/puppetdb-postgres:/var/lib/postgresql/data/
     networks:
@@ -33,7 +34,8 @@ services:
           - foreman-postgres
   puppetserver:
     container_name: puppetserver
-    hostname: ${puppetserver_hostname}.${domain}
+    hostname: ${puppetserver_hostname}
+    domainname: ${domain}
     image: luksi1/puppetserver-foreman:${TAG}
     ports:
       - "8140:8140"
@@ -66,7 +68,10 @@ services:
       - "8081:8080"
       - "8080:8080"
     environment:
-      PUPPETDB_DATABASE_CONNECTION: '//puppetdb-postgres:5432/puppetdb'
+      - PUPPETDB_POSTGRES_HOSTNAME=puppetdb-postgres
+      - PUPPETDB_PASSWORD=puppetdb
+      - PUPPETDB_USER=puppetdb
+      - USE_PUPPETSERVER='false'
     volumes:
       - /etc/puppetlabs/puppet/ssl/:/etc/puppetlabs/puppet/ssl/
     networks:
