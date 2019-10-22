@@ -7,44 +7,6 @@
   },
   "item": [
     {
-      "name": "Get dashboard information",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "id": "41aaccb0-323d-48d6-8eb6-eb8b2c0f8d7b",
-            "exec": [
-              "pm.test(\"Status code is 200\", function () {",
-              "    pm.response.to.have.status(200);",
-              "});",
-              "pm.test(\"No hosts exist\", function () {",
-              "    var jsonData = pm.response.json();",
-              "    pm.expect(jsonData.total_hosts).to.eql(0);",
-              "});"
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "https://{{domain_name}}/api/v2/dashboard",
-          "protocol": "https",
-          "host": [
-            "{{domain_name}}"
-          ],
-          "path": [
-            "api",
-            "v2",
-            "dashboard"
-          ]
-        }
-      },
-      "response": []
-    },
-    {
       "name": "Get trusted_hosts",
       "event": [
         {
@@ -269,7 +231,7 @@
     "basic": [
       {
         "key": "password",
-        "value": "rAsCEbq8LgoYU7cp",
+        "value": "yPcSvGUrsT8k4njZ",
         "type": "string"
       },
       {

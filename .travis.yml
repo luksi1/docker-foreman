@@ -85,7 +85,7 @@ matrix:
     - sudo -E docker-compose --project-directory examples/docker-compose -f examples/docker-compose/docker-compose.yml up -d
     script:
     - export PATH="${PATH}:node_modules/.bin"
-    - scripts/run.tests.sh
+    - scripts/tests/foreman.sh
     after_script:
     - sudo docker ps
     - sudo docker logs foreman
