@@ -17,9 +17,9 @@
               "pm.test(\"Status code is 200\", function () {",
               "    pm.response.to.have.status(200);",
               "});",
-              "pm.test(\"No hosts exist\", function () {",
+              "pm.test(\"One host still exists\", function () {",
               "    var jsonData = pm.response.json();",
-              "    pm.expect(jsonData.total_hosts).to.eql(0);",
+              "    pm.expect(jsonData.total_hosts).to.eql(1);",
               "});"
             ],
             "type": "text/javascript"
