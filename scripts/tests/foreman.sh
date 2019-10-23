@@ -5,8 +5,6 @@ set -e
 # shellcheck disable=SC1090
 source "${BASH_SOURCE%/*}/../functions/foreman.sh"
 
-NEWMAN_FILE='foreman_provision.json'
-
 while true
 do
   if puppet_health_status | egrep -q "healthy"
@@ -48,7 +46,7 @@ set_newman_password "foreman_after_agent_run.json" "$ADMIN_PASSWORD"
 
 
 # perform tests
-run_newman_test "$NEWMAN_FILE"
+run_newman_test 'foreman/provision.json'
 puppet_agent_run "my-agent.dummy.test" "docker-compose_puppet-foreman-network"
-run_newman_test 'foreman_after_agent_run.json'
-run_newman_test 'foreman_cleanup.json'
+run_newman_test 'foreman/post_agent_run.json'
+run_newman_test 'foreman/cleanup.json'
