@@ -179,6 +179,51 @@
         }
       },
       "response": []
+    },
+    {
+      "name": "Delete Puppet smart proxy",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "3faac968-7966-4e5b-aa6e-b1fa37c75067",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "DELETE",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"https://puppet-smart-proxy.dummy.test:8443\" }}"
+        },
+        "url": {
+          "raw": "https://{{domain_name}}/api/v2/smart_proxies/{{puppet_smart_proxy_id}}",
+          "protocol": "https",
+          "host": [
+            "{{domain_name}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "smart_proxies",
+            "{{puppet_smart_proxy_id}}"
+          ]
+        }
+      },
+      "response": []
     }
   ],
   "auth": {
