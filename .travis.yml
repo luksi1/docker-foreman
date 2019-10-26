@@ -90,9 +90,33 @@ matrix:
     - sudo docker logs foreman
     - docker-compose stop
     - docker-compose rm -f
-  # - stage: deploy
-  #   name: Deploy to DockerHub
-  #   script:
-  #   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-  #   - mvn docker:build
-  #   - mvn docker:push
+  - stage: deploy
+    name: Deploy to DockerHub
+    before_script:
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - docker pull luksi1/puppetserver-foreman:${TAG}
+    - docker pull luksi1/foreman:${TAG}
+    - docker pull luksi1/puppet-smart-proxy:${TAG}
+    - docker pull luksi1/r10k:${TAG}
+    script:
+    # tag with version
+    - docker tag luksi1/puppetserver-foreman:${TAG} luksi1/puppetserver-foreman:${PUPPET_VERSION}
+    - docker tag luksi1/foreman:${TAG} luksi1/foreman:${FOREMAN_RELEASE}
+    - docker tag luksi1/puppet-smart-proxy:${TAG} luksi1/puppet-smart-proxy:${FOREMAN_RELEASE}
+    - docker tag luksi1/r10k:${TAG} luksi1/r10k:${R10K_VERSION}
+    # tag with latest
+    - docker tag luksi1/puppetserver-foreman:${TAG} luksi1/puppetserver-foreman:latest
+    - docker tag luksi1/foreman:${TAG} luksi1/foreman:latest
+    - docker tag luksi1/puppet-smart-proxy:${TAG} luksi1/puppet-smart-proxy:latest
+    - docker tag luksi1/r10k:${TAG} luksi1/r10k:latest
+    after_script:
+    # push version
+    - docker push luksi1/puppetserver-foreman:${PUPPET_VERSION}
+    - docker push luksi1/foreman:${FOREMAN_RELEASE}
+    - docker push luksi1/puppet-smart-proxy:${FOREMAN_RELEASE}
+    - docker push luksi1/r10k:${TAG} luksi1/r10k:${R10K_VERSION}
+    # push latest
+    - docker push luksi1/puppetserver-foreman:${TAG} luksi1/puppetserver-foreman:latest
+    - docker push luksi1/foreman:${TAG} luksi1/foreman:latest
+    - docker push luksi1/puppet-smart-proxy:${TAG} luksi1/puppet-smart-proxy:latest
+    - docker push luksi1/r10k:${TAG} luksi1/r10k:latest
