@@ -28,11 +28,12 @@ A docker stack for Puppet, using Foreman as the external node classifier, R10K f
 
 ## Description
 
-**Foreman** is a free open source project used to automate tasks, deploy application, and manage a server's life cycle, either bare-metal, virtual, or in the cloud.
+**Foreman** is a free open source project used to automate tasks, deploy applications, and manage a server's life cycle, either bare-metal, virtual, or in the cloud.
 
 **Puppet** is a configuration management tool provided by PuppetLabs, allowing system administrators to use "Infrastructure as Code" to define a server's state.
 
-**PuppetDB** is a backend, providing an easy way to query your infrastructure's operating systems, versions, network cards... 
+**PuppetDB** is a backend, providing an easy way to query your infrastructure's operating systems, versions, network cards, and
+other meta information.
 
 **R10K** is a Ruby gem that allows you to pull Puppet modules directly into your configuration management stack from a version control system.
 
@@ -57,13 +58,12 @@ Add a webhook for each repository you want to trigger a pull when pushing to. Go
 https://puppet:puppet@puppet-test.domain.com:8088/payload
 ```
 
-## Up and running with maven (foreman.dummy.test)
+## Up and running with docker-compose
 
-Running "mvn docker:run" should get you an entire stack with https://foreman.dummy.test as your web url. Be sure to add foreman.dummy.test to your hosts file!
-
-## Up and running with docker-compose (foreman.dummy.test)
+Use the following three commands to create a Puppet certificate (puppet.dummy.test) and Foreman certificate for your web frontend.
 
 ```
+scripts/utilities/create.certificates.sh
 cd examples/docker-compose
 docker-compose up
 ```
@@ -167,14 +167,6 @@ Copy SSL certificates to /opt/docker-foreman/volumes/puppet/ssl/
 4. Log in to your Postgres image with: `docker exec -it $(docker ps | grep postgres | awk '{print $1}') /bin/bash`
 5. Perform your import. You dump file will be located under /var/postgres/data
 
-### If you are starting from a fresh install
-
-- You will get some errors as the database is not yet seeded. This will be taken care of efter the Foreman installer has run. Nothing to worry about!
-- You will need to create your puppet server certificates (CA, public, and private) and Foreman certificates and place it in /opt/foreman/volumes/puppet/ssl/. You can do this on a host with puppet installed or you can use docker:
-```
-docker run -v /opt/foreman/volumes/puppet/ssl:/etc/puppetlabs/puppet/ssl puppet/puppet-agent cert --generate YOUR_HOSTNAME
-```
-
 ## Standard Operating Procedures
 
 ### Starting your foreman stack
@@ -193,23 +185,11 @@ Edit your host's crontab accordingly
 
 ## Testing
 
-### Dependencies
-
-- maven
-
-### Usage
-
-```
-mvn verify
-``` 
-
 #### Coverage
 
 - Start/Stop docker-compose
 - Puppet agent run
 - Access Foreman API
-- Import Puppet classes to Foreman
-- Remove node from Foreman
 
 ## Notes
 
