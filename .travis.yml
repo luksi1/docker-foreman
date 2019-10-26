@@ -31,14 +31,14 @@ matrix:
   - stage: build
     name: Build Puppet, Foreman, Foreman Puppet smart proxy, and R10k images
     script:
-    - cd $TRAVIS_BUILD_DIR/images/puppetserver
-    - docker build -t luksi1/puppetserver-foreman:${TAG} . &
-    - cd $TRAVIS_BUILD_DIR/images/foreman
-    - docker build --build-arg FOREMAN_RELEASE=${FOREMAN_RELEASE} -t luksi1/foreman:${TAG} . &
     - cd $TRAVIS_BUILD_DIR/images/puppet-smart-proxy
     - docker build --build-arg FOREMAN_RELEASE=${FOREMAN_RELEASE} -t luksi1/puppet-smart-proxy:${TAG} . &
     - cd $TRAVIS_BUILD_DIR/images/r10k
     - docker build --build-arg R10K_VERSION=${R10K_VERSION} -t luksi1/r10k:${TAG} . &
+    - cd $TRAVIS_BUILD_DIR/images/puppetserver
+    - docker build -t luksi1/puppetserver-foreman:${TAG} . &
+    - cd $TRAVIS_BUILD_DIR/images/foreman
+    - docker build --build-arg FOREMAN_RELEASE=${FOREMAN_RELEASE} -t luksi1/foreman:${TAG} .
     after_success:
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - docker push luksi1/puppetserver-foreman:${TAG}
