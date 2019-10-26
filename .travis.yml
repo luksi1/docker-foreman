@@ -4,8 +4,8 @@ language: ruby
 env:
   global:
   - TAG="$(git log -1 --pretty=%h)"
-  - FOREMAN_RELEASE=1.20
-  - PUPPET_VERSION=6.5.0
+  - FOREMAN_RELEASE=1.23
+  - PUPPET_VERSION=6.7.1
   - R10K_VERSION=3.3.1
   - UBUNTU_CODENAME=bionic
   - secure: elEmEa4y/Z71ghvMD/582rkoChBjz4OYtELwjNeGu3yiMsaVhOleb8OUGIa5wAi1DgKRLcRHXVIRH2JZLXhXY92F9zeSV7kOY0FuFmIHdVlo2Gs3DF1xCfgkvijHX3SFtAcxyMq8OQlKFNmYvuwcGq2dhlYCC5BlmEgmSH0VPoFc2pvKiZ4aILH3oTeJu631KUIOjM1Xnrt0ZNRT+jodc3koWpKNoTMBGdfm4mdvwUEFUxPcAEehoTsdeYTZWW/4uwajBI0hA6n1wRdjqGcEWbKarWC3JX1zeaNLHxXKMmum0SdlnP0QDjy1ROlGPzy351EEP7drZ41tByMZaRpwNQhy8oVtBscCaeYuRUjkuRltChEWWKyX/yl6XA92Z8GDZgnu1gglJbaZljX+xJlOt8kktAg1qF0jMiHdunWYX2MlCXt5Jpc/bvpo3Yu/w2YelQ2gZVXqsVJ/l0M69Jm4QGSocjy9/Vs/UbT7wthXFlfBeFD/ME9KrQYe4NjHKWv38m7RdX/9KAsDvR/i3uZHxyvPLvy6g/VcRfSvAtk7Sb/KfZLEs974p+tHQ3qMQSyczx9b72tvKgNTlFwgu+00WY4UPmQ9lQ1GXG6WLmbDZF4OwYsD0Hu6Wy3zS6evPlQlsEnVTu4VQ6uFyfCX+VFDJzFFS3tGdUGTU1bHUPJuqLc=
@@ -90,9 +90,9 @@ matrix:
     - sudo docker logs foreman
     - docker-compose stop
     - docker-compose rm -f
-  - stage: deploy
-    name: Deploy to DockerHub
-    script:
-    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    - mvn docker:build
-    - mvn docker:push
+  # - stage: deploy
+  #   name: Deploy to DockerHub
+  #   script:
+  #   - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+  #   - mvn docker:build
+  #   - mvn docker:push
