@@ -1,55 +1,122 @@
----
-sudo: required
-
+dist: bionic
+os: linux
+language: ruby
+env:
+  global:
+  - TAG="$(git log -1 --pretty=%h)"
+  - FOREMAN_RELEASE=1.23
+  - PUPPET_VERSION=6.7.1
+  - R10K_VERSION=3.3.1
+  - UBUNTU_CODENAME=bionic
+  - secure: elEmEa4y/Z71ghvMD/582rkoChBjz4OYtELwjNeGu3yiMsaVhOleb8OUGIa5wAi1DgKRLcRHXVIRH2JZLXhXY92F9zeSV7kOY0FuFmIHdVlo2Gs3DF1xCfgkvijHX3SFtAcxyMq8OQlKFNmYvuwcGq2dhlYCC5BlmEgmSH0VPoFc2pvKiZ4aILH3oTeJu631KUIOjM1Xnrt0ZNRT+jodc3koWpKNoTMBGdfm4mdvwUEFUxPcAEehoTsdeYTZWW/4uwajBI0hA6n1wRdjqGcEWbKarWC3JX1zeaNLHxXKMmum0SdlnP0QDjy1ROlGPzy351EEP7drZ41tByMZaRpwNQhy8oVtBscCaeYuRUjkuRltChEWWKyX/yl6XA92Z8GDZgnu1gglJbaZljX+xJlOt8kktAg1qF0jMiHdunWYX2MlCXt5Jpc/bvpo3Yu/w2YelQ2gZVXqsVJ/l0M69Jm4QGSocjy9/Vs/UbT7wthXFlfBeFD/ME9KrQYe4NjHKWv38m7RdX/9KAsDvR/i3uZHxyvPLvy6g/VcRfSvAtk7Sb/KfZLEs974p+tHQ3qMQSyczx9b72tvKgNTlFwgu+00WY4UPmQ9lQ1GXG6WLmbDZF4OwYsD0Hu6Wy3zS6evPlQlsEnVTu4VQ6uFyfCX+VFDJzFFS3tGdUGTU1bHUPJuqLc=
+  - secure: TvrkxzeJBVL5UuWl0mItqWVZYFbnb8aA0BO63KyEwPT9fbWGRUMZJKJJkLa7KRykftgXkkvmj/LIaT4z1lhenWFXdXSDEfDvzU4/vPhD0Do2GS6Pkj28NhXxfPf4xv2hZyqNv00BshRJZq/iXBR6Yeduh4izk1z/khDaOum98k+mfaZ/AQeiGpGiRO5GzRsyMGrRnplunVHiQvKs+b22gB0MHc7JSAgvmvWZNv99zv+m1S8rnWwMYemOq3omSvjTE1mH4DgP5Yc+zORZykQPausvoARtYfX8FUBBki83Atdrlj1KKeBR8duGCisL2XVhNkrJVZl6EBRXaeEHyVqL7AyUYmybUD6YRmRbAxnSr8iSRtgmO4qrLRCoDjprzd3wikgo1BV2bAhjUtfCaO5L4Z5pHYyPrJYEeDM1dTEfy++hHC7V1U/AM4sjHkyGkgntTJ2b78A071I72epEkBuDN4WjXYy3IDH6qF8qBbqq5VqnzQdD3/gDXjms44wnzuPKr7xB8Fh2h2uHBqR08HAYvET5DVIoVp1dd4IgZso+BzAiiy5656dPcgTSs05TcY1ckYZwe+Adqu2R9OCifOd8Y+qEeBUWAJzmWLvi/TAZRyqqUzgeJi5UyW4zrLS8sDbC+ERaaHDjrQmevoKyidz50jUrmHk36gGEkyKrOYFzBr4=
 stages:
-  - syntax
-  - integration
-  - name: deploy
-    if: branch = master
-
+- syntax
+- build
+- integration
+- name: deploy
+  if: branch = master
 services:
-  - docker
-
-before_install:
-  - sudo apt-get update && sudo apt-get install -y openssl maven openjdk-8-jdk
-
-jobs:
+- docker
+matrix:
   include:
-    - stage: syntax
-      name: "Hadolint"
-      script:
-        - docker run --rm -i hadolint/hadolint < src/main/images/foreman/Dockerfile
-        - docker run --rm -i hadolint/hadolint < src/main/images/puppet/Dockerfile
-    -
-      name: "Shellchecker"
-      script: docker run --rm -v "$(pwd)":/mnt koalaman/shellcheck:stable src/main/images/foreman/*.sh
-    - stage: integration
-      name: "docker-compose"
-      env:
-        - DOCKER_COMPOSE_VERSION=1.23.1
-        - DOCKER_HOST=tcp://127.0.0.1:2375
-      before_script:
-        - sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-        - sudo chmod +x /usr/local/bin/docker-compose
-        - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-        # We need to run some certificate signing images to get everything up to snuff
-        # We should be able to change this out with some puppet certificate commands
-        - mvn verify
-      script:
-        - cd examples/docker-compose
-        - sudo docker-compose up -d
-        - sleep 180
-        - cd $TRAVIS_BUILD_DIR
-        - docker ps
-        - mvn failsafe:integration-test
-    -
-      name: "Fabric8 docker-maven-plugin"
-      script:
-        - mvn install -DskipTests=true -Dmaven.javadoc.skip=true -B -V
-        - mvn verify
-    - stage: deploy
-      name: "Deploy to DockerHub"
-      script: 
-        - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-        - mvn docker:build
-        - mvn docker:push
+  - stage: syntax
+    name: Hadolint
+    script:
+    - docker run --rm -i hadolint/hadolint < images/foreman/Dockerfile
+    - docker run --rm -i hadolint/hadolint < images/puppetserver/Dockerfile
+    - docker run --rm -i hadolint/hadolint < images/puppet-smart-proxy/Dockerfile
+  - name: Shellchecker
+    script: docker run --rm -v "$(pwd)":/mnt koalaman/shellcheck:stable images/foreman/*.sh
+  - stage: build
+    name: Build Puppet, Foreman, Foreman Puppet smart proxy, and R10k images
+    script:
+    - cd $TRAVIS_BUILD_DIR/images/puppet-smart-proxy
+    - docker build --build-arg FOREMAN_RELEASE=${FOREMAN_RELEASE} -t luksi1/puppet-smart-proxy:${TAG} . &
+    - cd $TRAVIS_BUILD_DIR/images/r10k
+    - docker build --build-arg R10K_VERSION=${R10K_VERSION} -t luksi1/r10k:${TAG} . &
+    - cd $TRAVIS_BUILD_DIR/images/puppetserver
+    - docker build -t luksi1/puppetserver-foreman:${TAG} . &
+    - cd $TRAVIS_BUILD_DIR/images/foreman
+    - docker build --build-arg FOREMAN_RELEASE=${FOREMAN_RELEASE} -t luksi1/foreman:${TAG} .
+    after_success:
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - docker push luksi1/puppetserver-foreman:${TAG}
+    - docker push luksi1/foreman:${TAG}
+    - docker push luksi1/puppet-smart-proxy:${TAG}
+    - docker push luksi1/r10k:${TAG}
+  - stage: integration
+    name: docker-compose
+    addons:
+      hosts:
+      - foreman.dummy.test
+      - foreman
+      - puppet.dummy.test
+      - puppet
+      - puppet-smart-proxy.dummy.test
+      - puppet-smart-proxy
+      - puppetdb
+      - puppetdb.dummy.test
+      apt:
+        sources:
+        - sourceline: 'deb https://deb.nodesource.com/node_10.x stretch main'
+          key_url: 'https://deb.nodesource.com/gpgkey/nodesource.gpg.key'
+        packages:
+        - openssl
+        - nodejs
+        - curl
+        - gnupg
+        - netcat
+    env:
+    - DOCKER_COMPOSE_VERSION=1.23.1
+    - UBUNTU_VERSION=bionic
+    - PUPPETSERVER_URL=puppet.dummy.test
+    - FOREMAN_URL=foreman.dummy.test
+    before_install:
+    # install docker-compose
+    - sudo curl -L "https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-$(uname
+      -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+    - sudo chmod +x /usr/local/bin/docker-compose
+    # create certificates
+    - scripts/utilities/create.certificates.sh
+    install:
+    - npm install newman
+    - sudo -E docker-compose --project-directory examples/docker-compose -f examples/docker-compose/docker-compose.yml up -d
+    script:
+    - export PATH="${PATH}:node_modules/.bin"
+    - scripts/tests/foreman.sh
+    after_script:
+    - sudo docker ps
+    - sudo docker logs foreman
+    - docker-compose stop
+    - docker-compose rm -f
+  - stage: deploy
+    name: Deploy to DockerHub
+    before_script:
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+    - docker pull luksi1/puppetserver-foreman:${TAG}
+    - docker pull luksi1/foreman:${TAG}
+    - docker pull luksi1/puppet-smart-proxy:${TAG}
+    - docker pull luksi1/r10k:${TAG}
+    script:
+    # tag with version
+    - docker tag luksi1/puppetserver-foreman:${TAG} luksi1/puppetserver-foreman:${PUPPET_VERSION}
+    - docker tag luksi1/foreman:${TAG} luksi1/foreman:${FOREMAN_RELEASE}
+    - docker tag luksi1/puppet-smart-proxy:${TAG} luksi1/puppet-smart-proxy:${FOREMAN_RELEASE}
+    - docker tag luksi1/r10k:${TAG} luksi1/r10k:${R10K_VERSION}
+    # tag with latest
+    - docker tag luksi1/puppetserver-foreman:${TAG} luksi1/puppetserver-foreman:latest
+    - docker tag luksi1/foreman:${TAG} luksi1/foreman:latest
+    - docker tag luksi1/puppet-smart-proxy:${TAG} luksi1/puppet-smart-proxy:latest
+    - docker tag luksi1/r10k:${TAG} luksi1/r10k:latest
+    after_script:
+    # push version
+    - docker push luksi1/puppetserver-foreman:${PUPPET_VERSION}
+    - docker push luksi1/foreman:${FOREMAN_RELEASE}
+    - docker push luksi1/puppet-smart-proxy:${FOREMAN_RELEASE}
+    - docker push luksi1/r10k:${TAG} luksi1/r10k:${R10K_VERSION}
+    # push latest
+    - docker push luksi1/puppetserver-foreman:${TAG} luksi1/puppetserver-foreman:latest
+    - docker push luksi1/foreman:${TAG} luksi1/foreman:latest
+    - docker push luksi1/puppet-smart-proxy:${TAG} luksi1/puppet-smart-proxy:latest
+    - docker push luksi1/r10k:${TAG} luksi1/r10k:latest
