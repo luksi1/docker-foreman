@@ -1,0 +1,94 @@
+{
+  "info": {
+    "_postman_id": "6a063b52-6c21-4c43-860c-c15167a6b150",
+    "name": "Foreman",
+    "description": "Foreman API calls",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Get dashboard information",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "id": "41aaccb0-323d-48d6-8eb6-eb8b2c0f8d7b",
+            "exec": [
+              "pm.test(\"Status code is 200\", function () {",
+              "    pm.response.to.have.status(200);",
+              "});",
+              "pm.test(\"One host exists\", function () {",
+              "    var jsonData = pm.response.json();",
+              "    pm.expect(jsonData.total_hosts).to.eql(1);",
+              "});"
+            ],
+            "type": "text/javascript"
+          }
+        }
+      ],
+      "request": {
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "https://{{domain_name}}/api/v2/dashboard",
+          "protocol": "https",
+          "host": [
+            "{{domain_name}}"
+          ],
+          "path": [
+            "api",
+            "v2",
+            "dashboard"
+          ]
+        }
+      },
+      "response": []
+    }
+  ],
+  "auth": {
+    "type": "basic",
+    "basic": [
+      {
+        "key": "password",
+        "value": "yPcSvGUrsT8k4njZ",
+        "type": "string"
+      },
+      {
+        "key": "username",
+        "value": "admin",
+        "type": "string"
+      }
+    ]
+  },
+  "event": [
+    {
+      "listen": "prerequest",
+      "script": {
+        "id": "90a9f1a5-e7fc-4ca3-980e-d6278497d4ce",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    },
+    {
+      "listen": "test",
+      "script": {
+        "id": "393a13dd-ffa2-4819-8dfc-b48ec0fc2e25",
+        "type": "text/javascript",
+        "exec": [
+          ""
+        ]
+      }
+    }
+  ],
+  "variable": [
+    {
+      "id": "b545f812-686b-460e-b901-0dabfe3b070a",
+      "key": "domain_name",
+      "value": "foreman.dummy.test",
+      "type": "string"
+    }
+  ],
+  "protocolProfileBehavior": {}
+}
