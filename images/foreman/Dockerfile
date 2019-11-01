@@ -1,5 +1,5 @@
 ARG FOREMAN_RELEASE=1.23
-FROM quay.io/foreman/foreman:$FOREMAN_RELEASE
+FROM quay.io/foreman/foreman:${FOREMAN_RELEASE}-stable
 
 LABEL org.label-schema.name="foreman" \
       org.label-schema.version=$FOREMAN_RELEASE \
