@@ -18,17 +18,17 @@ that we can visualize and easily configure our servers. Included is two PostreSQ
 
 **luksi1/puppet-foreman**   
 
-[![](https://images.microbadger.com/badges/image/luksi1/puppetserver-foreman.svg)](https://microbadger.com/images/luksi1/puppetserver-foreman "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/luksi1/puppetserver-foreman:6.7.svg)](https://microbadger.com/images/luksi1/puppetserver-foreman:6.7 "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/commit/luksi1/puppetserver-foreman:6.2.1-2.svg)](https://microbadger.com/images/luksi1/puppetserver-foreman:6.2.1-2 "Get your own commit badge on microbadger.com") [![](https://images.microbadger.com/badges/license/luksi1/puppetserver-foreman:6.2.1-2.svg)](https://microbadger.com/images/luksi1/puppetserver-foreman:6.2.1-2 "Get your own license badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/luksi1/puppetserver-foreman.svg)](https://microbadger.com/images/luksi1/puppetserver-foreman "Get your own image badge on microbadger.com") [![](https://images.microbadger.com/badges/version/luksi1/puppetserver-foreman:6.7.1.svg)](https://microbadger.com/images/luksi1/puppetserver-foreman:6.7.1 "Get your own version badge on microbadger.com") [![](https://images.microbadger.com/badges/commit/luksi1/puppetserver-foreman:6.7.1.svg)](https://microbadger.com/images/luksi1/puppetserver-foreman:6.7.1 "Get your own commit badge on microbadger.com") [![](https://images.microbadger.com/badges/license/luksi1/puppetserver-foreman:6.7.1.svg)](https://microbadger.com/images/luksi1/puppetserver-foreman:6.7.1 "Get your own license badge on microbadger.com")
 
 **luksi1/r10k**
 
-[![](https://images.microbadger.com/badges/image/luksi1/r10k:2.6.5.svg)](https://microbadger.com/images/luksi1/r10k:2.6.5 "Get your own image badge on microbadger.com")
-[![](https://images.microbadger.com/badges/version/luksi1/r10k:2.6.5.svg)](https://microbadger.com/images/luksi1/r10k:2.6.5 "Get your own version badge on microbadger.com")
+[![](https://images.microbadger.com/badges/image/luksi1/r10k:3.3.1.svg)](https://microbadger.com/images/luksi1/r10k:2.6.5 "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/luksi1/r10k:3.3.1.svg)](https://microbadger.com/images/luksi1/r10k:2.6.5 "Get your own version badge on microbadger.com")
 
 **luksi1/puppet-smart-proxy**
 
-[![](https://images.microbadger.com/badges/image/luksi1/puppet-smart-proxy:1.20-2.svg)](https://microbadger.com/images/luksi1/puppet-smart-proxy:1.20-2 "Get your own image badge on microbadger.com")
-[![](https://images.microbadger.com/badges/version/luksi1/puppet-smart-proxy:1.20-2.svg)](https://microbadger.com/images/luksi1/puppet-smart-proxy:1.20-2 "Get your own version badge on microbadger.com")'
+[![](https://images.microbadger.com/badges/image/luksi1/puppet-smart-proxy:1.23.svg)](https://microbadger.com/images/luksi1/puppet-smart-proxy:1.23 "Get your own image badge on microbadger.com")
+[![](https://images.microbadger.com/badges/version/luksi1/puppet-smart-proxy:1.23.svg)](https://microbadger.com/images/luksi1/puppet-smart-proxy:1.23 "Get your own version badge on microbadger.com")'
 
 ## Dependencies
 
