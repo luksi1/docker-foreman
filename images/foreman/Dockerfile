@@ -5,7 +5,7 @@ LABEL org.label-schema.name="foreman" \
       org.label-schema.version=$FOREMAN_RELEASE \
       org.label-schema.vcs-url="https://github.com/luksi1/docker-foreman"
 
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+# SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 # confd
 ADD https://github.com/kelseyhightower/confd/releases/download/v0.10.0/confd-0.10.0-linux-amd64 /usr/local/bin/confd
