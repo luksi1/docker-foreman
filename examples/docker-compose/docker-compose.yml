@@ -36,7 +36,7 @@ services:
     container_name: puppetserver
     hostname: ${puppetserver_hostname}
     domainname: ${domain}
-    image: luksi1/puppetserver-foreman:${TAG}
+    image: luksi1/puppetserver-foreman:${PUPPETSERVER_TAG:-6.7}
     ports:
       - "8140:8140"
     environment:
@@ -81,7 +81,7 @@ services:
   foreman:
     container_name: foreman
     hostname: ${foreman_hostname}.${domain}
-    image: luksi1/foreman:${TAG}
+    image: luksi1/foreman:${FOREMAN_TAG}
     ports:
       - "443:443"
     environment:
@@ -107,7 +107,7 @@ services:
           - ${foreman_hostname}.${domain}
   puppet-smart-proxy:
     container_name: puppet-smart-proxy
-    image: luksi1/puppet-smart-proxy:${TAG}
+    image: luksi1/puppet-smart-proxy:${PUPPET_SMART_PROXY_TAG:-1.23}
     environment:
       TRUSTED_HOSTS: "${foreman_hostname},${foreman_hostname}.${domain},${puppetserver_hostname},${puppetserver_hostname}.${domain}"
       PUPPET_VERSION: "${puppetserver_version}"
@@ -124,7 +124,7 @@ services:
           - puppet-smart-proxy.${domain}
   r10k:
     container_name: r10k
-    image: luksi1/r10k:${TAG}
+    image: luksi1/r10k:${R10_TAG:-3.3.1}
     ports:
       - "8088:8088"
     environment:

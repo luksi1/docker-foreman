@@ -4,6 +4,10 @@ language: ruby
 env:
   global:
   - TAG="$(git log -1 --pretty=%h)"
+  - PUPPET_SMART_PROXY_TAG=$TAG
+  - R10K_TAG=$TAG
+  - FOREMAN_TAG=$TAG
+  - PUPPETSERVER_TAG=$TAG
   - FOREMAN_RELEASE=1.23
   - PUPPET_VERSION=6.7.1
   - R10K_VERSION=3.3.1
@@ -15,6 +19,8 @@ stages:
 - build
 - integration
 - name: deploy
+  if: branch = master
+- name: documentation
   if: branch = master
 services:
 - docker
@@ -114,9 +120,16 @@ matrix:
     - docker push luksi1/puppetserver-foreman:${PUPPET_VERSION}
     - docker push luksi1/foreman:${FOREMAN_RELEASE}
     - docker push luksi1/puppet-smart-proxy:${FOREMAN_RELEASE}
-    - docker push luksi1/r10k:${TAG} luksi1/r10k:${R10K_VERSION}
+    - docker push luksi1/r10k:${R10K_VERSION}
     # push latest
     - docker push luksi1/puppetserver-foreman:${TAG} luksi1/puppetserver-foreman:latest
     - docker push luksi1/foreman:${TAG} luksi1/foreman:latest
     - docker push luksi1/puppet-smart-proxy:${TAG} luksi1/puppet-smart-proxy:latest
     - docker push luksi1/r10k:${TAG} luksi1/r10k:latest
+  - stage: documentation
+    name: README
+    before_script:
+    - curl -k -XPOST https://hooks.microbadger.com/images/luksi1/foreman/HU12ezoskHOO7omMCFgZWXRt3FE=
+    - curl -k -XPOST https://hooks.microbadger.com/images/luksi1/puppetserver-foreman/pHZ_31Qsi4Wwg-gjQI_ntcujSWw=
+    - curl -k -XPOST https://hooks.microbadger.com/images/luksi1/r10k/x9qY2R3oW2ICY192qNFz8WEqV40=
+    - curl -k -XPOST https://hooks.microbadger.com/images/luksi1/puppet-smart-proxy/rjmozDUgkg4oPwClTLkuTq8qJ50=
