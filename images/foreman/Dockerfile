@@ -23,10 +23,8 @@ RUN gpg --keyserver pool.sks-keyservers.net --recv-keys B42F6819007F00F88E364FD4
 
 # confd
 ADD https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64 /usr/local/bin/confd
-RUN gosu chmod +x /usr/local/bin/confd
+RUN gosu root chmod +x /usr/local/bin/confd
 COPY files/confd /etc/confd
-
-RUN gosu mkdir /certs && chown 1001 /certs
 
 COPY docker-entrypoint.sh /
 RUN gosu chmod +x /docker-entrypoint.sh
