@@ -22,7 +22,7 @@ RUN chmod +x /usr/local/bin/confd
 COPY files/confd /etc/confd
 
 COPY docker-entrypoint.sh /
-RUN gosu root chmod +x /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
 
 USER 1001
 
