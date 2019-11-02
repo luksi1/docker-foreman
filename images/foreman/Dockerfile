@@ -15,7 +15,7 @@ LABEL org.label-schema.name="foreman" \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 COPY --chown=1001 docker-entrypoint.sh ${HOME}/docker-entrypoint.sh
-RUN chmod +x ${HOME}/docker-entrypoint.sh
+RUN chmod +x "${HOME}/docker-entrypoint.sh"
 COPY --from=confd /usr/local/bin/confd /usr/local/bin/confd
 ENTRYPOINT ["${HOME}/docker-entrypoint.sh"]
 
