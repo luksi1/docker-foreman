@@ -6,6 +6,10 @@ ADD https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}
 RUN chmod +x /usr/local/bin/confd
 COPY files/confd /etc/confd
 
+FROM registry.fedoraproject.org/fedora-minimal:${FEDORA_RELEASE} as entrypoint
+COPY --chown=1001 docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+
 FROM quay.io/foreman/foreman:${FOREMAN_RELEASE}-stable
 ARG CONFD_VERSION="0.10.0"
 LABEL org.label-schema.name="foreman" \
@@ -14,8 +18,7 @@ LABEL org.label-schema.name="foreman" \
       org.lobal-schema.confd-version=$CONFD_VERSION
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-COPY --chown=1001 docker-entrypoint.sh ${HOME}/docker-entrypoint.sh
-RUN chmod +x "${HOME}/docker-entrypoint.sh"
+COPY --from=entypoint --chown=1001 /docker-entrypoint.sh "${HOME}/docker-entrypoint.sh"
 COPY --from=confd /usr/local/bin/confd /usr/local/bin/confd
 ENTRYPOINT ["${HOME}/docker-entrypoint.sh"]
 
