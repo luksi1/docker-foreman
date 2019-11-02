@@ -10,7 +10,7 @@ LABEL org.label-schema.name="foreman" \
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
-USER root
+USER 1
 
 # gosu
 ADD https://github.com/tianon/gosu/releases/download/1.2/gosu-amd64 /usr/local/bin/gosu
