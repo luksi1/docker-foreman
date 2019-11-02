@@ -1,18 +1,19 @@
 ARG CONFD_VERSION=0.10.0
 ARG FOREMAN_RELEASE=1.23
+ARG FEDORA_RELEASE=30
 
-FROM registry.fedoraproject.org/fedora-minimal as gosu
+FROM registry.fedoraproject.org/fedora-minimal:${FEDORA_RELEASE} as gosu
 ADD https://github.com/tianon/gosu/releases/download/1.2/gosu-amd64 /usr/local/bin/gosu
 RUN chmod +x /usr/local/bin/gosu
 
-FROM registry.fedoraproject.org/fedora-minimal as confd
+FROM registry.fedoraproject.org/fedora-minimal:${FEDORA_RELEASE} as confd
 ADD https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64 /usr/local/bin/confd
 RUN chmod +x /usr/local/bin/confd
 COPY files/confd /etc/confd
 
-FROM registry.fedoraproject.org/fedora-minimal as entrypoint
+FROM registry.fedoraproject.org/fedora-minimal:${FEDORA_RELEASE} as entrypoint
 COPY --chown=1001 docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x ${HOME}/docker-entrypoint.sh
+RUN chmod +x "${HOME}/docker-entrypoint.sh"
 
 FROM quay.io/foreman/foreman:${FOREMAN_RELEASE}-stable
 LABEL org.label-schema.name="foreman" \
