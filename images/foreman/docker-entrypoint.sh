@@ -21,18 +21,18 @@ cp /certs/server_cachain.pem /usr/local/share/ca-certificates/server_cachain.crt
 if [ -d /certs/trusts ]; then
   cp /certs/trusts/*crt /usr/local/share/ca-certificates/
 fi
-update-ca-certificates
+gosu update-ca-certificates
 
 # confd configuration
-/usr/local/bin/confd -onetime -backend env
+gosu /usr/local/bin/confd -onetime -backend env
 
-while ! nc -z "${DATABASE_HOST}" "${DATABASE_PORT}"; do
-  sleep 1
-done
+# while ! nc -z "${DATABASE_HOST}" "${DATABASE_PORT}"; do
+#   sleep 1
+# done
 
-foreman-rake db:migrate
-foreman-rake db:seed
-foreman-rake apipie:cache:index
+# foreman-rake db:migrate
+# foreman-rake db:seed
+# foreman-rake apipie:cache:index
 
-# Start foreman in the foreground
-apachectl -d /etc/apache2 -f /etc/apache2/apache2.conf -e debug -DFOREGROUND
+# # Start foreman in the foreground
+# apachectl -d /etc/apache2 -f /etc/apache2/apache2.conf -e debug -DFOREGROUND
