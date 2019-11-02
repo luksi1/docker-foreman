@@ -1,4 +1,3 @@
-ARG CONFD_VERSION=0.10.0
 ARG FOREMAN_RELEASE=1.23
 ARG FEDORA_RELEASE=30
 
@@ -7,6 +6,7 @@ ADD https://github.com/tianon/gosu/releases/download/1.2/gosu-amd64 /usr/local/b
 RUN chmod +x /usr/local/bin/gosu
 
 FROM registry.fedoraproject.org/fedora-minimal:${FEDORA_RELEASE} as confd
+ENV CONFD_VERSION=0.10.0
 ADD https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64 /usr/local/bin/confd
 RUN chmod +x /usr/local/bin/confd
 COPY files/confd /etc/confd
