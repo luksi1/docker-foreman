@@ -1,5 +1,5 @@
 ARG FEDORA_RELEASE=30
-
+ARG FOREMAN_RELEASE=1.23
 FROM registry.fedoraproject.org/fedora-minimal:${FEDORA_RELEASE} as confd
 ARG CONFD_VERSION="0.10.0"
 ADD https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64 /usr/local/bin/confd
@@ -7,7 +7,7 @@ RUN chmod +x /usr/local/bin/confd
 COPY files/confd /etc/confd
 
 FROM quay.io/foreman/foreman:${FOREMAN_RELEASE}-stable
-ARG FOREMAN_RELEASE=1.23
+ARG CONFD_VERSION="0.10.0"
 LABEL org.label-schema.name="foreman" \
       org.label-schema.version=$FOREMAN_RELEASE \
       org.label-schema.vcs-url="https://github.com/luksi1/docker-foreman" \
