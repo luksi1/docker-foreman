@@ -1,32 +1,30 @@
-ARG FOREMAN_RELEASE=1.23
-FROM quay.io/foreman/foreman:${FOREMAN_RELEASE}-stable
-
 ARG CONFD_VERSION=0.10.0
+ARG FOREMAN_RELEASE=1.23
 
+FROM registry.fedoraproject.org/fedora-minimal as gosu
+ADD https://github.com/tianon/gosu/releases/download/1.2/gosu-amd64 /usr/local/bin/gosu
+RUN chmod +x /usr/local/bin/gosu
+
+FROM registry.fedoraproject.org/fedora-minimal as confd
+ADD https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64 /usr/local/bin/confd
+RUN chmod +x /usr/local/bin/confd
+COPY files/confd /etc/confd
+
+FROM registry.fedoraproject.org/fedora-minimal as entrypoint
+COPY --chown=1001 docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x ${HOME}/docker-entrypoint.sh
+
+FROM quay.io/foreman/foreman:${FOREMAN_RELEASE}-stable
 LABEL org.label-schema.name="foreman" \
       org.label-schema.version=$FOREMAN_RELEASE \
       org.label-schema.vcs-url="https://github.com/luksi1/docker-foreman" \
       org.lobal-schema.confd-version=$CONFD_VERSION
 
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-
-USER 1
-
-# gosu
-ADD https://github.com/tianon/gosu/releases/download/1.2/gosu-amd64 /usr/local/bin/gosu
-RUN chmod +x /usr/local/bin/confd
-
-# confd
-ADD https://github.com/kelseyhightower/confd/releases/download/v${CONFD_VERSION}/confd-${CONFD_VERSION}-linux-amd64 /usr/local/bin/confd
-RUN chmod +x /usr/local/bin/confd
-COPY files/confd /etc/confd
-
-COPY docker-entrypoint.sh /
-RUN chmod +x /docker-entrypoint.sh
-
-USER 1001
-
-ENTRYPOINT ["/docker-entrypoint.sh"]
+COPY --from=entrypoint /docker-entrypoint.sh /${HOME}/docker-entrypoint.sh
+COPY --from=confd /usr/local/bin/confd /usr/local/bin/confd
+COPY --from=gosu /usr/local/bin/gosu /usr/local/bin/gosu
+ENTRYPOINT ["${HOME}/docker-entrypoint.sh"]
 
 EXPOSE 443
 EXPOSE 8443
