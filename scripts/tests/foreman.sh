@@ -20,18 +20,18 @@ do
   echo "Puppetserver's health is \"$(puppet_health_status)\""
 done
 
-while true
-do
-  if sudo docker logs foreman 2> /dev/null | egrep -q ' \| Finished'
-  then
-    echo "Foreman has started"
-    break
-  else
-    echo "Waiting for Foreman to come up..."
-    sleep 5
-    continue
-  fi
-done
+# while true
+# do
+#   if sudo docker logs foreman 2> /dev/null | egrep -q ' \| Finished'
+#   then
+#     echo "Foreman has started"
+#     break
+#   else
+#     echo "Waiting for Foreman to come up..."
+#     sleep 5
+#     continue
+#   fi
+# done
 
 # grab the container ID for Foreman
 # FOREMAN_CONTAINER_ID=$(get_container_id_by_label "org.label-schema.name" "foreman")
