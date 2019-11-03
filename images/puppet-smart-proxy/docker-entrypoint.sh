@@ -8,7 +8,7 @@ fi
 update-ca-certificates
 /usr/local/bin/confd -onetime -backend env
 
-while ! nc -z foreman 443; do
+while ! nc -z foreman 3000; do
   sleep 1
 done
 
