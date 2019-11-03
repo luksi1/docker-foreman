@@ -9,14 +9,14 @@ services:
       POSTGRES_USER: puppetdb
       POSTGRES_DB: puppetdb
     ports:
-      - 5432
+    - 5432
     volumes:
-      - /databases/puppetdb-postgres:/var/lib/postgresql/data/
+    - /databases/puppetdb-postgres:/var/lib/postgresql/data/
     networks:
       puppet-foreman-network:
         aliases:
-          - puppetdb-postgres
-          - postgres
+        - puppetdb-postgres
+        - postgres
   foreman-postgres:
     container_name: foreman-postgres
     image: postgres:9.6
@@ -31,12 +31,12 @@ services:
     networks:
       puppet-foreman-network:
         aliases:
-          - foreman-postgres
+        - foreman-postgres
   puppetserver:
     container_name: puppetserver
     hostname: ${puppetserver_hostname}
     domainname: ${domain}
-    image: luksi1/puppetserver-foreman:${PUPPETSERVER_TAG:-6.7.1}
+    image: luksi1/puppetserver-foreman:${PUPPETSERVER_TAG:-$puppetserver_version}
     ports:
       - "8140:8140"
     environment:
@@ -44,17 +44,17 @@ services:
       FOREMAN_HOSTNAME: ${foreman_hostname}.${domain}
       FOREMAN_WEB_CA_CERTIFICATE: /etc/puppetlabs/foreman/ssl/ca.pem
     volumes:
-      - /etc/puppetlabs/code:/etc/puppetlabs/code/
-      - /opt/puppetlabs/server/data/puppetserver/:/opt/puppetlabs/server/data/puppetserver/
-      - ${foreman_server_cert_chain_file}:/etc/puppetlabs/foreman/ssl/ca.pem
-      - /etc/puppetlabs/puppet/ssl/crl.pem:/etc/puppetlabs/puppet/ssl/crl.pem
-      - /etc/puppetlabs/puppet/ssl/ca/:/etc/puppetlabs/puppet/ssl/ca/
-      - /etc/puppetlabs/puppet/ssl/certificate_requests/:/etc/puppetlabs/puppet/ssl/certificate_requests/
-      - /etc/puppetlabs/puppet/ssl/private/:/etc/puppetlabs/puppet/ssl/private/
-      - /etc/puppetlabs/puppet/ssl/private_keys/:/etc/puppetlabs/puppet/ssl/private_keys/
-      - /etc/puppetlabs/puppet/ssl/public_keys/:/etc/puppetlabs/puppet/ssl/public_keys/
-      - /etc/puppetlabs/puppet/ssl/certs/${puppetserver_hostname}.${domain}.pem:/etc/puppetlabs/puppet/ssl/certs/${puppetserver_hostname}.${domain}.pem
-      - /etc/puppetlabs/puppet/ssl/certs/ca.pem:/etc/puppetlabs/puppet/ssl/certs/ca.pem
+    - /etc/puppetlabs/code:/etc/puppetlabs/code/
+    - /opt/puppetlabs/server/data/puppetserver/:/opt/puppetlabs/server/data/puppetserver/
+    - ${foreman_server_cert_chain_file}:/etc/puppetlabs/foreman/ssl/ca.pem
+    - /etc/puppetlabs/puppet/ssl/crl.pem:/etc/puppetlabs/puppet/ssl/crl.pem
+    - /etc/puppetlabs/puppet/ssl/ca/:/etc/puppetlabs/puppet/ssl/ca/
+    - /etc/puppetlabs/puppet/ssl/certificate_requests/:/etc/puppetlabs/puppet/ssl/certificate_requests/
+    - /etc/puppetlabs/puppet/ssl/private/:/etc/puppetlabs/puppet/ssl/private/
+    - /etc/puppetlabs/puppet/ssl/private_keys/:/etc/puppetlabs/puppet/ssl/private_keys/
+    - /etc/puppetlabs/puppet/ssl/public_keys/:/etc/puppetlabs/puppet/ssl/public_keys/
+    - /etc/puppetlabs/puppet/ssl/certs/${puppetserver_hostname}.${domain}.pem:/etc/puppetlabs/puppet/ssl/certs/${puppetserver_hostname}.${domain}.pem
+    - /etc/puppetlabs/puppet/ssl/certs/ca.pem:/etc/puppetlabs/puppet/ssl/certs/ca.pem
     networks:
       puppet-foreman-network:
         aliases:
@@ -63,26 +63,26 @@ services:
   puppetdb:
     container_name: puppetdb
     hostname: puppetdb
-    image: puppet/puppetdb:latest
+    image: puppet/puppetdb:$puppetdb_version
     ports:
-      - "8081:8080"
-      - "8080:8080"
+    - "8081:8080"
+    - "8080:8080"
     environment:
-      - PUPPETDB_POSTGRES_HOSTNAME=puppetdb-postgres
-      - PUPPETDB_PASSWORD=puppetdb
-      - PUPPETDB_USER=puppetdb
-      - USE_PUPPETSERVER='false'
+    - PUPPETDB_POSTGRES_HOSTNAME=puppetdb-postgres
+    - PUPPETDB_PASSWORD=puppetdb
+    - PUPPETDB_USER=puppetdb
+    - USE_PUPPETSERVER='false'
     volumes:
-      - /etc/puppetlabs/puppet/ssl/:/etc/puppetlabs/puppet/ssl/
+    - /etc/puppetlabs/puppet/ssl/:/etc/puppetlabs/puppet/ssl/
     networks:
       puppet-foreman-network:
         aliases:
-          - puppetdb
+        - puppetdb
   foreman:
     container_name: foreman
     command: bundle exec bin/rails server -b 0.0.0.0
     hostname: ${foreman_hostname}.${domain}
-    image: luksi1/foreman:${FOREMAN_TAG:-1.23}
+    image: luksi1/foreman:${FOREMAN_TAG:-$foreman_release}
     # image: quay.io/foreman/foreman:1.23-stable
     ports:
     - "80:3000"
@@ -132,7 +132,7 @@ services:
         - worker.${domain}
   puppet-smart-proxy:
     container_name: puppet-smart-proxy
-    image: luksi1/puppet-smart-proxy:${PUPPET_SMART_PROXY_TAG:-5034970}
+    image: luksi1/puppet-smart-proxy:${PUPPET_SMART_PROXY_TAG:-$foreman_release}
     environment:
       TRUSTED_HOSTS: "${foreman_hostname},${foreman_hostname}.${domain},${puppetserver_hostname},${puppetserver_hostname}.${domain}"
       PUPPET_VERSION: "${puppetserver_version}"
@@ -149,7 +149,7 @@ services:
         - puppet-smart-proxy.${domain}
   r10k:
     container_name: r10k
-    image: luksi1/r10k:${R10K_TAG:-5034970}
+    image: luksi1/r10k:${R10K_TAG:-$r10k_version}
     ports:
     - "8088:8088"
     environment:
