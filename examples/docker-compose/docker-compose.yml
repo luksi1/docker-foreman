@@ -82,19 +82,20 @@ services:
     container_name: foreman
     command: bundle exec bin/rails server -b 0.0.0.0
     hostname: ${foreman_hostname}.${domain}
-    # image: luksi1/foreman:${FOREMAN_TAG:-5034970}
-    image: quay.io/foreman/foreman:1.23-stable
+    image: luksi1/foreman:${FOREMAN_TAG:-1.23}
+    # image: quay.io/foreman/foreman:1.23-stable
     ports:
-    - "3000:3000"
+    - "80:3000"
     - "5910-5930:5910-5930"
     environment:
     - DATABASE_URL=postgres://foreman:foreman@foreman-postgres:5432/foreman?pool=5
     - RAILS_MAX_THREADS=5
-    - RAILS_ENV=development
+    - RAILS_ENV=production
     - FOREMAN_FQDN=${foreman_hostname}.${domain}
     - FOREMAN_DOMAIN=${domain}
     - FOREMAN_RAILS_CACHE_STORE_TYPE=redis
     - FOREMAN_RAILS_CACHE_STORE_URLS=redis://redis:6379/0
+    - FOREMAN_ADMIN_PASSWORD=Abcd1234
     # volumes:
     # - ${foreman_server_cert_file}:/certs/server.crt
     # - ${foreman_server_cert_key_file}:/certs/server.key
@@ -117,7 +118,7 @@ services:
     environment:
     - DATABASE_URL=postgres://foreman:foreman@foreman-postgres:5432/foreman?pool=5
     - RAILS_MAX_THREADS=5
-    - RAILS_ENV=development
+    - RAILS_ENV=production
     - FOREMAN_FQDN=${foreman_hostname}.${domain}
     - FOREMAN_DOMAIN=${domain}
     - FOREMAN_RAILS_CACHE_STORE_TYPE=redis

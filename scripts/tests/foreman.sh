@@ -34,15 +34,15 @@ do
 done
 
 # grab the container ID for Foreman
-FOREMAN_CONTAINER_ID=$(get_container_id_by_label "org.label-schema.name" "foreman")
+# FOREMAN_CONTAINER_ID=$(get_container_id_by_label "org.label-schema.name" "foreman")
 
 # grab password from Foreman
-ADMIN_PASSWORD=$(reset_foreman_admin_password "$FOREMAN_CONTAINER_ID")
+# ADMIN_PASSWORD=$(reset_foreman_admin_password "$FOREMAN_CONTAINER_ID")
 
 # swap out admin password with jq
-set_newman_password "foreman/provision.json" "$ADMIN_PASSWORD"
-set_newman_password "foreman/cleanup.json" "$ADMIN_PASSWORD"
-set_newman_password "foreman/post_agent_run.json" "$ADMIN_PASSWORD"
+# set_newman_password "foreman/provision.json" "$ADMIN_PASSWORD"
+# set_newman_password "foreman/cleanup.json" "$ADMIN_PASSWORD"
+# set_newman_password "foreman/post_agent_run.json" "$ADMIN_PASSWORD"
 
 
 # perform tests

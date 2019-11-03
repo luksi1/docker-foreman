@@ -16,15 +16,15 @@ set -e
 # fi
 
 # add TLS public certs so that they are trusted in your environment
-cp /certs/client_ca.pem /usr/local/share/ca-certificates/client_ca.crt
-cp /certs/server_cachain.pem /usr/local/share/ca-certificates/server_cachain.crt
-if [ -d /certs/trusts ]; then
-  cp /certs/trusts/*crt /usr/local/share/ca-certificates/
-fi
-update-ca-certificates
+# cp /certs/client_ca.pem /usr/local/share/ca-certificates/client_ca.crt
+# cp /certs/server_cachain.pem /usr/local/share/ca-certificates/server_cachain.crt
+# if [ -d /certs/trusts ]; then
+#   cp /certs/trusts/*crt /usr/local/share/ca-certificates/
+# fi
+# update-ca-certificates
 
 # confd configuration
-/usr/local/bin/confd -onetime -backend env
+# /usr/local/bin/confd -onetime -backend env
 
 # run foreman
 
@@ -33,9 +33,12 @@ update-ca-certificates
 #   sleep 1
 # done
 
-# foreman-rake db:migrate
-# foreman-rake db:seed
-# foreman-rake apipie:cache:index
+bundle exec rake db:migrate
+bundle exec rake db:seed
+bundle exec permissions:reset PASSWORD="${FOREMAN_ADMIN_PASSWORD}"
+# bundle exec rake apipie:cache:index
+
+bundle exec bin/rails server -b 0.0.0.0
 
 # # Start foreman in the foreground
 # apachectl -d /etc/apache2 -f /etc/apache2/apache2.conf -e debug -DFOREGROUND
