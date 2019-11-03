@@ -18,9 +18,9 @@ LABEL org.label-schema.name="foreman" \
       org.lobal-schema.confd-version=$CONFD_VERSION
 
 # SHELL ["/bin/bash", "-o", "pipefail", "-c"]
-COPY --from=entrypoint --chown=1001 /docker-entrypoint.sh "${HOME}/docker-entrypoint.sh"
+COPY --from=entrypoint --chown=1001 /docker-entrypoint.sh /docker-entrypoint.sh
 # COPY --from=confd /usr/local/bin/confd /usr/local/bin/confd
-ENTRYPOINT ["${HOME}/docker-entrypoint.sh"]
+ENTRYPOINT ["/docker-entrypoint.sh"]
 
 # EXPOSE 443
 # EXPOSE 8443
