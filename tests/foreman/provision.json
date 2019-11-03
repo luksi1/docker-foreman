@@ -29,7 +29,7 @@
         "header": [],
         "url": {
           "raw": "http://{{domain_name}}/api/v2/settings/trusted_hosts",
-          "protocol": "https",
+          "protocol": "http",
           "host": [
             "{{domain_name}}"
           ],
@@ -79,7 +79,7 @@
         },
         "url": {
           "raw": "http://{{domain_name}}/api/v2/settings/{{trusted_hosts_id}}",
-          "protocol": "https",
+          "protocol": "http",
           "host": [
             "{{domain_name}}"
           ],
@@ -118,7 +118,7 @@
         "header": [],
         "url": {
           "raw": "http://{{domain_name}}/api/v2/smart_proxies",
-          "protocol": "https",
+          "protocol": "http",
           "host": [
             "{{domain_name}}"
           ],
@@ -167,7 +167,7 @@
         },
         "url": {
           "raw": "http://{{domain_name}}/api/v2/smart_proxies",
-          "protocol": "https",
+          "protocol": "http",
           "host": [
             "{{domain_name}}"
           ],
@@ -211,7 +211,7 @@
         },
         "url": {
           "raw": "http://{{domain_name}}/api/v2/smart_proxies/{{puppet_smart_proxy_id}}",
-          "protocol": "https",
+          "protocol": "http",
           "host": [
             "{{domain_name}}"
           ],

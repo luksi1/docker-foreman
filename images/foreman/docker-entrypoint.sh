@@ -35,7 +35,7 @@ set -e
 
 bundle exec rake db:migrate
 bundle exec rake db:seed
-bundle exec permissions:reset PASSWORD="${FOREMAN_ADMIN_PASSWORD}"
+bundle exec rake permissions:reset username=admin password=${FOREMAN_ADMIN_PASSWORD}
 # bundle exec rake apipie:cache:index
 
 bundle exec bin/rails server -b 0.0.0.0
