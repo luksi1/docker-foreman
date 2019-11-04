@@ -80,7 +80,6 @@ services:
         - puppetdb
   foreman:
     container_name: foreman
-    command: bundle exec bin/rails server -b 0.0.0.0
     hostname: ${foreman_hostname}.${domain}
     image: luksi1/foreman:${FOREMAN_TAG:-1.23}
     # image: quay.io/foreman/foreman:1.23-stable

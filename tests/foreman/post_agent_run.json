@@ -3,7 +3,7 @@
     "_postman_id": "6a063b52-6c21-4c43-860c-c15167a6b150",
     "name": "Foreman",
     "description": "Foreman API calls",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+    "schema": "http://schema.getpostman.com/json/collection/v2.1.0/collection.json"
   },
   "item": [
     {
@@ -30,8 +30,8 @@
         "method": "GET",
         "header": [],
         "url": {
-          "raw": "https://{{domain_name}}/api/v2/dashboard",
-          "protocol": "https",
+          "raw": "http://{{domain_name}}/api/v2/dashboard",
+          "protocol": "http",
           "host": [
             "{{domain_name}}"
           ],
