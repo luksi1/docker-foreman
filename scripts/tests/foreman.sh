@@ -20,6 +20,9 @@ do
   echo "Puppetserver's health is \"$(puppet_health_status)\""
 done
 
+# Wait 2 minutes for Foreman to startup
+sleep 120
+
 # while true
 # do
 #   if sudo docker logs foreman 2> /dev/null | egrep -q ' \| Finished'
