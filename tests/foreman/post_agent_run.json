@@ -1,94 +1,337 @@
 {
-  "info": {
-    "_postman_id": "6a063b52-6c21-4c43-860c-c15167a6b150",
-    "name": "Foreman",
-    "description": "Foreman API calls",
-    "schema": "http://schema.getpostman.com/json/collection/v2.1.0/collection.json"
-  },
-  "item": [
-    {
-      "name": "Get dashboard information",
-      "event": [
-        {
-          "listen": "test",
-          "script": {
-            "id": "41aaccb0-323d-48d6-8eb6-eb8b2c0f8d7b",
-            "exec": [
-              "pm.test(\"Status code is 200\", function () {",
-              "    pm.response.to.have.status(200);",
-              "});",
-              "pm.test(\"One host exists\", function () {",
-              "    var jsonData = pm.response.json();",
-              "    pm.expect(jsonData.total_hosts).to.eql(1);",
-              "});"
-            ],
-            "type": "text/javascript"
-          }
-        }
-      ],
-      "request": {
-        "method": "GET",
-        "header": [],
-        "url": {
-          "raw": "http://{{domain_name}}/api/v2/dashboard",
-          "protocol": "http",
-          "host": [
-            "{{domain_name}}"
-          ],
-          "path": [
-            "api",
-            "v2",
-            "dashboard"
-          ]
-        }
-      },
-      "response": []
-    }
-  ],
-  "auth": {
-    "type": "basic",
-    "basic": [
-      {
-        "key": "password",
-        "value": "Abcd1234",
-        "type": "string"
-      },
-      {
-        "key": "username",
-        "value": "admin",
-        "type": "string"
-      }
-    ]
-  },
-  "event": [
-    {
-      "listen": "prerequest",
-      "script": {
-        "id": "90a9f1a5-e7fc-4ca3-980e-d6278497d4ce",
-        "type": "text/javascript",
-        "exec": [
-          ""
-        ]
-      }
-    },
-    {
-      "listen": "test",
-      "script": {
-        "id": "393a13dd-ffa2-4819-8dfc-b48ec0fc2e25",
-        "type": "text/javascript",
-        "exec": [
-          ""
-        ]
-      }
-    }
-  ],
-  "variable": [
-    {
-      "id": "b545f812-686b-460e-b901-0dabfe3b070a",
-      "key": "domain_name",
-      "value": "foreman.dummy.test",
-      "type": "string"
-    }
-  ],
-  "protocolProfileBehavior": {}
+	"info": {
+		"_postman_id": "6a063b52-6c21-4c43-860c-c15167a6b150",
+		"name": "Foreman",
+		"description": "Foreman API calls",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Get dashboard information",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "41aaccb0-323d-48d6-8eb6-eb8b2c0f8d7b",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"One host exist\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.total_hosts).to.eql(1);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{protocol}}://{{domain_name}}/api/v2/dashboard",
+					"protocol": "{{protocol}}",
+					"host": [
+						"{{domain_name}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"dashboard"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get trusted_hosts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d765bddd-c0e0-4108-b4f3-477dfac9869f",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"trusted_hosts exists\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.full_name).to.eql(\"Trusted hosts\");",
+							"});",
+							"pm.test(\"trusted_hosts has ID 72\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.id).to.eql(72);",
+							"    pm.globals.set(\"trusted_hosts_id\", jsonData.id);",
+							"});",
+							"",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://{{domain_name}}/api/v2/settings/trusted_hosts",
+					"protocol": "https",
+					"host": [
+						"{{domain_name}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"settings",
+						"trusted_hosts"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Update trusted_hosts",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "d765bddd-c0e0-4108-b4f3-477dfac9869f",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"trusted_hosts value is now puppet\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.value[0]).to.eql(\"puppet\");",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "PUT",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n\t\"setting\": {\r\n\t\t\"value\": \"[puppet]\"\r\n\t}\r\n}"
+				},
+				"url": {
+					"raw": "https://{{domain_name}}/api/v2/settings/{{trusted_hosts_id}}",
+					"protocol": "https",
+					"host": [
+						"{{domain_name}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"settings",
+						"{{trusted_hosts_id}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get smart proxies",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "0abbda69-dd8b-4e1b-a914-33d409ebbcd5",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"pm.test(\"Your test name\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.total).to.eql(0);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://34.68.135.35/api/v2/smart_proxies",
+					"protocol": "https",
+					"host": [
+						"34",
+						"68",
+						"135",
+						"35"
+					],
+					"path": [
+						"api",
+						"v2",
+						"smart_proxies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add Puppet smart proxy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3faac968-7966-4e5b-aa6e-b1fa37c75067",
+						"exec": [
+							"pm.test(\"Status code is 201\", function () {",
+							"    pm.response.to.have.status(201);",
+							"});",
+							"pm.test(\"Puppet smart proxy added\", function () {",
+							"    var jsonData = pm.response.json();",
+							"    pm.expect(jsonData.name).to.eql(\"puppet\");",
+							"    pm.globals.set(\"puppet_smart_proxy_id\", jsonData.id);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "Content-Type",
+						"name": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"https://puppet-smart-proxy.dummy.test:8443\" }}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://{{domain_name}}/api/v2/smart_proxies",
+					"protocol": "https",
+					"host": [
+						"{{domain_name}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"smart_proxies"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete Puppet smart proxy",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"id": "3faac968-7966-4e5b-aa6e-b1fa37c75067",
+						"exec": [
+							"pm.test(\"Status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});"
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "DELETE",
+				"header": [
+					{
+						"key": "Content-Type",
+						"value": "application/json",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"https://puppet-smart-proxy.dummy.test:8443\" }}"
+				},
+				"url": {
+					"raw": "https://{{domain_name}}/api/v2/smart_proxies/{{puppet_smart_proxy_id}}",
+					"protocol": "https",
+					"host": [
+						"{{domain_name}}"
+					],
+					"path": [
+						"api",
+						"v2",
+						"smart_proxies",
+						"{{puppet_smart_proxy_id}}"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"auth": {
+		"type": "basic",
+		"basic": [
+			{
+				"key": "password",
+				"value": "Abcd1234",
+				"type": "string"
+			},
+			{
+				"key": "username",
+				"value": "admin",
+				"type": "string"
+			}
+		]
+	},
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"id": "90a9f1a5-e7fc-4ca3-980e-d6278497d4ce",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"id": "393a13dd-ffa2-4819-8dfc-b48ec0fc2e25",
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"id": "8f570751-7047-4761-a037-259887b6970b",
+			"key": "domain_name",
+			"value": "foreman.dummy.test",
+			"type": "string"
+		},
+		{
+			"id": "eb88df82-719e-4a82-ba86-e45d2880325a",
+			"key": "protocol",
+			"value": "http",
+			"type": "string"
+		}
+	],
+	"protocolProfileBehavior": {}
 }

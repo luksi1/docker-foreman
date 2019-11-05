@@ -21,7 +21,7 @@ do
 done
 
 # Wait 2 minutes for Foreman to startup
-# sleep 120
+sleep 120
 
 # while true
 # do
