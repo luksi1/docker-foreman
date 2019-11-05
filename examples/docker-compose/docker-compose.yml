@@ -87,7 +87,11 @@ services:
     - "80:3000"
     - "5910-5930:5910-5930"
     environment:
-    - DATABASE_URL=postgres://foreman:foreman@foreman-postgres:5432/foreman?pool=5
+    - DATABASE_USER=foreman
+    - DATABASE_PASSWORD=foreman
+    - DATABASE_HOSTNAME=foreman-postgres
+    - DATABASE_PORT=5432
+    - DATABASE_URL=postgres://foreman:foreman@${DATABASE_HOSTNAME}:${DATABASE_PORT}/foreman?pool=5
     - RAILS_MAX_THREADS=5
     - RAILS_ENV=production
     - FOREMAN_FQDN=${foreman_hostname}.${domain}

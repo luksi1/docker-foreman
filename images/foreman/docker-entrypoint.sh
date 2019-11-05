@@ -29,9 +29,9 @@ set -e
 # run foreman
 
 
-# while ! nc -z "${DATABASE_HOST}" "${DATABASE_PORT}"; do
-#   sleep 1
-# done
+while ! nc -z "${DATABASE_HOSTNAME" "${DATABASE_PORT}"; do
+  sleep 1
+done
 
 bundle exec rake db:migrate
 bundle exec rake db:seed
