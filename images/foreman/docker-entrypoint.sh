@@ -29,7 +29,7 @@ set -e
 # run foreman
 
 
-while ! nc -z "${DATABASE_HOSTNAME" "${DATABASE_PORT}"; do
+while ! nc -z "${DATABASE_HOSTNAME}" "${DATABASE_PORT}"; do
   sleep 1
 done
 
