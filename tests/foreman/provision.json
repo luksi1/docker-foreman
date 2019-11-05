@@ -3,7 +3,7 @@
 		"_postman_id": "6a063b52-6c21-4c43-860c-c15167a6b150",
 		"name": "Foreman",
 		"description": "Foreman API calls",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "{{protocol}}://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -75,8 +75,8 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://{{domain_name}}/api/v2/settings/trusted_hosts",
-					"protocol": "https",
+					"raw": "{{protocol}}://{{domain_name}}/api/v2/settings/trusted_hosts",
+					"protocol": "{{protocol}}",
 					"host": [
 						"{{domain_name}}"
 					],
@@ -125,8 +125,8 @@
 					"raw": "{\r\n\t\"setting\": {\r\n\t\t\"value\": \"[puppet]\"\r\n\t}\r\n}"
 				},
 				"url": {
-					"raw": "https://{{domain_name}}/api/v2/settings/{{trusted_hosts_id}}",
-					"protocol": "https",
+					"raw": "{{protocol}}://{{domain_name}}/api/v2/settings/{{trusted_hosts_id}}",
+					"protocol": "{{protocol}}",
 					"host": [
 						"{{domain_name}}"
 					],
@@ -164,13 +164,10 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "https://34.68.135.35/api/v2/smart_proxies",
-					"protocol": "https",
+					"raw": "{{protocol}}://{{domain_name}}/api/v2/smart_proxies",
+					"protocol": "{{protocol}}",
 					"host": [
-						"34",
-						"68",
-						"135",
-						"35"
+						"{{domain_name}}"
 					],
 					"path": [
 						"api",
@@ -214,7 +211,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"https://puppet-smart-proxy.dummy.test:8443\" }}",
+					"raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"{{protocol}}://puppet-smart-proxy.dummy.test:8443\" }}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -222,8 +219,8 @@
 					}
 				},
 				"url": {
-					"raw": "https://{{domain_name}}/api/v2/smart_proxies",
-					"protocol": "https",
+					"raw": "{{protocol}}://{{domain_name}}/api/v2/smart_proxies",
+					"protocol": "{{protocol}}",
 					"host": [
 						"{{domain_name}}"
 					],
@@ -263,11 +260,11 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"https://puppet-smart-proxy.dummy.test:8443\" }}"
+					"raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"{{protocol}}://puppet-smart-proxy.dummy.test:8443\" }}"
 				},
 				"url": {
-					"raw": "https://{{domain_name}}/api/v2/smart_proxies/{{puppet_smart_proxy_id}}",
-					"protocol": "https",
+					"raw": "{{protocol}}://{{domain_name}}/api/v2/smart_proxies/{{puppet_smart_proxy_id}}",
+					"protocol": "{{protocol}}",
 					"host": [
 						"{{domain_name}}"
 					],
