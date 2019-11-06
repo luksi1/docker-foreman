@@ -19,7 +19,7 @@ EXPOSE 3000
 VOLUME /certs/client_ca.pem
 # the certificate revocation list for the client certificate
 # when using puppet, this will be your Puppet CRL.
-VOLUME /certs/client_crl.pem
+# VOLUME /certs/client_crl.pem
 # the client certificates. The will be used for example to
 # perform mutual authentication with a smart proxy
 VOLUME /certs/client.crt
