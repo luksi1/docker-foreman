@@ -3,7 +3,7 @@
 		"_postman_id": "6a063b52-6c21-4c43-860c-c15167a6b150",
 		"name": "Foreman",
 		"description": "Foreman API calls",
-		"schema": "{{protocol}}://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
 	"item": [
 		{
@@ -50,7 +50,7 @@
 				{
 					"listen": "test",
 					"script": {
-						"id": "d765bddd-c0e0-4108-b4f3-477dfac9869f",
+						"id": "65466059-c26b-4a5d-955a-d0d8fec6974e",
 						"exec": [
 							"pm.test(\"Status code is 200\", function () {",
 							"    pm.response.to.have.status(200);",
@@ -207,7 +207,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"{{protocol}}://puppet-smart-proxy.dummy.test:8443\" }}",
+					"raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"https://puppet-smart-proxy.dummy.test:8443\" }}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -256,7 +256,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"{{protocol}}://puppet-smart-proxy.dummy.test:8443\" }}"
+					"raw": "{ \"smart_proxy\": {\"name\": \"puppet\", \"url\": \"https://puppet-smart-proxy.dummy.test:8443\" }}"
 				},
 				"url": {
 					"raw": "{{protocol}}://{{domain_name}}/api/v2/smart_proxies/{{puppet_smart_proxy_id}}",
@@ -314,13 +314,13 @@
 	],
 	"variable": [
 		{
-			"id": "8f570751-7047-4761-a037-259887b6970b",
+			"id": "b01695bd-7273-4710-b52d-d2a4eb028187",
 			"key": "domain_name",
 			"value": "foreman.dummy.test",
 			"type": "string"
 		},
 		{
-			"id": "eb88df82-719e-4a82-ba86-e45d2880325a",
+			"id": "8c4851d7-8fdf-4774-970d-7a9c7d49fe9c",
 			"key": "protocol",
 			"value": "http",
 			"type": "string"
