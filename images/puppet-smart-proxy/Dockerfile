@@ -57,7 +57,7 @@ RUN chmod +x /docker-entrypoint.sh
 
 ENTRYPOINT ["/docker-entrypoint.sh"]
 
-EXPOSE 8443
+EXPOSE 8000
 VOLUME /certs/ca.pem
 VOLUME /certs/puppet.crt
 VOLUME /certs/private.key

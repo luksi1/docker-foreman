@@ -1,10 +1,4 @@
 ---
-{{ if getenv "TRUSTED_HOSTS" }}
-:trusted_hosts: {{ $hosts := split (getenv "TRUSTED_HOSTS") "," }}{{ range $hosts }}
- - {{.}}{{end}}
-{{ else }}
-:trusted_hosts: []
-{{ end }}
 :foreman_url: http://{{ getenv "FOREMAN_FQDN" }}
 :daemon: false
 :bind_host: '*'

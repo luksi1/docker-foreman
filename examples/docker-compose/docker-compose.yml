@@ -135,14 +135,9 @@ services:
     container_name: puppet-smart-proxy
     image: luksi1/puppet-smart-proxy:${PUPPET_SMART_PROXY_TAG:-1.23}
     environment:
-      TRUSTED_HOSTS: "${foreman_hostname},${foreman_hostname}.${domain},${puppetserver_hostname},${puppetserver_hostname}.${domain}"
       PUPPET_VERSION: "${puppetserver_version}"
       PUPPET_URL: "https://${puppetserver_hostname}.${domain}:8140"
       FOREMAN_FQDN: "${foreman_hostname}.${domain}"
-    volumes:
-    - /etc/puppetlabs/puppet/ssl/certs/${puppet_smartproxy_hostname}.${domain}.pem:/certs/public.crt
-    - /etc/puppetlabs/puppet/ssl/private_keys/${puppet_smartproxy_hostname}.${domain}.pem:/certs/private.key
-    - /etc/puppetlabs/puppet/ssl/certs/ca.pem:/certs/ca.pem
     networks:
       puppet-foreman-network:
         aliases:
