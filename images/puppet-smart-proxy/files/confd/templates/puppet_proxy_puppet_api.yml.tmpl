@@ -1,16 +1,8 @@
 # URL of the puppet master itself for API requests
 :puppet_url: {{ getenv "PUPPET_URL" }}
-#
-# SSL certificates used to access the puppet API
-{{if getenv "DISABLE_TLS" }}
-# :puppet_ssl_ca: /ca.pem
-# :puppet_ssl_cert: /cert.pem
-# :puppet_ssl_key: /key.pem
-{{ else }}
 :puppet_ssl_ca: /certs/ca.pem
 :puppet_ssl_cert: /certs/public.crt
 :puppet_ssl_key: /certs/private.key
-{{ end }}
-#
+
 # Smart Proxy api timeout when Puppet's environment classes api is used and classes cache is disabled
 :api_timeout: 30

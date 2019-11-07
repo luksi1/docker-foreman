@@ -39,7 +39,7 @@ do
 done
 
 # Generate a foreman certificate signed by puppet
-sudo -E docker exec -t puppetserver puppetserver ca generate --certname "$FOREMAN_URL"
+# sudo -E docker exec -t puppetserver puppetserver ca generate --certname "$FOREMAN_URL"
 # Generate a smart proxy certificate signed by puppet
 sudo -E docker exec -t puppetserver puppetserver ca generate --certname "$PUPPET_SMARTPROXY_URL"
 # Generate a puppetdb certificate signed by puppet
