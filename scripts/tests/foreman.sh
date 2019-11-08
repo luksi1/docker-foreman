@@ -15,13 +15,14 @@ do
   echo "Puppetserver's health is \"$(puppet_health_status)\""
 done
 
-while [ $SECONDS -lt $timeout ]
-do
-  if curl -s http://localhost:80/api/v2/status | egrep -q 'Unable to authenticate user'
-  then
-    break
-  fi
-done
+# while [ $SECONDS -lt $timeout ]
+# do
+#   if curl -s http://localhost:80/api/v2/status | egrep -q 'Unable to authenticate user'
+#   then
+#     break
+#   fi
+# done
+sleep 120
 
 # perform tests
 run_newman_test 'foreman/provision.json'
