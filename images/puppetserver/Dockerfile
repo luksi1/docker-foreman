@@ -5,7 +5,7 @@ LABEL org.label-schema.name="puppetserver" \
 
 # Set the default Foreman web CA certificate
 # But allow it to be overidden
-ENV FOREMAN_WEB_CA_CERTIFICATE="/etc/puppetlabs/puppet/ssl/certs/ca.pem"
+# ENV FOREMAN_WEB_CA_CERTIFICATE="/etc/puppetlabs/puppet/ssl/certs/ca.pem"
 ENV AUTOSIGN="true"
 
 # foreman.rb

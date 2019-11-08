@@ -27,7 +27,7 @@ services:
       POSTGRES_USER: 'foreman'
       POSTGRES_DB: 'foreman'
     volumes:
-      - /databases/foreman-postgres:/var/lib/postgresql/data/
+    - /databases/foreman-postgres:/var/lib/postgresql/data/
     networks:
       puppet-foreman-network:
         aliases:
@@ -38,7 +38,7 @@ services:
     domainname: ${domain}
     image: luksi1/puppetserver-foreman:${PUPPETSERVER_TAG:-6.7.1}
     ports:
-      - "8140:8140"
+    - "8140:8140"
     environment:
       PUPPETSERVER_HOSTNAME: ${puppetserver_hostname}.${domain}
       FOREMAN_HOSTNAME: ${foreman_hostname}.${domain}
@@ -97,14 +97,6 @@ services:
     - FOREMAN_RAILS_CACHE_STORE_TYPE=redis
     - FOREMAN_RAILS_CACHE_STORE_URLS=redis://redis:6379/0
     - FOREMAN_ADMIN_PASSWORD=Abcd1234
-    volumes:
-    # - ${foreman_server_cert_file}:/certs/server.crt
-    # - ${foreman_server_cert_key_file}:/certs/server.key
-    # - ${foreman_server_cert_chain_file}:/certs/server_cachain.pem
-    - /etc/puppetlabs/puppet/ssl/certs/ca.pem:/certs/client_ca.pem
-    - /etc/puppetlabs/puppet/ssl/ca/ca_crl.pem:/certs/client_crl.pem
-    - /etc/puppetlabs/puppet/ssl/certs/${foreman_hostname}.${domain}.pem:/certs/client.crt
-    - /etc/puppetlabs/puppet/ssl/private_keys/${foreman_hostname}.${domain}.pem:/certs/client.key
     networks:
       puppet-foreman-network:
         aliases:
@@ -138,6 +130,10 @@ services:
       PUPPET_VERSION: "${puppetserver_version}"
       PUPPET_URL: "https://${puppetserver_hostname}.${domain}:8140"
       FOREMAN_FQDN: "${foreman_hostname}.${domain}"
+    volumes:
+    - /etc/puppetlabs/puppet/ssl/certs/${puppet_smartproxy_hostname}.${domain}.pem:/certs/public.crt
+    - /etc/puppetlabs/puppet/ssl/private_keys/${puppet_smartproxy_hostname}.${domain}.pem:/certs/private.key
+    - /etc/puppetlabs/puppet/ssl/certs/ca.pem:/certs/ca.pem
     networks:
       puppet-foreman-network:
         aliases:
