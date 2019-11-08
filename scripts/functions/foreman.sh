@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -e
-
 # Make a Puppet run with a hostname and attach it to a network
 puppet_agent_run() {
   if [[ "${1}x" == "x" || "${2}x" == "x" ]]

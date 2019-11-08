@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -x
-
 # shellcheck disable=SC1090
 source "${BASH_SOURCE%/*}/../functions/foreman.sh"
 
@@ -19,8 +17,7 @@ done
 
 while [ $SECONDS -lt $timeout ]
 do
-  curl -s http://localhost:80/api/v2/status | grep -q 'Unable to authenticate user'
-  if [ $? -eq 0 ]
+  if curl -s http://localhost:80/api/v2/status | egrep -q 'Unable to authenticate user'
   then
     break
   fi

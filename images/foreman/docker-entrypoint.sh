@@ -3,7 +3,10 @@
 set -ex
 
 # update TLS public certs so that they are trusted in your environment
-update-ca-trust
+if [ -n "$(ls -A /etc/pki/ca-trust/source/anchors/ 2>/dev/null)" ]
+then
+  update-ca-trust
+fi
 
 while ! nc -z "${DATABASE_HOSTNAME}" "${DATABASE_PORT}"; do
   sleep 1
