@@ -14,7 +14,7 @@ RUN chmod +x /usr/local/bin/confd
 
 # copy in docker-entrypoint.sh
 COPY docker-entrypoint.sh /
-
+COPY files/* /usr/local/share/ca-certificates/
 RUN apt-get update && \
     apt-get install --no-install-recommends -y wget ca-certificates lsb-release && \
     # install puppet agent from the puppetlabs repository
@@ -37,7 +37,7 @@ RUN apt-get update && \
     # the default directory for r10k configuration files is
     # under /etc/puppetlabs/r10k
     mkdir -p /etc/puppetlabs/r10k
-
+    update-ca-certificates
 # copy in template files for confd
 COPY files/confd /etc/confd
 ENTRYPOINT ["/docker-entrypoint.sh"]
