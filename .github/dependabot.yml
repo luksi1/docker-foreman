@@ -1,0 +1,16 @@
+version: 2
+updates:
+- package-ecosystem: maven
+  directory: "/"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+  target-branch: docker-maven-plugin
+- package-ecosystem: docker
+  directory: "/src/main/images/puppet"
+  schedule:
+    interval: daily
+    time: "04:00"
+  open-pull-requests-limit: 10
+  target-branch: docker-maven-plugin
